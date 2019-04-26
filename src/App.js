@@ -6,6 +6,7 @@ import StudentInfo from "./components/StudentInfo";
 import { Route, NavLink } from "react-router-dom";
 import UUID4 from "uuid4";
 import AttendanceReport from "./components/AttendanceReport";
+import StandupReport from "./components/StandupReport";
 
 class App extends React.Component{
     state = {
@@ -65,6 +66,7 @@ class App extends React.Component{
                         <NavLink to={ "/" }>Home</NavLink>
                         <NavLink to={ "/attendance" }>Attendance
                             Report</NavLink>
+                        <NavLink to={ "/standup" }>StandUp Report</NavLink>
                     </nav>
                 </header>
                 <Form onSubmit={ this.submitStudent }>
@@ -101,6 +103,7 @@ class App extends React.Component{
                        render={ props => <StudentInfo { ...props }
                                                       students={ this.state.students }/> }/>
                 <Route path={ "/attendance" } component={ AttendanceReport }/>
+                <Route path={ "/standup" } component={ StandupReport }/>
             </div>
         
         );
