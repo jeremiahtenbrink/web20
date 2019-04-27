@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AttendanceStudent from "./AttendanceStudent";
+import AttendanceStudent from "../attendanceReport/AttendanceStudent";
 import { Form, Input } from "reactstrap";
 
 class AttendanceReport extends Component{

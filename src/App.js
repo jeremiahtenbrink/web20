@@ -1,12 +1,13 @@
 import React from "react";
 import "./App.css";
 import { Form, FormGroup, Input, Button, Row, Col } from "reactstrap";
-import Students from "./components/Students";
-import StudentInfo from "./components/StudentInfo";
+import Students from "./components/students/Students";
+import StudentInfo from "./components/students/StudentInfo";
 import { Route, NavLink } from "react-router-dom";
 import UUID4 from "uuid4";
-import AttendanceReport from "./components/AttendanceReport";
-import StandupReport from "./components/StandupReport";
+import AttendanceReport from "./components/attendanceReport/AttendanceReport";
+import StandupReport from "./components/standUpReport/StandupReport";
+import SprintReport from "./components/sprintChallenge/SprintChallenge";
 
 class App extends React.Component{
     state = {
@@ -67,6 +68,7 @@ class App extends React.Component{
                         <NavLink to={ "/attendance" }>Attendance
                             Report</NavLink>
                         <NavLink to={ "/standup" }>StandUp Report</NavLink>
+                        <NavLink to={ "/sprint" }>Sprint Report</NavLink>
                     </nav>
                 </header>
                 <Form onSubmit={ this.submitStudent }>
@@ -104,6 +106,7 @@ class App extends React.Component{
                                                       students={ this.state.students }/> }/>
                 <Route path={ "/attendance" } component={ AttendanceReport }/>
                 <Route path={ "/standup" } component={ StandupReport }/>
+                <Route path={ "/sprint" } component={ SprintReport }/>
             </div>
         
         );
