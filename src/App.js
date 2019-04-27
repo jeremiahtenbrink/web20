@@ -10,6 +10,12 @@ import AttendanceReport from "./components/attendanceReport/AttendanceReport";
 import StandupReport from "./components/standUpReport/StandupReport";
 import SprintReport from "./components/sprintChallenge/SprintChallenge";
 
+import { checkAuth } from './actions'
+
+import firebase from './firebase/firebase'
+
+import { connect } from "react-redux";
+
 import GetStarted from "./views/GetStarted";
 import AddStudents from "./views/AddStudents";
 
@@ -27,13 +33,15 @@ class App extends React.Component {
   //     });
   //   }
   // }
-  
-  // componentDidMount() {
-  //   this.unregisterAuthObserver = firebase
-  //     .auth()
-  //     //checks to see if there is a user logged in.
-  //     .onAuthStateChanged(() => this.props.authenticate())
-  // }
+
+  componentDidMount() {
+    this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(() => this.props.checkAuth());
+  }
+
+  componentWillUnmount() {
+    this.unregisterAuthObserver()
+  }
+
 
   removeStudent = id => {
     this.setState(state => {
@@ -130,11 +138,26 @@ class App extends React.Component {
       //   <Route path={"/sprint"} component={SprintReport} />
       // </div>
       <Switch>
-        <Route exact path="/start" render={props => <GetStarted {...props} />}  />
-        <Route exact path="/students" render={props => <AddStudents {...props} />}  />
+        <Route
+          exact
+          path="/start"
+          render={props => <GetStarted {...props} />}
+        />
+        <Route
+          exact
+          path="/students"
+          render={props => <AddStudents {...props} />}
+        />
       </Switch>
     );
   }
 }
 
-export default App;
+const mapStateToProps = ({ auth }) => ({
+  user: auth.user
+});
+
+export default connect(
+  mapStateToProps,
+  { checkAuth }
+)(App);

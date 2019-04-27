@@ -23,6 +23,10 @@ class AddStudents extends React.Component {
     console.log(this.props.uid);
   }
 
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return !shallowEqual(this.state.props, nextState.props);
+  // }
+
   addHandler = e => {};
 
   inputHandler = e => {
@@ -90,14 +94,14 @@ class AddStudents extends React.Component {
         </Container>
       );
     } else {
-      this.props.history.push("/start");
+      // this.props.history.push("/start");
     }
   }
 }
 
 const mapStateToProps = ({ students, auth }) => ({
   isLoading: students.isLoading,
-  user: auth.user,
+  user: auth.user
 });
 
 export default connect(
