@@ -1,5 +1,6 @@
 import firebase, { store } from "../firebase/firebase";
 
+import { push } from 'connected-react-router'
 var provider = new firebase.auth.GoogleAuthProvider();
 
 export const AUTH_INIT = "AUTH_INIT";
@@ -16,29 +17,31 @@ export const SIGNIN_NEW_USER = "SIGNIN_NEW_USER";
 export const SIGNIN_FAILED = "SIGNIN_FAILED";
 
 export const signIn = () => dispatch => {
-    dispatch( { type: SIGNIN_INIT } );
-    firebase
-        .auth()
-        .signInWithPopup( provider )
-        .then( function( result ){
-            if( result.additionalUserInfo.isNewUser ){
-                dispatch( {
-                    type: SIGNIN_NEW_USER,
-                    payload: result.user,
-                    token: result.credential.accessToken
-                } );
-            }else{
-                dispatch( {
-                    type: SIGNIN_SUCCESS,
-                    payload: result.user,
-                    token: result.credential.accessToken
-                } );
-            }
-        } )
-        .catch( function( error ){
-            dispatch( { type: SIGNIN_FAILED, payload: error.message } );
-        } );
-};
+  dispatch({ type: SIGNIN_INIT });
+  firebase
+    .auth()
+    .signInWithPopup(provider)
+    .then(function(result) {
+      if (result.additionalUserInfo.isNewUser) {
+        dispatch({
+          type: SIGNIN_NEW_USER,
+          payload: result.user,
+          token: result.credential.accessToken
+        });
+        dispatch(push('/students'))
+      } else {
+        dispatch({
+          type: SIGNIN_SUCCESS,
+          payload: result.user,
+          token: result.credential.accessToken
+        });
+        dispatch(push('/'))
+      }
+    })
+    .catch(function(error) {
+      dispatch({ type: SIGNIN_FAILED, payload: error.message });
+    });
+}
 
 export const LOGOUT_INIT = "LOGOUT_INIT";
 export const LOGOUT_SUCCESSFUL = "LOGOUT_SUCCESSFUL";
