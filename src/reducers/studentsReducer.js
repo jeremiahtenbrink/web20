@@ -1,0 +1,22 @@
+import {
+  FETCH_STUDENTS_INIT,
+  FETCH_STUDENTS_SUCCESS,
+  FETCH_STUDENTS_FAILED
+} from "../actions";
+
+const initialState = {
+  students: [],
+  isLoading: false,
+  error: "",
+};
+
+export const studentsReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_STUDENTS_INIT:
+      return {...state, isLoading: true}
+    case FETCH_STUDENTS_SUCCESS: 
+      return {...state, isLoading: false, students: action.payload};
+    default: 
+      return state
+  }
+};
