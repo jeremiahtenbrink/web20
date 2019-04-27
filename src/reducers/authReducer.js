@@ -26,7 +26,8 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         newUser: true,
         user: action.payload,
-        token: action.token
+        token: action.token,
+        isLoading: false
       };
     case SIGNIN_SUCCESS:
       return {
@@ -38,7 +39,9 @@ export const authReducer = (state = initialState, action) => {
     case SIGNIN_FAILED:
       return { ...state, isLoading: false, error: action.payload };
     case CREATE_USER_INIT: 
-      return { ...state, isLoading: true}
+      return { ...state, isLoading: false,}
+    case CREATE_USER_SUCCESS:
+      return {...state, isLoading: false,}
     default:
       return state;
   }
