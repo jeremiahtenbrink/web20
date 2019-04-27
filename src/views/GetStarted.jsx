@@ -52,7 +52,7 @@ class GetStart extends React.Component {
         <Row className="cover">
           <Col xs="6" className="text-center align-self-center">
             {this.props.newUser ? (
-              <>
+              <div className="form">
                 <h3>We need more...</h3>
                 <p className="text-danger">
                   Use same name as on Airtable including casing
@@ -94,7 +94,7 @@ class GetStart extends React.Component {
                 </Row>
                 <br />
                 <Button onClick={this.submitHandler}>Get Started</Button>
-              </>
+              </div>
             ) : (
               <>
                 <h1>Welcome PM</h1>
