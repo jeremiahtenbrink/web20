@@ -51,7 +51,6 @@ export const createUser = user => dispatch => {
     .collection(`users`)
     .doc(user.uid)
     .set({
-      id: user.uid,
       firstName: user.firstName,
       lastName: user.lastName,
       cohort: user.webNumber

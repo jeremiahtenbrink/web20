@@ -31,7 +31,7 @@ class GetStart extends React.Component {
   };
 
   render() {
-    if(this.props.user){
+    if(this.props.user && !this.props.newUser){
       this.props.history.push('/')
     }
     if (this.props.isLoading) {
