@@ -19,3 +19,12 @@ export const getStudents = id => dispatch => {
       dispatch({ type: FETCH_STUDENTS_FAILED, payload: err });
     });
 };
+
+export const ADD_STUDENT_INIT = "ADD_STUDENT_INIT"
+export const ADD_STUDENT_SUCCESS = "ADD_STUDENT_SUCCESS"
+export const ADD_STUDENT_FAILED = "ADD_STUDENT_FAILED"
+
+
+export const addStudent = ({student, uid}) => dispatch => {
+  dispatch({ type: ADD_STUDENT_INIT})
+}

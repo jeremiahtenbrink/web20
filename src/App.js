@@ -10,6 +10,7 @@ import StandupReport from "./components/standUpReport/StandupReport";
 import SprintReport from "./components/sprintChallenge/SprintChallenge";
 
 import GetStarted from './views/GetStarted'
+import AddStudents from './views/AddStudents'
 
 class App extends React.Component {
   state = {
@@ -26,19 +27,12 @@ class App extends React.Component {
   //   }
   // }
   
-  componentDidMount() {
-    this.unregisterAuthObserver = firebase
-      .auth()
-      //checks to see if there is a user logged in.
-      .onAuthStateChanged(() => this.props.authenticate())
-    if (window.Stripe) {
-      this.establishStripe()
-    } else {
-      document
-        .querySelector('#stripe-js')
-        .addEventListener('load', this.establishStripe)
-    }
-  }
+  // componentDidMount() {
+  //   this.unregisterAuthObserver = firebase
+  //     .auth()
+  //     //checks to see if there is a user logged in.
+  //     .onAuthStateChanged(() => this.props.authenticate())
+  // }
 
   removeStudent = id => {
     this.setState(state => {
@@ -136,7 +130,7 @@ class App extends React.Component {
       // </div>
       <Switch>
         <Route exact path="/start" render={props => <GetStarted {...props} />}  />
-
+        <Route exact path="/add-students" render={props => <AddStudents {...props} />}  />
       </Switch>
     );
   }
