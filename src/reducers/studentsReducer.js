@@ -8,8 +8,8 @@ import {
 } from "../actions";
 
 const initialState = {
-  students: [],
-  isLoading: false,
+  students: null,
+  isLoading: true,
   error: "",
 };
 

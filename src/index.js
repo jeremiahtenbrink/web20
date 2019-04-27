@@ -5,19 +5,11 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware, compose } from "redux";
-import thunk from "redux-thunk";
-import Store from "./reducers/index.js";
-import { ConnectedRouter } from "connected-react-router";
-import { createBrowserHistory } from "history";
-import createRootReducer from "./reducers";
 
-const composeEnhancers =
-  (process.env.NODE_ENV === "development" &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-  compose;
+import configStore from "./configStore";
 
-const store = createStore(Store, composeEnhancers(applyMiddleware(thunk)));
+const initialState = {};
+const store = configStore(initialState);
 
 ReactDOM.render(
   <Provider store={store}>

@@ -4,6 +4,9 @@ import {
     Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink,
     Container
 } from "reactstrap";
+import Button from "reactstrap/es/Button";
+import { connect } from "react-redux";
+import { logout } from "../actions";
 
 class Header extends React.Component{
     state = {
@@ -28,6 +31,7 @@ class Header extends React.Component{
                                     Students</NavLink>
                             </NavItem>
                         </Nav>
+                        <Button onClick={ this.props.logout }>Logout</Button>
                     </Collapse>
                 
                 </Container>
@@ -38,4 +42,4 @@ class Header extends React.Component{
 
 Header.propTypes = {};
 
-export default Header;
+export default connect( undefined, { logout } )( Header );

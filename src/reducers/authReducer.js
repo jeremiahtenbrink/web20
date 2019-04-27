@@ -5,12 +5,11 @@ import {
 } from "../actions";
 
 const initialState = {
-    isLoading: false,
-    user: null,
-    uid: null,
-    newUser: false,
-    token: "",
-    error: ""
+  isLoading: false,
+  user: null,
+  newUser: false,
+  token: "",
+  error: ""
 };
 
 export const authReducer = ( state = initialState, action ) => {
