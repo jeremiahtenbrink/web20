@@ -25,7 +25,7 @@ class GetStart extends React.Component {
     this.props.createUser({
       uid: this.props.user.uid,
       firstName: this.state.firstName,
-      lastName: this.state.webNumber,
+      lastName: this.state.lastName,
       webNumber: "WEB" + this.state.webNumber
     });
   };

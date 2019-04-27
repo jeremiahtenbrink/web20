@@ -11,7 +11,6 @@ import {
 const initialState = {
   isLoading: false,
   user: null,
-  uid: null,
   newUser: false,
   token: "",
   error: ""
