@@ -1,5 +1,6 @@
 import firebase, { store } from "../firebase/firebase";
 
+import { push } from 'connected-react-router'
 
 var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -28,12 +29,14 @@ export const signIn = () => dispatch => {
           payload: result.user,
           token: result.credential.accessToken
         });
+        dispatch(push('/students'))
       } else {
         dispatch({
           type: SIGNIN_SUCCESS,
           payload: result.user,
           token: result.credential.accessToken
         });
+        dispatch(push('/'))
       }
     })
     .catch(function(error) {

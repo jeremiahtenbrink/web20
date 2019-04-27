@@ -130,7 +130,7 @@ class App extends React.Component {
       // </div>
       <Switch>
         <Route exact path="/start" render={props => <GetStarted {...props} />}  />
-        <Route exact path="/add-students" render={props => <AddStudents {...props} />}  />
+        <Route exact path="/students" render={props => <AddStudents {...props} />}  />
       </Switch>
     );
   }
