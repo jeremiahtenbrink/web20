@@ -5,6 +5,7 @@ import Students from "./components/students/Students";
 import StudentInfo from "./components/students/StudentInfo";
 import { Route, Switch, NavLink } from "react-router-dom";
 import UUID4 from "uuid4";
+import Header from "./views/Header";
 import AttendanceReport from "./components/attendanceReport/AttendanceReport";
 import StandupReport from "./components/standUpReport/StandupReport";
 import SprintReport from "./components/sprintChallenge/SprintChallenge";
@@ -129,9 +130,11 @@ class App extends React.Component{
             //   <Route path={"/standup"} component={StandupReport} />
             //   <Route path={"/sprint"} component={SprintReport} />
             // </div>
+            
             <Switch>
                 <Route exact path="/start"
                        render={ props => <GetStarted { ...props } /> }/>
+                <Header/>
                 <Route exact path="/add-students"
                        render={ props => <AddStudents { ...props } /> }/>
             </Switch> );
