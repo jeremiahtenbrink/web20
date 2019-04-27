@@ -1,4 +1,5 @@
-// Firebase App (the core Firebase SDK) is always required and must be listed first
+// Firebase App (the core Firebase SDK) is always required and must be listed
+// first
 import * as firebase from "firebase/app";
 
 // Add the Firebase products that you want to use
@@ -15,4 +16,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp( firebaseConfig );
+
+const database = firebase.database();
+export default database;
