@@ -12,28 +12,36 @@ import "./getstarted.css";
 
 class AddStudents extends React.Component {
   state = {
-    students: {},
     addStudent: {
-      firstName: '',
+      firstName: "",
       lastName: "",
       githubUsername: "",
       notes: ""
     }
   };
 
-  componentDidMount() {
-    //this.props.getStudents(this.props.uid);
-    //console.log(this.props.uid);
-  }
-
   componentDidUpdate() {
-    if(this.props.uid && this.props.isLoading){
-      this.props.getStudents(this.props.uid)
-      console.log(this.props.uid)
+    if (this.props.uid && this.props.isLoading) {
+      this.props.getStudents(this.props.uid);
+      console.log(this.props.uid);
     }
   }
 
-  addHandler = e => {};
+  addHandler = e => {
+    e.preventDefault();
+    this.props.addStudent({
+      student: this.state.addStudent,
+      id: this.props.uid
+    });
+    this.setState({
+      addStudent: {
+        firstName: "",
+        lastName: "",
+        githubUsername: "",
+        notes: ""
+      }
+    });
+  };
 
   inputHandler = e => {
     this.setState({
@@ -96,48 +104,74 @@ class AddStudents extends React.Component {
                     </tr>
                   </>
                 ) : (
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
+                  <>
+                    {Object.values(this.props.students).map(
+                      (student, index) => (
+                        <tr key={student.id}>
+                          <th scope="row">{index + 1}</th>
+                          <td>{student.firstName}</td>
+                          <td>{student.lastName}</td>
+                          <td>{student.github}</td>
+                        </tr>
+                      )
+                    )}
+                  </>
                 )}
               </tbody>
             </Table>
             <hr />
-            <form onSubmit={this.addHandler}>
-              <Row>
-                <Col>
-                  <Input
-                    type="text"
-                    placeholder="First Name"
-                    name="firstName"
-                    value={this.state.addStudent.name}
-                    onChange={this.inputHandler}
-                  />
-                </Col>
-                <Col>
-                  <Input
-                    type="text"
-                    placeholder="Last Name"
-                    name="lastName"
-                    value={this.state.addStudent.name}
-                    onChange={this.inputHandler}
-                  />
-                </Col>
-              </Row>
-              <br/>
-              <Input
-                type="text"
-                placeholder="Github"
-                name="github"
-                value={this.state.addStudent.name}
-                onChange={this.inputHandler}
-              />
-              <br />
-              <Button color="primary">Add Student</Button>
-            </form>
+            {this.props.isAdding ? (
+              <>
+                <Row>
+                  <Col>
+                    <Skeleton />
+                  </Col>
+                  <Col>
+                    <Skeleton />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Skeleton />
+                  </Col>
+                </Row>
+              </>
+            ) : (
+              <form onSubmit={this.addHandler}>
+                <Row>
+                  <Col>
+                    <Input
+                      type="text"
+                      placeholder="First Name"
+                      name="firstName"
+                      value={this.state.addStudent.name}
+                      onChange={this.inputHandler}
+                    />
+                  </Col>
+                  <Col>
+                    <Input
+                      type="text"
+                      placeholder="Last Name"
+                      name="lastName"
+                      value={this.state.addStudent.name}
+                      onChange={this.inputHandler}
+                    />
+                  </Col>
+                </Row>
+                <br />
+                <Input
+                  type="text"
+                  placeholder="Github"
+                  name="github"
+                  value={this.state.addStudent.name}
+                  onChange={this.inputHandler}
+                />
+                <br />
+                <Button color="primary" type="submit">
+                  Add Student
+                </Button>
+              </form>
+            )}
           </Col>
         </Row>
       </Container>
@@ -149,6 +183,7 @@ const mapStateToProps = ({ students, auth }) => ({
   isLoading: students.isLoading,
   uid: auth.user,
   students: students.students,
+  isAdding: students.isAdding
 });
 
 export default connect(

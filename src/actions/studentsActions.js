@@ -40,6 +40,12 @@ export const ADD_STUDENT_INIT = "ADD_STUDENT_INIT";
 export const ADD_STUDENT_SUCCESS = "ADD_STUDENT_SUCCESS";
 export const ADD_STUDENT_FAILED = "ADD_STUDENT_FAILED";
 
-export const addStudent = ({ student, uid }) => dispatch => {
+export const addStudent = ({ student, id }) => dispatch => {
   dispatch({ type: ADD_STUDENT_INIT });
+  store.collection('users').doc(id).collection('students').add({
+    ...student
+  }).then(res => {
+    console.log(res)
+    dispatch({type: ADD_STUDENT_SUCCESS, payload: {id: res.id, ...student}})
+  })
 };

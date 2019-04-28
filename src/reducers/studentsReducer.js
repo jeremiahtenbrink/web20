@@ -10,11 +10,16 @@ import {
 const initialState = {
   students: null,
   isLoading: true,
+  isAdding: false,
   error: "",
 };
 
 export const studentsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ADD_STUDENT_INIT: 
+      return {...state, isAdding: true}
+    case ADD_STUDENT_SUCCESS: 
+      return {...state, students: {...state.students, [action.payload.id]:  action.payload}, isAdding: false}
     case FETCH_STUDENTS_INIT:
       return {...state, isLoading: true}
     case FETCH_STUDENTS_SUCCESS: 
