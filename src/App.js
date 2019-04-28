@@ -5,7 +5,6 @@ import Students from "./components/students/Students";
 import StudentInfo from "./components/students/StudentInfo";
 import { Route, Switch, NavLink } from "react-router-dom";
 import UUID4 from "uuid4";
-import Header from "./views/Header";
 import AttendanceReport from "./components/attendanceReport/AttendanceReport";
 import StandupReport from "./components/standUpReport/StandupReport";
 import SprintReport from "./components/sprintChallenge/SprintChallenge";
