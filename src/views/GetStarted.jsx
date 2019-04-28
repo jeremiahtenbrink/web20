@@ -23,7 +23,7 @@ class GetStart extends React.Component {
 
   submitHandler = () => {
     this.props.createUser({
-      uid: this.props.user,
+      uid: this.props.uid,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       webNumber: "WEB" + this.state.webNumber
@@ -110,7 +110,7 @@ class GetStart extends React.Component {
 const mapStateToProps = ({ auth }) => ({
   isLoading: auth.isLoading,
   newUser: auth.newUser,
-  user: auth.user
+  uid: auth.uid
 });
 
 export default connect(

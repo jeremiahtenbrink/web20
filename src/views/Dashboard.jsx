@@ -91,7 +91,7 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = state => ({
   students: state.students.students,
-  uid: state.auth.user
+  uid: state.auth.uid
 });
 
 export default connect(

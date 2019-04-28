@@ -21,13 +21,6 @@ class AddStudents extends React.Component {
     }
   };
 
-  componentDidUpdate() {
-    if (this.props.uid && this.props.isLoading) {
-      this.props.getStudents(this.props.uid);
-      console.log(this.props.uid);
-    }
-  }
-
   addHandler = e => {
     e.preventDefault();
     this.props.addStudent({
@@ -76,6 +69,7 @@ class AddStudents extends React.Component {
         <Row className="cover">
           <Col xs="6" className="cover-img-2" />
           <Col xs="6" className="text-center overflow-scroll">
+            <Header />
             <h2>Students</h2>
             <Table bordered className="form">
               <thead>
@@ -84,7 +78,6 @@ class AddStudents extends React.Component {
                   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Github</th>
-                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -94,9 +87,6 @@ class AddStudents extends React.Component {
                       <th scope="row">
                         <Skeleton />
                       </th>
-                      <td>
-                        <Skeleton />
-                      </td>
                       <td>
                         <Skeleton />
                       </td>
@@ -117,19 +107,6 @@ class AddStudents extends React.Component {
                           <td>{student.firstName}</td>
                           <td>{student.lastName}</td>
                           <td>{student.github}</td>
-                          <td>
-                            <Button
-                              color="danger"
-                              onClick={() =>
-                                this.props.delStudent(
-                                  student.id,
-                                  this.props.uid
-                                )
-                              }
-                            >
-                              X
-                            </Button>
-                          </td>
                         </tr>
                       )
                     )}
@@ -199,12 +176,12 @@ class AddStudents extends React.Component {
 
 const mapStateToProps = ({ students, auth }) => ({
   isLoading: students.isLoading,
-  uid: auth.user,
+  uid: auth.uid,
   students: students.students,
   isAdding: students.isAdding
 });
 
 export default connect(
   mapStateToProps,
-  { addStudent, getStudents, delStudent }
+  { addStudent, getStudents }
 )(AddStudents);
