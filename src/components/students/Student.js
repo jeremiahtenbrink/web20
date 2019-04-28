@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Col } from "reactstrap";
 import "./student.scss";
+import { delStudent } from "../../actions";
+import { connect } from "react-redux";
 
 const Student = props => {
     return ( <div>
@@ -14,19 +16,14 @@ const Student = props => {
             </h5>
             <h5>{ props.github }</h5>
             <h5 className={ "remove-student" }
-                onClick={ props.removeStudent }>
+                onClick={ () => props.delStudent( props.id, props.uid ) }>
                 del
             </h5>
         </Col>
     </div> );
 };
 
-Student.propTypes = {
-    id: PropTypes.string,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    removeStudent: PropTypes.func,
-    github: PropTypes.string
-};
-
-export default Student;
+const mapPropsToState = state => ( {
+    uid: state.auth.user,
+} );
+export default connect( mapPropsToState, { delStudent } )( Student );

@@ -47,3 +47,26 @@ export const addStudent = ( { student, id } ) => dispatch => {
         } );
     } );
 };
+
+export const DEL_STUDENT_INIT = "DEL_STUDENT_INIT";
+export const DEL_STUDENT_SUCCESS = "DEL_STUDENT_SUCCESS";
+export const DEL_STUDENT_FAILED = "DEL_STUDENT_FAILED";
+
+export const delStudent = ( studentId, userId ) => dispatch => {
+    
+    dispatch( { type: DEL_STUDENT_INIT } );
+    store.collection( "users" ).
+        doc( userId ).
+        collection( "students" ).
+        doc( studentId ).
+        delete().
+        then( res => {
+            console.log( res );
+            dispatch( {
+                type: DEL_STUDENT_SUCCESS, payload: studentId
+            } );
+        } ).
+        catch( err => {
+            dispatch( { type: DEL_STUDENT_FAILED, payload: err } );
+        } );
+};
