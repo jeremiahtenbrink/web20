@@ -1,6 +1,6 @@
 import firebase, { store } from "../firebase/firebase";
 
-import { push, go } from "connected-react-router";
+import { push } from "connected-react-router";
 var provider = new firebase.auth.GoogleAuthProvider();
 
 export const AUTH_INIT = "AUTH_INIT";
@@ -8,15 +8,19 @@ export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAILED = "AUTH_FAILED";
 
 export const checkAuth = () => dispatch => {
-  dispatch({type: AUTH_INIT})
-  const {currentUser} = firebase.auth()
-  if(currentUser){
-    dispatch({type: AUTH_SUCCESS, payload: currentUser.uid, token: currentUser._lat})
+  dispatch({ type: AUTH_INIT });
+  const { currentUser } = firebase.auth();
+  if (currentUser) {
+    dispatch({
+      type: AUTH_SUCCESS,
+      payload: currentUser.uid,
+      token: currentUser._lat
+    });
+  } else {
+    dispatch({ type: AUTH_FAILED });
+    dispatch(push("/start"));
   }
-  else{
-    dispatch({type: AUTH_FAILED})
-  }
-  console.log(currentUser)
+  console.log(currentUser);
 };
 
 export const SIGNIN_INIT = "SIGNIN_INIT";
@@ -42,7 +46,7 @@ export const signIn = () => dispatch => {
           payload: result.user.uid,
           token: result.credential.accessToken
         });
-        dispatch(go("/"));
+        dispatch(push("/"));
       }
     })
     .catch(function(error) {

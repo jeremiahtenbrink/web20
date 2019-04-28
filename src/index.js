@@ -6,10 +6,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ConnectedRouter as Router } from "connected-react-router";
 import { Provider } from "react-redux";
 
-import configStore, {history} from "./configStore";
+import store, {history} from "./configStore";
 
-const initialState = {};
-const store = configStore(initialState);
+
 
 ReactDOM.render(
   <Provider store={store}>

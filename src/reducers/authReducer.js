@@ -11,12 +11,12 @@ import {
   LOGOUT_FAILED,
   AUTH_INIT,
   AUTH_SUCCESS,
-  AUTH_FAILED,
+  AUTH_FAILED
 } from "../actions";
 
 const initialState = {
   isLoading: false,
-  user: {},
+  user: null,
   newUser: false,
   token: "",
   error: ""
@@ -24,6 +24,17 @@ const initialState = {
 
 export const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case AUTH_INIT:
+      return { ...state, isLoading: true };
+    case AUTH_FAILED:
+      return { ...state, isLoading: false };
+    case AUTH_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        user: action.payload,
+        token: action.token
+      };
     case SIGNIN_INIT:
       return { ...state, isLoading: true };
     case SIGNIN_NEW_USER:

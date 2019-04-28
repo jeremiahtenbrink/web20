@@ -6,13 +6,16 @@ export const FETCH_STUDENTS_FAILED = "FETCH_STUDENTS_FAILED";
 
 export const getStudents = id => dispatch => {
   dispatch({ type: FETCH_STUDENTS_INIT });
-  store
+  if(id){
+    store
     .collection("users")
-    .docs(id)
+    .doc(id)
     .collection("students")
     .get()
     .then(students => {
-      let allStudentsData = students.map(student => student.data());
+      console.log(students)
+      students.forEach(student => )
+      console.log(allStudentsData);
       dispatch({
         type: FETCH_STUDENTS_SUCCESS,
         payload: allStudentsData
@@ -21,6 +24,10 @@ export const getStudents = id => dispatch => {
     .catch(err => {
       dispatch({ type: FETCH_STUDENTS_FAILED, payload: err });
     });
+  }
+  else {
+    dispatch({type: FETCH_STUDENTS_FAILED})
+  }
 };
 
 export const ADD_STUDENT_INIT = "ADD_STUDENT_INIT";

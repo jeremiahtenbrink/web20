@@ -137,6 +137,7 @@ class App extends React.Component {
       //   <Route path={"/standup"} component={StandupReport} />
       //   <Route path={"/sprint"} component={SprintReport} />
       // </div>
+      <>
       <Switch>
         <Route
           exact
@@ -149,6 +150,7 @@ class App extends React.Component {
           render={props => <AddStudents {...props} />}
         />
       </Switch>
+      </>
     );
   }
 }

@@ -23,7 +23,7 @@ class GetStart extends React.Component {
 
   submitHandler = () => {
     this.props.createUser({
-      uid: this.props.user.uid,
+      uid: this.props.user,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       webNumber: "WEB" + this.state.webNumber
