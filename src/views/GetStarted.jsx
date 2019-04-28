@@ -2,7 +2,6 @@ import React from "react";
 
 import { Container, Row, Col, Input, Button, Spinner } from "reactstrap";
 
-import "./getstarted.css";
 
 import { signIn, createUser } from "../actions";
 

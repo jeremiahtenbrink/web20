@@ -13,7 +13,6 @@ import {
   CardText
 } from "reactstrap";
 import Students from "../components/students/Students";
-import "./dashboard.scss";
 import { Link } from "react-router-dom";
 
 class Dashboard extends React.Component {
@@ -77,8 +76,12 @@ class Dashboard extends React.Component {
                     <Card body inverse color="primary">
                       <CardTitle>Daily Standup</CardTitle>
                       <CardText>
-                        Coming Soon...
+                      Please make sure to take attendance every class day at
+                        the end of class. Make sure to leave feedback for the instructor.
                       </CardText>
+                      <Link to="/standup">
+                        <Button>Standup Report</Button>
+                      </Link>
                     </Card>
                   </Col>
                 </Row>

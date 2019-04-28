@@ -1,71 +1,24 @@
-/* .App {
-    text-align: center;
-    max-width: 1000px;
-    margin: 0 auto;
+.cover {
+  height: 100vh;
 }
 
-.App-logo {
-    animation: App-logo-spin infinite 20s linear;
-    height: 40vmin;
-    pointer-events: none;
+.cover-img {
+  background-image: url(https://source.unsplash.com/collection/4720465/);
+  background-size: cover;
 }
 
-.App-header {
-    background-color: #282c34;
-    min-height: 10vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.cover-img-2 {
+  background-image: url(https://source.unsplash.com/collection/4720465/);
+  background-size: cover;
+  background-position-y: center;
 }
 
-.App-link {
-    color: #61dafb;
+.cover-3 {
+  background-image: url(https://source.unsplash.com/collection/4720465/);
+  background-size: cover;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.overflow-scroll {
+  height: 100vh;
+  overflow-y: scroll;
 }
-
-.remove-student {
-    color: red;
-    cursor: pointer;
-    text-align: right;
-}
-
-.student {
-    display: flex;
-    justify-content: space-between;
-}
-
-.attendance-report {
-
-}
-
-.attendance-student {
-    display: flex;
-    justify-content: space-between;
-}
-
-.attendance-student-names {
-    display: flex;
-}
-
-.flex-start {
-    align-items: flex-start;
-}
-
-.attendance-student-names h5:not(:first-child) {
-    margin-left: 20px;
-}
-
-.attendance-link {
-    word-break: break-word;
-} */

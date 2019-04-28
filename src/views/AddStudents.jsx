@@ -8,16 +8,14 @@ import { connect } from "react-redux";
 
 import Skeleton from "react-loading-skeleton";
 
-import "./getstarted.css";
 import { Link } from "react-router-dom";
-
 
 class AddStudents extends React.Component {
   state = {
     addStudent: {
       firstName: "",
       lastName: "",
-      github: '',
+      github: ""
     }
   };
 
@@ -31,7 +29,7 @@ class AddStudents extends React.Component {
       addStudent: {
         firstName: "",
         lastName: "",
-        github: '',
+        github: ""
       }
     });
   };
@@ -49,9 +47,12 @@ class AddStudents extends React.Component {
     return (
       <Container fluid>
         <Row className="cover">
-          <Col xs="6" className="cover-img-2" />
           <Col xs="6" className="text-center overflow-scroll">
-          <Link to="/"><Button color="secondary" className="mt-3">Back</Button></Link>
+            <Link to="/">
+              <Button color="secondary" className="mt-3">
+                Back
+              </Button>
+            </Link>
             <h2>Students</h2>
             <Table bordered className="form">
               <thead>
@@ -93,7 +94,19 @@ class AddStudents extends React.Component {
                           <td>{student.firstName}</td>
                           <td>{student.lastName}</td>
                           <td>{student.github}</td>
-                          <td><Button color='danger' onClick={() => this.props.delStudent(student.id, this.props.uid)}>Delete</Button></td>
+                          <td>
+                            <Button
+                              color="danger"
+                              onClick={() =>
+                                this.props.delStudent(
+                                  student.id,
+                                  this.props.uid
+                                )
+                              }
+                            >
+                              Delete
+                            </Button>
+                          </td>
                         </tr>
                       )
                     )}
@@ -155,6 +168,7 @@ class AddStudents extends React.Component {
               </form>
             )}
           </Col>
+          <Col xs="6" className="cover-img-2" />
         </Row>
       </Container>
     );
