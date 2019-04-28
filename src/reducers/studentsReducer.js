@@ -2,12 +2,14 @@ import {
     FETCH_STUDENTS_INIT, FETCH_STUDENTS_SUCCESS, FETCH_STUDENTS_FAILED,
     ADD_STUDENT_INIT, ADD_STUDENT_SUCCESS, ADD_STUDENT_FAILED,
     DEL_STUDENT_SUCCESS, DEL_STUDENT_FAILED, DEL_STUDENT_INIT,
+    EDIT_STUDENT_INIT, EDIT_STUDENT_SUCCESS, EDIT_STUDENT_FAILED
 } from "../actions";
 
 const initialState = {
     students: null,
     isLoading: true,
     isAdding: false,
+    isEditing: false,
     error: "",
     isDeleting: false
 };
@@ -35,6 +37,14 @@ export const studentsReducer = ( state = initialState, action ) => {
             return { ...state, students: { ...students } };
         case DEL_STUDENT_FAILED:
             return { ...state, isDeleting: false, error: action.payload };
+        case EDIT_STUDENT_INIT:
+            return { ...state, isEditing: true, };
+        case EDIT_STUDENT_SUCCESS:
+            let studentsEdited = { ...state.students };
+            studentsEdited[ action.payload.id ] = { ...state.students[ action.payload.id ], ...action.payload };
+            return { ...state, students: studentsEdited, isEditing: false };
+        case EDIT_STUDENT_FAILED:
+            return { ...state, isEditing: false, error: action.payload };
         default:
             return state;
     }
