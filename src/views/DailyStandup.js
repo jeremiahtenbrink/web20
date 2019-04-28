@@ -136,11 +136,11 @@ class DailyStandup extends Component{
         return ( <div>
             { this.state.students &&
             Object.values( this.state.students ).map( student => {
-                return <AttendanceStudent lastName={ student.lastName }
-                                          firstName={ student.firstName }
-                                          id={ student.id }
-                                          onChange={ this.changePresent }
-                                          present={ student.isPresent }/>;
+                return <AttendanceStudent
+                    student={ student }
+                    onChange={ this.onChange }
+                    present={ student.isPresent }
+                />;
             } ) }
             
             <Form>

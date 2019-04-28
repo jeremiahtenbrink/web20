@@ -1,45 +1,43 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { FormGroup, Row, Col, Label, Input } from "reactstrap";
+import { Button, ButtonGroup } from "reactstrap";
 
-const AttendanceStudent = props => {
-    return ( <Row>
-        <Col md={ 4 }>
-            <div className={ "attendance-student-names" }>
-                <h5>{ props.firstName }</h5>
-                <h5>{ props.lastName }</h5>
-            </div>
-        </Col>
-        <Col md={ 2 } className={ "flex-start" }>
-            <FormGroup check>
-                <Label check/>
-                <Input checked={ props.present }
-                       type={ "checkbox" }
-                       onClick={ () => props.onChange( props.id ) }
-                />
-                Present
-            </FormGroup>
-        </Col>
-        <Col md={ 2 }>
-            <FormGroup check>
-                <Label check/>
-                <Input
-                    checked={ !props.present }
-                    type={ "checkbox" }
-                    onClick={ () => props.onChange( props.id ) }
-                />{ " " }
-                Not Present
-            </FormGroup>
-        </Col>
-    </Row> );
+const AttendanceStudent = ({ student, present, onChange }) => {
+  return (
+    <tr key={student.id}>
+      <td>
+        {student.firstName} {student.lastName}
+      </td>
+      <td>
+        <ButtonGroup>
+          <Button
+            color="primary"
+            onClick={() => onChange(student.id)}
+            outline
+            active={present}
+          >
+            Present
+          </Button>
+          <Button
+            color="warning"
+            onClick={() => onChange(student.id)}
+            outline
+            active={!present}
+          >
+            Absent
+          </Button>
+        </ButtonGroup>
+      </td>
+    </tr>
+  );
 };
 
 AttendanceStudent.propTypes = {
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    id: PropTypes.string,
-    onChange: PropTypes.func,
-    present: PropTypes.bool
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
+  id: PropTypes.string,
+  onChange: PropTypes.func,
+  present: PropTypes.bool
 };
 
 export default AttendanceStudent;

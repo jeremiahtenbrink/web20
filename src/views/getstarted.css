@@ -12,8 +12,3 @@
     background-size: cover;
     background-position-y: center;
 }
-
-form, .form {
-    margin: 0 auto;
-    max-width: 500px;
-}

@@ -2,10 +2,19 @@ import React from "react";
 import { connect } from "react-redux";
 import { getStudents } from "../actions";
 import Header from "../components/Header";
-import { Col, Container, Row, Spinner } from "reactstrap";
-import StudentInfo from "../components/students/StudentInfo";
+import {
+  Col,
+  Container,
+  Row,
+  Spinner,
+  Card,
+  Button,
+  CardTitle,
+  CardText
+} from "reactstrap";
 import Students from "../components/students/Students";
 import "./dashboard.scss";
+import { Link } from "react-router-dom";
 
 class Dashboard extends React.Component {
   state = {
@@ -46,6 +55,33 @@ class Dashboard extends React.Component {
               <Col className="cover cover-3 stay" md={6} />
               <Col md={6} className="text-center overflow-scroll">
                 <Header />
+                <Row className="mb-3">
+                  <Col>
+                    <Card
+                      body
+                      inverse
+                      style={{ backgroundColor: "#333", borderColor: "#333" }}
+                    >
+                      <CardTitle>Attendance Report</CardTitle>
+                      <CardText>
+                        Please make sure to take attendance every class day at
+                        the start of class, including Sprint Challenge days, and
+                        for PT "A" week Mondays.
+                      </CardText>
+                      <Link to="/attendance">
+                        <Button>Take Attendance</Button>
+                      </Link>
+                    </Card>
+                  </Col>
+                  <Col>
+                    <Card body inverse color="primary">
+                      <CardTitle>Daily Standup</CardTitle>
+                      <CardText>
+                        Coming Soon...
+                      </CardText>
+                    </Card>
+                  </Col>
+                </Row>
                 <Students students={this.props.students} />
               </Col>
             </Row>
