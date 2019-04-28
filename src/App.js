@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import { Route, Switch, NavLink } from "react-router-dom";
 
-import { checkAuth } from "./actions";
+import { checkAuth, getStudents, getUser } from "./actions";
 
 import firebase from "./firebase/firebase";
 
@@ -15,7 +15,11 @@ import Attendance from "./views/Attendance";
 
 class App extends React.Component{
     state = {
-        students: [], firstName: "", lastName: ""
+        students: [],
+        firstName: "",
+        lastName: "",
+        isGettingStudents: false,
+        attemptedLoad: false,
     };
     
     componentDidMount(){
@@ -25,6 +29,19 @@ class App extends React.Component{
     
     componentWillUnmount(){
         this.unregisterAuthObserver();
+    }
+    
+    componentWillUpdate( nextProps, nextState, nextContext ){
+        if( nextProps.uid && !nextState.isGettingStudents &&
+            !nextProps.students && !nextState.attemptedLoad ){
+            this.props.getStudents( nextProps.uid );
+            this.props.getUser( nextProps.uid );
+            this.setState( { isGettingStudents: true, attemptedLoad: true } );
+        }else if( nextProps.students && nextState.isGettingStudents ){
+            this.setState( {
+                isGettingStudents: false
+            } );
+        }
     }
     
     render(){
@@ -58,4 +75,7 @@ const mapStateToProps = ( { auth } ) => ( {
     uid: auth.uid
 } );
 
-export default connect( mapStateToProps, { checkAuth } )( App );
+export default connect( mapStateToProps,
+    { checkAuth, getStudents, getUser }
+)(
+    App );

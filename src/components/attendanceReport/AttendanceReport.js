@@ -2,31 +2,23 @@ import React, { Component } from "react";
 import AttendanceStudent from "./AttendanceStudent";
 import { Form, Input } from "reactstrap";
 import { connect } from "react-redux";
-import { getStudents, getUser } from "../../actions";
 
 class AttendanceReport extends Component{
     
     state = {
-        students: this.props.students,
-        isGettingStudents: false,
-        attemptedLoad: false,
-        notes: ""
+        students: this.props.students, loaded: false, notes: ""
     };
     
     componentWillUpdate( nextProps, nextState, nextContext ){
-        if( nextProps.uid && !nextState.isGettingStudents &&
-            !nextProps.students && !nextState.attemptedLoad ){
-            this.props.getStudents( nextProps.uid );
-            this.props.getUser( nextProps.uid );
-            this.setState( { isGettingStudents: true, attemptedLoad: true } );
-        }else if( nextProps.students && nextState.isGettingStudents ){
+        
+        if( nextProps.students && !nextState.loaded ){
             
             let keys = Object.keys( nextProps.students );
             for( let i = 0; i < keys.length; i++ ){
                 nextProps.students[ keys[ i ] ].isPresent = true;
             }
             this.setState( {
-                students: nextProps.students, isGettingStudents: false
+                students: nextProps.students, loaded: true,
             } );
         }
     }
@@ -121,4 +113,4 @@ const mpts = state => ( {
     user: state.auth.user,
 } );
 
-export default connect( mpts, { getStudents, getUser } )( AttendanceReport );
+export default connect( mpts, {} )( AttendanceReport );
