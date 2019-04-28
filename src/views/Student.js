@@ -9,7 +9,7 @@ class Student extends Component{
     };
     
     componentWillUpdate( nextProps, nextState, nextContext ){
-        debugger;
+        
         if( nextProps.students && !nextState.loaded && nextState.studentId ){
             const { firstName, lastName, github } = nextProps.students[ nextState.studentId ];
             this.setState( { firstName, lastName, github, loaded: true } );
@@ -25,7 +25,7 @@ class Student extends Component{
     };
     
     onSubmit = e => {
-        debugger;
+        
         e.preventDefault();
         let student = {};
         

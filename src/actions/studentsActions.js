@@ -71,7 +71,7 @@ export const EDIT_STUDENT_SUCCESS = "EDIT_STUDENT_SUCCESS";
 export const EDIT_STUDENT_FAILED = "EDIT_STUDENT_FAILED";
 
 export const editStudent = ( student, userId ) => dispatch => {
-    debugger;
+    
     dispatch( { type: EDIT_STUDENT_INIT } );
     store.collection( "users" ).
         doc( userId ).
