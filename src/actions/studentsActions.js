@@ -14,11 +14,17 @@ export const getStudents = id => dispatch => {
     .get()
     .then(students => {
       console.log(students)
-      students.forEach(student => )
-      console.log(allStudentsData);
+      let studentData = {}
+      students.forEach(student => {
+        studentData[student.id] = {
+          id: student.id,
+          ...student.data()
+        }
+      })
+      console.log(studentData);
       dispatch({
         type: FETCH_STUDENTS_SUCCESS,
-        payload: allStudentsData
+        payload: studentData
       });
     })
     .catch(err => {
