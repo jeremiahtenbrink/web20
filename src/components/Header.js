@@ -14,6 +14,7 @@ import {
 import Button from "reactstrap/es/Button";
 import { connect } from "react-redux";
 import { logout } from "../actions";
+import { Link } from "react-router-dom";
 
 class Header extends React.Component {
   state = {
@@ -27,7 +28,7 @@ class Header extends React.Component {
   render() {
     return (
       <div className="mt-3 mx-3">
-    {/* //     <Navbar color="light" light expand="md">
+        {/* //     <Navbar color="light" light expand="md">
     //       <Container>
     //         <NavbarBrand href="/">PM Dashboard</NavbarBrand>
     //         <NavbarToggler onClick={this.toggle} />
@@ -46,15 +47,19 @@ class Header extends React.Component {
     //     </Navbar> */}
         <Jumbotron>
           <h1 className="display-3">PM Dashboard</h1>
-          <p className="lead">
-            Welcome to the Lambda Retro Dashboard
-          </p>
+          <p className="lead">Welcome to the Lambda Retro Dashboard</p>
           <hr className="my-2" />
           <p>
-            Remember to always use the full name of students as they appear on Airtable.
+            Remember to always use the full name of students as they appear on
+            Airtable.
           </p>
           <p className="lead">
-            <Button color="danger" onClick={this.props.logout}>Logout</Button>
+            <Link to="/students"  className="mr-3">
+              <Button color="warning">Edit Students</Button>
+            </Link>
+            <Button color="danger" onClick={this.props.logout}>
+              Logout
+            </Button>
           </p>
         </Jumbotron>
       </div>

@@ -2,7 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 import { getStudents } from "../actions";
 import Header from "../components/Header";
-import { Col, Container, Row, Spinner } from "reactstrap";
+import {
+  Col,
+  Container,
+  Row,
+  Spinner,
+  Card,
+  Button,
+  CardTitle,
+  CardText
+} from "reactstrap";
 import StudentInfo from "../components/students/StudentInfo";
 import Students from "../components/students/Students";
 import "./dashboard.scss";
@@ -46,6 +55,30 @@ class Dashboard extends React.Component {
               <Col className="cover cover-3 stay" md={6} />
               <Col md={6} className="text-center overflow-scroll">
                 <Header />
+                <Row className="mb-3">
+                  <Col>
+                    <Card
+                      body
+                      inverse
+                      style={{ backgroundColor: "#333", borderColor: "#333" }}
+                    >
+                      <CardTitle>Special Title Treatment</CardTitle>
+                      <CardText>
+                        With supporting text below as a natural lead-in to
+                        additional content.
+                      </CardText>
+                    </Card>
+                  </Col>
+                  <Col>
+                    <Card body inverse color="primary">
+                      <CardTitle>Special Title Treatment</CardTitle>
+                      <CardText>
+                        With supporting text below as a natural lead-in to
+                        additional content.
+                      </CardText>
+                    </Card>
+                  </Col>
+                </Row>
                 <Students students={this.props.students} />
               </Col>
             </Row>
