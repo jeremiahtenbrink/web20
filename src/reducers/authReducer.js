@@ -2,12 +2,14 @@ import {
     SIGNIN_INIT, SIGNIN_SUCCESS, SIGNIN_FAILED, SIGNIN_NEW_USER,
     CREATE_USER_INIT, CREATE_USER_SUCCESS, CREATE_USER_FAILED, LOGOUT_INIT,
     LOGOUT_SUCCESSFUL, LOGOUT_FAILED, AUTH_INIT, AUTH_SUCCESS, AUTH_FAILED,
-    GET_USER_INIT, GET_USER_SUCCESS, GET_USER_FAILED
+    GET_USER_INIT, GET_USER_SUCCESS, GET_USER_FAILED, EDIT_USER_FAIL,
+    EDIT_USER_INIT, EDIT_USER_SUCCESS
 } from "../actions";
 
 const initialState = {
     isLoading: false,
     gettingUser: false,
+    editingUser: false,
     uid: null,
     user: null,
     newUser: false,
@@ -71,11 +73,18 @@ export const authReducer = ( state = initialState, action ) => {
             return { ...state, gettingUser: false, error: action.payload };
         case GET_USER_SUCCESS:
             return {
-                ...state,
-                gettingUser: false,
-                user: action.payload,
-                error: ""
+                ...state, gettingUser: false, user: action.payload, error: ""
             };
+        case EDIT_USER_INIT:
+            return { ...state, editingUser: true };
+        case EDIT_USER_SUCCESS:
+            return {
+                ...state,
+                editingUser: false,
+                user: { ...state.user, ...action.payload }
+            };
+        case EDIT_USER_FAIL:
+            return { ...state, editingUser: false, error: action.payload };
         default:
             return state;
     }

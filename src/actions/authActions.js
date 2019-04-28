@@ -85,13 +85,28 @@ export const GET_USER_SUCCESS = "GET_USER_SUCCESS";
 export const GET_USER_FAILED = "GET_USER_FAILED";
 
 export const getUser = id => dispatch => {
-    debugger;
+    
     dispatch( { type: GET_USER_INIT } );
     store.collection( `users` ).doc( id ).get().then( ( res ) => {
-        debugger;
+        
         let data = res.data();
         dispatch( { type: GET_USER_SUCCESS, payload: res.data() } );
     } ).catch( err => {
         dispatch( { type: GET_USER_FAILED, payload: err } );
+    } );
+};
+
+export const EDIT_USER_INIT = "EDIT_USER_INIT";
+export const EDIT_USER_SUCCESS = "EDIT_USER_SUCCESS";
+export const EDIT_USER_FAIL = "EDIT_USER_FAIL";
+
+export const editUser = user => dispatch => {
+    
+    dispatch( { type: EDIT_USER_INIT } );
+    store.collection( `users` ).doc( user.id ).update( user ).then( () => {
+        
+        dispatch( { type: EDIT_USER_SUCCESS, payload: user } );
+    } ).catch( err => {
+        dispatch( { type: EDIT_USER_FAIL, payload: err } );
     } );
 };
