@@ -12,9 +12,9 @@ import {
   CardTitle,
   CardText
 } from "reactstrap";
-import StudentInfo from "../components/students/StudentInfo";
 import Students from "../components/students/Students";
 import "./dashboard.scss";
+import { Link } from "react-router-dom";
 
 class Dashboard extends React.Component {
   state = {
@@ -62,19 +62,22 @@ class Dashboard extends React.Component {
                       inverse
                       style={{ backgroundColor: "#333", borderColor: "#333" }}
                     >
-                      <CardTitle>Special Title Treatment</CardTitle>
+                      <CardTitle>Attendance Report</CardTitle>
                       <CardText>
-                        With supporting text below as a natural lead-in to
-                        additional content.
+                        Please make sure to take attendance every class day at
+                        the start of class, including Sprint Challenge days, and
+                        for PT "A" week Mondays.
                       </CardText>
+                      <Link to="/attendance">
+                        <Button>Take Attendance</Button>
+                      </Link>
                     </Card>
                   </Col>
                   <Col>
                     <Card body inverse color="primary">
-                      <CardTitle>Special Title Treatment</CardTitle>
+                      <CardTitle>Daily Standup</CardTitle>
                       <CardText>
-                        With supporting text below as a natural lead-in to
-                        additional content.
+                        Coming Soon...
                       </CardText>
                     </Card>
                   </Col>

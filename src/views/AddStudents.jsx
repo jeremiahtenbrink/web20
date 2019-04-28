@@ -9,15 +9,15 @@ import { connect } from "react-redux";
 import Skeleton from "react-loading-skeleton";
 
 import "./getstarted.css";
-import Header from "../components/Header";
+import { Link } from "react-router-dom";
+
 
 class AddStudents extends React.Component {
   state = {
     addStudent: {
       firstName: "",
       lastName: "",
-      githubUsername: "",
-      notes: ""
+      github: '',
     }
   };
 
@@ -31,8 +31,7 @@ class AddStudents extends React.Component {
       addStudent: {
         firstName: "",
         lastName: "",
-        githubUsername: "",
-        notes: ""
+        github: '',
       }
     });
   };
@@ -47,29 +46,12 @@ class AddStudents extends React.Component {
   };
 
   render() {
-    // if (false) {
-    //   return (
-    //     <Container fluid>
-    //       <Row className="cover">
-    //         <Col xs="6" className="cover-img-2" />
-    //         <Col xs="6" className="text-center align-self-center">
-    //           <Spinner type="grow" color="primary" />
-    //           <h6>Loading...</h6>
-    //         </Col>
-    //       </Row>
-    //     </Container>
-    //   );
-    // }
-    // if(this.props.uid && !this.props.students && this.props.isLoading) {
-    //   //this.props.getStudents(this.props.uid)
-    //   console.log(this.props.uid)
-    // }
     return (
       <Container fluid>
         <Row className="cover">
           <Col xs="6" className="cover-img-2" />
           <Col xs="6" className="text-center overflow-scroll">
-            <Header />
+          <Link to="/"><Button color="secondary" className="mt-3">Back</Button></Link>
             <h2>Students</h2>
             <Table bordered className="form">
               <thead>
@@ -78,6 +60,7 @@ class AddStudents extends React.Component {
                   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Github</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -87,6 +70,9 @@ class AddStudents extends React.Component {
                       <th scope="row">
                         <Skeleton />
                       </th>
+                      <td>
+                        <Skeleton />
+                      </td>
                       <td>
                         <Skeleton />
                       </td>
@@ -107,6 +93,7 @@ class AddStudents extends React.Component {
                           <td>{student.firstName}</td>
                           <td>{student.lastName}</td>
                           <td>{student.github}</td>
+                          <td><Button color='danger' onClick={() => this.props.delStudent(student.id, this.props.uid)}>Delete</Button></td>
                         </tr>
                       )
                     )}
@@ -162,7 +149,7 @@ class AddStudents extends React.Component {
                   onChange={this.inputHandler}
                 />
                 <br />
-                <Button color="primary" type="submit">
+                <Button color="primary" className="mb-5" type="submit">
                   Add Student
                 </Button>
               </form>
@@ -183,5 +170,5 @@ const mapStateToProps = ({ students, auth }) => ({
 
 export default connect(
   mapStateToProps,
-  { addStudent, getStudents }
+  { addStudent, getStudents, delStudent }
 )(AddStudents);

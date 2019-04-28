@@ -6,7 +6,7 @@ import { Table } from "reactstrap";
 const Students = props => {
   return (
     <>
-      <h3>Our Students</h3>
+      <h3>My Students</h3>
       <Table bordered>
         <thead>
           <tr>
