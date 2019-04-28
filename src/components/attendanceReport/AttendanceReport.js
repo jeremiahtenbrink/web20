@@ -9,8 +9,20 @@ class AttendanceReport extends Component{
         students: this.props.students, loaded: false, notes: ""
     };
     
+    componentDidMount(){
+        if( this.props.students && !this.state.loaded ){
+            let keys = Object.keys( this.props.students );
+            for( let i = 0; i < keys.length; i++ ){
+                this.props.students[ keys[ i ] ].isPresent = true;
+            }
+            this.setState( {
+                students: this.props.students, loaded: true,
+            } );
+        }
+    }
+    
     componentWillUpdate( nextProps, nextState, nextContext ){
-        
+        debugger;
         if( nextProps.students && !nextState.loaded ){
             
             let keys = Object.keys( nextProps.students );
@@ -38,11 +50,12 @@ class AttendanceReport extends Component{
     };
     
     getAttendanceLink = () => {
+        debugger;
         if( this.props.user ){
-            let url = `https://airtable.com/shrEawWXvMldYbm5Q?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })&prefill_Section=WEB20&prefill_Present+Students=`;
+            let url = `https://airtable.com/shrEawWXvMldYbm5Q?prefill_Project+Manager=${ this.props.user.firstName.trim() }+${ this.props.user.lastName.trim() }+(${ this.props.user.cohort })&prefill_Section=WEB20&prefill_Present+Students=`;
             if( this.state.students ){
                 let keys = Object.keys( this.state.students );
-                let notPresentString = "&prefill_Absent+Students";
+                let notPresentString = "&prefill_Absent+Students=";
                 if( keys.length > 0 ){
                     let afterFirstIsPresent = false;
                     let afterFirstNotPresent = false;
@@ -51,7 +64,7 @@ class AttendanceReport extends Component{
                             if( afterFirstIsPresent ){
                                 url += ",";
                             }
-                            url += `${ this.state.students[ keys[ i ] ].firstName }+${ this.state.students[ keys[ i ] ].lastName }`;
+                            url += `${ this.state.students[ keys[ i ] ].firstName.trim() }+${ this.state.students[ keys[ i ] ].lastName.trim() }`;
                             if( !afterFirstIsPresent ){
                                 afterFirstIsPresent = true;
                             }
@@ -59,14 +72,14 @@ class AttendanceReport extends Component{
                             if( afterFirstNotPresent ){
                                 notPresentString += ",";
                             }
-                            notPresentString += `${ this.state.students[ keys[ i ] ].firstName }+${ this.state.students[ keys[ i ] ].lastName }`;
+                            notPresentString += `${ this.state.students[ keys[ i ] ].firstName.trim() }+${ this.state.students[ keys[ i ] ].lastName.trim() }`;
                             if( !afterFirstNotPresent ){
                                 afterFirstNotPresent = true;
                             }
                         }
                     }
                     
-                    if( notPresentString !== "&prefill_Absent+Students" ){
+                    if( notPresentString !== "&prefill_Absent+Students=" ){
                         url += notPresentString;
                     }
                 }

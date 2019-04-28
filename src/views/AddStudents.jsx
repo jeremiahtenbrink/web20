@@ -33,7 +33,8 @@ class AddStudents extends React.Component{
     inputHandler = e => {
         this.setState( {
             addStudent: {
-                ...this.state.addStudent, [ e.target.name ]: e.target.value
+                ...this.state.addStudent,
+                [ e.target.name ]: e.target.value
             }
         } );
     };
