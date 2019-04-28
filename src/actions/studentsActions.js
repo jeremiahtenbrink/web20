@@ -13,7 +13,6 @@ export const getStudents = id => dispatch => {
       .collection("students")
       .get()
       .then(students => {
-        console.log(students);
         let studentData = [];
         students.forEach(student => {
           studentData[student.id] = {
@@ -21,7 +20,6 @@ export const getStudents = id => dispatch => {
             ...student.data()
           };
         });
-        console.log(studentData);
         dispatch({
           type: FETCH_STUDENTS_SUCCESS,
           payload: studentData
@@ -49,7 +47,6 @@ export const addStudent = ({ student, id }) => dispatch => {
       ...student
     })
     .then(res => {
-      console.log(res);
       dispatch({
         type: ADD_STUDENT_SUCCESS,
         payload: { id: res.id, ...student }
@@ -70,7 +67,6 @@ export const delStudent = (studentId, userId) => dispatch => {
     .doc(studentId)
     .delete()
     .then(res => {
-      console.log(res);
       dispatch({
         type: DEL_STUDENT_SUCCESS,
         payload: studentId

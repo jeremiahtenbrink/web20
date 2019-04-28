@@ -16,18 +16,19 @@ const Students = props => {
             <th>Github</th>
           </tr>
         </thead>
-
-        {props.students &&
-          Object.values(props.students).map((student, index) => {
-            return (
-              <Student
-                key={student.id}
-                student={student}
-                index={index}
-                removeStudent={props.removeStudent}
-              />
-            );
-          })}
+        <tbody>
+          {props.students &&
+            Object.values(props.students).map((student, index) => {
+              return (
+                <Student
+                  key={student.id}
+                  student={student}
+                  index={index}
+                  removeStudent={props.removeStudent}
+                />
+              );
+            })}
+        </tbody>
       </Table>
     </>
   );
