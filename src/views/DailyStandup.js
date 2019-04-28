@@ -44,7 +44,6 @@ class DailyStandup extends Component {
   }
 
   componentWillUpdate(nextProps, nextState, nextContext) {
-    debugger;
     if (nextProps.students && !nextState.loaded) {
       let keys = Object.keys(nextProps.students);
       for (let i = 0; i < keys.length; i++) {

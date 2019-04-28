@@ -14,74 +14,76 @@ import Dashboard from "./views/Dashboard";
 import Attendance from "./views/Attendance";
 import DailyStandup from "./views/DailyStandup";
 
-class App extends React.Component{
-    state = {
-        students: [],
-        firstName: "",
-        lastName: "",
-        isGettingStudents: false,
-        attemptedLoad: false,
-    };
-    
-    componentDidMount(){
-        this.unregisterAuthObserver = firebase.auth().
-            onAuthStateChanged( () => this.props.checkAuth() );
+class App extends React.Component {
+  state = {
+    students: [],
+    firstName: "",
+    lastName: "",
+    isGettingStudents: false,
+    attemptedLoad: false
+  };
+
+  componentDidMount() {
+    this.unregisterAuthObserver = firebase
+      .auth()
+      .onAuthStateChanged(() => this.props.checkAuth());
+  }
+
+  componentWillUnmount() {
+    this.unregisterAuthObserver();
+  }
+
+  componentWillUpdate(nextProps, nextState, nextContext) {
+    if (
+      nextProps.uid &&
+      !nextState.isGettingStudents &&
+      !nextProps.students &&
+      !nextState.attemptedLoad
+    ) {
+      this.props.getStudents(nextProps.uid);
+      this.props.getUser(nextProps.uid);
+      this.setState({ isGettingStudents: true, attemptedLoad: true });
+    } else if (nextProps.students && nextState.isGettingStudents) {
+      this.setState({
+        isGettingStudents: false
+      });
     }
-    
-    componentWillUnmount(){
-        this.unregisterAuthObserver();
-    }
-    
-    componentWillUpdate( nextProps, nextState, nextContext ){
-        if( nextProps.uid && !nextState.isGettingStudents &&
-            !nextProps.students && !nextState.attemptedLoad ){
-            this.props.getStudents( nextProps.uid );
-            this.props.getUser( nextProps.uid );
-            this.setState( { isGettingStudents: true, attemptedLoad: true } );
-        }else if( nextProps.students && nextState.isGettingStudents ){
-            this.setState( {
-                isGettingStudents: false
-            } );
-        }
-    }
-    
-    render(){
-        return ( <Switch>
-            <Route
-                exact
-                path="/start"
-                render={ props => <GetStarted { ...props } /> }
-            />
-            <Route
-                exact
-                path="/students"
-                render={ props => <AddStudents { ...props } /> }
-            />
-            <Route
-                exact
-                path="/attendance"
-                render={ props => <Attendance { ...props } /> }
-            />
-            <Route
-                exact
-                path="/standup"
-                render={ props => <DailyStandup { ...props } /> }
-            />
-            <Route
-                exact
-                path="/"
-                render={ props => <Dashboard { ...props } /> }
-            />
-        
-        </Switch> );
-    }
+  }
+
+  render() {
+    return (
+      <Switch>
+        <Route
+          exact
+          path="/start"
+          render={props => <GetStarted {...props} />}
+        />
+        <Route
+          exact
+          path="/students"
+          render={props => <AddStudents {...props} />}
+        />
+        <Route
+          exact
+          path="/attendance"
+          render={props => <Attendance {...props} />}
+        />
+        <Route
+          exact
+          path="/standup"
+          render={props => <DailyStandup {...props} />}
+        />
+        <Route exact path="/" render={props => <Dashboard {...props} />} />
+      </Switch>
+    );
+  }
 }
 
-const mapStateToProps = ( { auth } ) => ( {
-    uid: auth.uid
-} );
+const mapStateToProps = ({ auth }) => ({
+  uid: auth.uid
+});
 
-export default connect( mapStateToProps,
-    { checkAuth, getStudents, getUser }
-)(
-    App );
+export default connect(
+  mapStateToProps,
+  { checkAuth, getStudents, getUser }
+)(App);

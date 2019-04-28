@@ -2,6 +2,10 @@ import React from "react";
 
 import { Container, Row, Col, Input, Button, Spinner } from "reactstrap";
 
+import { FaGoogle, FaGithub } from 'react-icons/fa';
+
+import { GOOGLE_PROVIDER, GITHUB_PROVIDER} from '../actions'
+
 
 import { signIn, createUser } from "../actions";
 
@@ -95,7 +99,8 @@ class GetStart extends React.Component {
               <>
                 <h1>Welcome PM</h1>
                 <h6>Login or Signup</h6>
-                <Button onClick={this.props.signIn}>Google</Button>
+                <Button onClick={() => this.props.signIn(GOOGLE_PROVIDER)} color="primary" className="mr-3" size="lg"><FaGoogle /> Google</Button>
+                <Button onClick={() => this.props.signIn(GITHUB_PROVIDER)} size="lg"><FaGithub /> Github</Button>
               </>
             )}
           </Col>

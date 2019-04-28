@@ -14,7 +14,6 @@ import {
 
 import { Link } from "react-router-dom";
 
-
 class AttendanceReport extends Component {
   state = {
     students: this.props.students,
@@ -121,7 +120,9 @@ class AttendanceReport extends Component {
       <Container fluid>
         <Row>
           <Col md={6} className="text-center overflow-scroll">
-            <Link to="/" ><Button className="my-3">Back</Button></Link>
+            <Link to="/">
+              <Button className="my-3">Back</Button>
+            </Link>
             <Table bordered>
               <thead>
                 <tr>
@@ -129,16 +130,18 @@ class AttendanceReport extends Component {
                   <th>Attendance</th>
                 </tr>
               </thead>
-              {this.state.students &&
-                Object.values(this.state.students).map(student => {
-                  return (
-                    <AttendanceStudent
-                      student={student}
-                      onChange={this.onChange}
-                      present={student.isPresent}
-                    />
-                  );
-                })}
+              <tbody>
+                {this.state.students &&
+                  Object.values(this.state.students).map(student => {
+                    return (
+                      <AttendanceStudent
+                        student={student}
+                        onChange={this.onChange}
+                        present={student.isPresent}
+                      />
+                    );
+                  })}
+              </tbody>
             </Table>
             <Form>
               <Input
