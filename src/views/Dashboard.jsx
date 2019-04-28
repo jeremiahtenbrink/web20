@@ -9,13 +9,19 @@ import "./dashboard.scss";
 
 class Dashboard extends React.Component {
   state = {
-    isGettingStudents: false
+    isGettingStudents: false,
+    attemptedLoad: false
   };
 
   componentWillUpdate(nextProps, nextState, nextContext) {
-    if (nextProps.uid && !nextState.isGettingStudents && !nextProps.students) {
+    if (
+      nextProps.uid &&
+      !nextState.isGettingStudents &&
+      !nextProps.students &&
+      !nextState.attemptedLoad
+    ) {
       this.props.getStudents(nextProps.uid);
-      this.setState({ isGettingStudents: true });
+      this.setState({ isGettingStudents: true, attemptedLoad: true });
     } else if (nextProps.students && nextState.isGettingStudents) {
       this.setState({ isGettingStudents: false });
     }

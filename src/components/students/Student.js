@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Col } from "reactstrap";
 import "./student.scss";
+import { delStudent } from "../../actions";
+import { connect } from "react-redux";
 
 const Student = ({student, index}) => {
   return (

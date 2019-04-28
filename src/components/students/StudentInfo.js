@@ -4,7 +4,7 @@ import Input from "reactstrap/es/Input";
 
 class StudentInfo extends React.Component {
   constructor(props) {
-    debugger;
+    
     super(props);
     let students = props.students;
     if (props.students.length === 0) {
