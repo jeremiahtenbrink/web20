@@ -1,73 +1,69 @@
 import React, { Component } from "react";
 import AttendanceStudent from "./AttendanceStudent";
 import { Form, Input } from "reactstrap";
+import { connect } from "react-redux";
+import { getStudents } from "../../actions";
 
 class AttendanceReport extends Component{
     
     state = {
-        present: [], notHere: [], notes: "",
+        students: this.props.students, isGettingStudents: false
     };
     
-    componentDidMount(){
-        this.setState( {
-            present: JSON.parse( localStorage.getItem( "web20_students" ) )
-        } );
+    componentWillUpdate( nextProps, nextState, nextContext ){
+        if( nextProps.uid && !nextState.isGettingStudents &&
+            !nextProps.students && !nextState.attemptedLoad ){
+            this.props.getStudents( nextProps.uid );
+            this.setState( { isGettingStudents: true, attemptedLoad: true } );
+        }else if( nextProps.students && nextState.isGettingStudents ){
+            
+            let keys = Object.keys( nextProps.students );
+            for( let i = 0; i < keys.length; i++ ){
+                nextProps.students[ keys[ i ] ].isPresent = true;
+            }
+            this.setState( {
+                students: nextProps.students, isGettingStudents: false
+            } );
+        }
     }
     
     notesChange = e => {
         this.setState( { notes: e.target.value.trim() } );
     };
     
-    onChangePresent = id => {
+    onChange = id => {
         this.setState( state => {
-            let studentToChange = {};
-            const notHere = state.notHere.filter( student => {
-                if( student.id === id ){
-                    studentToChange = { ...student };
-                    return false;
-                }
-                return true;
-            } );
-            const present = [ ...state.present, studentToChange ];
-            return { present, notHere };
             
-        } );
-    };
-    
-    onChangeNotPresent = id => {
-        this.setState( state => {
-            let studentToChange = {};
-            const present = state.present.filter( student => {
-                if( student.id === id ){
-                    studentToChange = student;
-                    return false;
-                }
-                return true;
-            } );
-            const notHere = [ ...state.notHere, studentToChange ];
-            return {
-                present, notHere
-            };
+            let student = { ...state.students[ id ] };
+            student.isPresent = !state.students[ id ].isPresent;
+            state.students[ id ] = student;
+            return { students: { ...state.students } };
         } );
     };
     
     getAttendanceLink = () => {
         
         let url = "https://airtable.com/shrEawWXvMldYbm5Q?prefill_Project+Manager=Jeremiah%20Tenbrink%20(WEB20)&prefill_Section=WEB20&prefill_Present+Students=";
-        for( let i = 0; i < this.state.present.length; i++ ){
-            if( i > 0 ){
-                url += ",";
-            }
-            url += `${ this.state.present[ i ].firstName }%20${ this.state.present[ i ].lastName }`;
-        }
-        
-        if( this.state.notHere.length > 0 ){
-            url += "&prefill_Absent+Students=";
-            for( let j = 0; j < this.state.notHere.length; j++ ){
-                if( j > 0 ){
+        if( this.state.present ){
+            let keys = Object.keys( this.state.present );
+            for( let i = 0; i < keys.length; i++ ){
+                if( i > 0 ){
                     url += ",";
                 }
-                url += `${ this.state.notHere[ j ].firstName }%20${ this.state.notHere[ j ].lastName }`;
+                url += `${ this.state.present[ keys[ i ] ].firstName }%20${ this.state.present[ keys[ i ] ].lastName }`;
+            }
+        }
+        
+        if( typeof ( this.state.notHere ) === "object" ){
+            let notHereKeys = Object.keys( this.state.notHere );
+            if( notHereKeys.length > 0 ){
+                url += "&prefill_Absent+Students=";
+                for( let j = 0; j < this.state.notHere.keys().length; j++ ){
+                    if( j > 0 ){
+                        url += ",";
+                    }
+                    url += `${ this.state.notHere[ notHereKeys[ j ] ].firstName }%20${ this.state.notHere[ notHereKeys[ j ] ].lastName }`;
+                }
             }
         }
         
@@ -81,20 +77,17 @@ class AttendanceReport extends Component{
     };
     
     render(){
+        
+        console.log( this.state.notHere );
         return ( <div className={ "attendance-report" }>
-            { this.state.notHere.map( student => {
-                return <AttendanceStudent lastName={ student.lastName }
-                                          firstName={ student.firstName }
-                                          onChange={ this.onChangePresent }
-                                          id={ student.id }
-                                          present={ false }/>;
-            } ) }
-            { this.state.present.map( student => {
+            
+            { this.state.students &&
+            Object.values( this.state.students ).map( student => {
                 return <AttendanceStudent lastName={ student.lastName }
                                           firstName={ student.firstName }
                                           id={ student.id }
-                                          onChange={ this.onChangeNotPresent }
-                                          present={ true }/>;
+                                          onChange={ this.onChange }
+                                          present={ student.isPresent }/>;
             } ) }
             
             <Form>
@@ -108,4 +101,8 @@ class AttendanceReport extends Component{
     }
 }
 
-export default AttendanceReport;
+const mpts = state => ( {
+    students: state.students.students, uid: state.auth.user
+} );
+
+export default connect( mpts, { getStudents } )( AttendanceReport );

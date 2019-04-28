@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import GetStarted from "./views/GetStarted";
 import AddStudents from "./views/AddStudents";
 import Dashboard from "./views/Dashboard";
+import Attendance from "./views/Attendance";
 
 class App extends React.Component{
     state = {
@@ -40,9 +41,15 @@ class App extends React.Component{
             />
             <Route
                 exact
+                path="/attendance"
+                render={ props => <Attendance { ...props } /> }
+            />
+            <Route
+                exact
                 path="/"
                 render={ props => <Dashboard { ...props } /> }
             />
+        
         </Switch> );
     }
 }
