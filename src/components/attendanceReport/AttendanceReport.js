@@ -2,18 +2,22 @@ import React, { Component } from "react";
 import AttendanceStudent from "./AttendanceStudent";
 import { Form, Input } from "reactstrap";
 import { connect } from "react-redux";
-import { getStudents } from "../../actions";
+import { getStudents, getUser } from "../../actions";
 
 class AttendanceReport extends Component{
     
     state = {
-        students: this.props.students, isGettingStudents: false
+        students: this.props.students,
+        isGettingStudents: false,
+        attemptedLoad: false,
+        notes: ""
     };
     
     componentWillUpdate( nextProps, nextState, nextContext ){
         if( nextProps.uid && !nextState.isGettingStudents &&
             !nextProps.students && !nextState.attemptedLoad ){
             this.props.getStudents( nextProps.uid );
+            this.props.getUser( nextProps.uid );
             this.setState( { isGettingStudents: true, attemptedLoad: true } );
         }else if( nextProps.students && nextState.isGettingStudents ){
             
@@ -28,7 +32,7 @@ class AttendanceReport extends Component{
     }
     
     notesChange = e => {
-        this.setState( { notes: e.target.value.trim() } );
+        this.setState( { notes: e.target.value } );
     };
     
     onChange = id => {
@@ -42,37 +46,47 @@ class AttendanceReport extends Component{
     };
     
     getAttendanceLink = () => {
-        
-        let url = "https://airtable.com/shrEawWXvMldYbm5Q?prefill_Project+Manager=Jeremiah%20Tenbrink%20(WEB20)&prefill_Section=WEB20&prefill_Present+Students=";
-        if( this.state.present ){
-            let keys = Object.keys( this.state.present );
-            for( let i = 0; i < keys.length; i++ ){
-                if( i > 0 ){
-                    url += ",";
-                }
-                url += `${ this.state.present[ keys[ i ] ].firstName }%20${ this.state.present[ keys[ i ] ].lastName }`;
-            }
-        }
-        
-        if( typeof ( this.state.notHere ) === "object" ){
-            let notHereKeys = Object.keys( this.state.notHere );
-            if( notHereKeys.length > 0 ){
-                url += "&prefill_Absent+Students=";
-                for( let j = 0; j < this.state.notHere.keys().length; j++ ){
-                    if( j > 0 ){
-                        url += ",";
+        if( this.props.user ){
+            let url = `https://airtable.com/shrEawWXvMldYbm5Q?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })&prefill_Section=WEB20&prefill_Present+Students=`;
+            if( this.state.students ){
+                let keys = Object.keys( this.state.students );
+                let notPresentString = "&prefill_Absent+Students";
+                if( keys.length > 0 ){
+                    let afterFirstIsPresent = false;
+                    let afterFirstNotPresent = false;
+                    for( let i = 0; i < keys.length; i++ ){
+                        if( this.state.students[ keys[ i ] ].isPresent ){
+                            if( afterFirstIsPresent ){
+                                url += ",";
+                            }
+                            url += `${ this.state.students[ keys[ i ] ].firstName }+${ this.state.students[ keys[ i ] ].lastName }`;
+                            if( !afterFirstIsPresent ){
+                                afterFirstIsPresent = true;
+                            }
+                        }else{
+                            if( afterFirstNotPresent ){
+                                notPresentString += ",";
+                            }
+                            notPresentString += `${ this.state.students[ keys[ i ] ].firstName }+${ this.state.students[ keys[ i ] ].lastName }`;
+                            if( !afterFirstNotPresent ){
+                                afterFirstNotPresent = true;
+                            }
+                        }
                     }
-                    url += `${ this.state.notHere[ notHereKeys[ j ] ].firstName }%20${ this.state.notHere[ notHereKeys[ j ] ].lastName }`;
+                    
+                    if( notPresentString !== "&prefill_Absent+Students" ){
+                        url += notPresentString;
+                    }
                 }
             }
+            
+            if( this.state.notes !== "" ){
+                let notes = encodeURI( this.state.notes );
+                url += `&prefill_Notes=${ notes }`;
+            }
+            
+            return url;
         }
-        
-        if( this.state.notes !== "" ){
-            let notes = encodeURI( this.state.notes );
-            url += `&prefill_Notes=${ notes }`;
-        }
-        
-        return url;
         
     };
     
@@ -102,7 +116,9 @@ class AttendanceReport extends Component{
 }
 
 const mpts = state => ( {
-    students: state.students.students, uid: state.auth.user
+    students: state.students.students,
+    uid: state.auth.uid,
+    user: state.auth.user,
 } );
 
-export default connect( mpts, { getStudents } )( AttendanceReport );
+export default connect( mpts, { getStudents, getUser } )( AttendanceReport );

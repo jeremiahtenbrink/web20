@@ -183,7 +183,7 @@ class AddStudents extends React.Component {
 
 const mapStateToProps = ({ students, auth }) => ({
   isLoading: students.isLoading,
-  uid: auth.user,
+  uid: auth.uid,
   students: students.students,
   isAdding: students.isAdding
 });
