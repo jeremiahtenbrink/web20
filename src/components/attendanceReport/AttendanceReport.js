@@ -138,6 +138,7 @@ class AttendanceReport extends Component {
                         student={student}
                         onChange={this.onChange}
                         present={student.isPresent}
+                        key={student.id}
                       />
                     );
                   })}

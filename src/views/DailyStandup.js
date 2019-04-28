@@ -165,16 +165,19 @@ class DailyStandup extends Component {
                   <th>Attendance</th>
                 </tr>
               </thead>
-              {this.state.students &&
-                Object.values(this.state.students).map(student => {
-                  return (
-                    <AttendanceStudent
-                      student={student}
-                      onChange={this.changePresent}
-                      present={student.isPresent}
-                    />
-                  );
-                })}
+              <tbody>
+                {this.state.students &&
+                  Object.values(this.state.students).map(student => {
+                    return (
+                      <AttendanceStudent
+                        student={student}
+                        onChange={this.changePresent}
+                        present={student.isPresent}
+                        key={student.id}
+                      />
+                    );
+                  })}
+              </tbody>
             </Table>
             <Form>
               <Input
