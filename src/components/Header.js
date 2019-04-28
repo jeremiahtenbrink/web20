@@ -52,6 +52,8 @@ class Header extends React.Component{
                             onClick={ this.props.logout }>Logout</Button>
                     <Link
                         to={ "/attendance" }><Button>Attendance</Button></Link>
+                    <Link
+                        to={ "/standup" }><Button>Daily Standup</Button></Link>
                 </p>
             </Jumbotron>
         </div> );

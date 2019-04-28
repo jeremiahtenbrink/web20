@@ -12,6 +12,7 @@ import GetStarted from "./views/GetStarted";
 import AddStudents from "./views/AddStudents";
 import Dashboard from "./views/Dashboard";
 import Attendance from "./views/Attendance";
+import DailyStandup from "./views/DailyStandup";
 
 class App extends React.Component{
     state = {
@@ -60,6 +61,11 @@ class App extends React.Component{
                 exact
                 path="/attendance"
                 render={ props => <Attendance { ...props } /> }
+            />
+            <Route
+                exact
+                path="/standup"
+                render={ props => <DailyStandup { ...props } /> }
             />
             <Route
                 exact
