@@ -143,3 +143,21 @@ export const getUser = id => dispatch => {
       dispatch({ type: GET_USER_FAILED, payload: err });
     });
 };
+
+export const EDIT_USER_INIT = "EDIT_USER_INIT";
+export const EDIT_USER_SUCCESS = "EDIT_USER_SUCCESS";
+export const EDIT_USER_FAIL = "EDIT_USER_FAIL";
+
+export const editUser = user => dispatch => {
+  dispatch({ type: EDIT_USER_INIT });
+  store
+    .collection(`users`)
+    .doc(user.id)
+    .update(user)
+    .then(() => {
+      dispatch({ type: EDIT_USER_SUCCESS, payload: user });
+    })
+    .catch(err => {
+      dispatch({ type: EDIT_USER_FAIL, payload: err });
+    });
+};

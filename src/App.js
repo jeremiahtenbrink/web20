@@ -13,6 +13,7 @@ import AddStudents from "./views/AddStudents";
 import Dashboard from "./views/Dashboard";
 import Attendance from "./views/Attendance";
 import DailyStandup from "./views/DailyStandup";
+import EditUser from "./views/EditUser";
 
 class App extends React.Component {
   state = {
@@ -73,6 +74,7 @@ class App extends React.Component {
           path="/standup"
           render={props => <DailyStandup {...props} />}
         />
+        <Route exact path="/user" render={props => <EditUser {...props} />} />
         <Route exact path="/" render={props => <Dashboard {...props} />} />
       </Switch>
     );
