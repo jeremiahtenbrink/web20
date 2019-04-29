@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import AttendanceStudent from "./AttendanceStudent";
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import AttendanceStudent from './AttendanceStudent';
+import {connect} from 'react-redux';
 import {
   Container,
   Row,
@@ -9,16 +9,16 @@ import {
   Input,
   Button,
   Table,
-  Spinner
-} from "reactstrap";
+  Spinner,
+} from 'reactstrap';
 
-import { Link } from "react-router-dom";
+import {Link} from 'react-router-dom';
 
 class AttendanceReport extends Component {
   state = {
     students: this.props.students,
     loaded: false,
-    notes: ""
+    notes: '',
   };
 
   componentDidMount() {
@@ -29,13 +29,12 @@ class AttendanceReport extends Component {
       }
       this.setState({
         students: this.props.students,
-        loaded: true
+        loaded: true,
       });
     }
   }
 
   componentWillUpdate(nextProps, nextState, nextContext) {
-    
     if (nextProps.students && !nextState.loaded) {
       let keys = Object.keys(nextProps.students);
       for (let i = 0; i < keys.length; i++) {
@@ -43,21 +42,21 @@ class AttendanceReport extends Component {
       }
       this.setState({
         students: nextProps.students,
-        loaded: true
+        loaded: true,
       });
     }
   }
 
   notesChange = e => {
-    this.setState({ notes: e.target.value });
+    this.setState({notes: e.target.value});
   };
 
   onChange = id => {
     this.setState(state => {
-      let student = { ...state.students[id] };
+      let student = {...state.students[id]};
       student.isPresent = !state.students[id].isPresent;
       state.students[id] = student;
-      return { students: { ...state.students } };
+      return {students: {...state.students}};
     });
   };
 
@@ -68,14 +67,14 @@ class AttendanceReport extends Component {
       })&prefill_Section=WEB20&prefill_Present+Students=`;
       if (this.state.students) {
         let keys = Object.keys(this.state.students);
-        let notPresentString = "&prefill_Absent+Students=";
+        let notPresentString = '&prefill_Absent+Students=';
         if (keys.length > 0) {
           let afterFirstIsPresent = false;
           let afterFirstNotPresent = false;
           for (let i = 0; i < keys.length; i++) {
             if (this.state.students[keys[i]].isPresent) {
               if (afterFirstIsPresent) {
-                url += ",";
+                url += ',';
               }
               url += `${this.state.students[
                 keys[i]
@@ -87,7 +86,7 @@ class AttendanceReport extends Component {
               }
             } else {
               if (afterFirstNotPresent) {
-                notPresentString += ",";
+                notPresentString += ',';
               }
               notPresentString += `${this.state.students[
                 keys[i]
@@ -100,13 +99,13 @@ class AttendanceReport extends Component {
             }
           }
 
-          if (notPresentString !== "&prefill_Absent+Students=") {
+          if (notPresentString !== '&prefill_Absent+Students=') {
             url += notPresentString;
           }
         }
       }
 
-      if (this.state.notes !== "") {
+      if (this.state.notes !== '') {
         let notes = encodeURI(this.state.notes);
         url += `&prefill_Notes=${notes}`;
       }
@@ -119,6 +118,7 @@ class AttendanceReport extends Component {
     return (
       <Container fluid>
         <Row>
+          <Col className="cover cover-3 stay" md={6} />
           <Col md={6} className="text-center overflow-scroll">
             <Link to="/">
               <Button className="my-3">Back</Button>
@@ -155,12 +155,10 @@ class AttendanceReport extends Component {
             <a
               className="btn btn-success mt-3"
               target="_blank"
-              href={this.getAttendanceLink()}
-            >
+              href={this.getAttendanceLink()}>
               Submit Attendance
             </a>
           </Col>
-          <Col className="cover cover-3 stay" md={6} />
         </Row>
       </Container>
     );
@@ -170,10 +168,10 @@ class AttendanceReport extends Component {
 const mpts = state => ({
   students: state.students.students,
   uid: state.auth.uid,
-  user: state.auth.user
+  user: state.auth.user,
 });
 
 export default connect(
   mpts,
-  {}
+  {},
 )(AttendanceReport);

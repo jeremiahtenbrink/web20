@@ -1,14 +1,24 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Form, FormGroup, Label, Input, Button } from "reactstrap";
-import { editUser } from "../actions";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  Row,
+  Col,
+  Container,
+} from 'reactstrap';
+import {editUser} from '../actions';
+import {Link} from 'react-router-dom';
 
 class EditUser extends Component {
   state = {
-    firstName: "",
-    lastName: "",
-    cohort: "",
-    loaded: false
+    firstName: '',
+    lastName: '',
+    cohort: '',
+    loaded: false,
   };
 
   componentWillUpdate(nextProps, nextState, nextContext) {
@@ -17,13 +27,13 @@ class EditUser extends Component {
         firstName: nextProps.user.firstName,
         lastName: nextProps.user.lastName,
         cohort: nextProps.user.cohort,
-        loaded: true
+        loaded: true,
       });
     }
   }
 
   onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({[e.target.name]: e.target.value});
   };
 
   submitForm = e => {
@@ -46,54 +56,64 @@ class EditUser extends Component {
 
   render() {
     return (
-      <div>
-        <Form onSubmit={this.submitForm}>
-          <FormGroup>
-            <Label for={"firstName"}>First Name</Label>
-            <Input
-              id={"firstName"}
-              name={"firstName"}
-              value={this.state.firstName}
-              type={"text"}
-              placeHolder={"..."}
-              onChange={this.onChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for={"lastName"}>Last Name</Label>
-            <Input
-              id={"lastName"}
-              name={"lastName"}
-              value={this.state.lastName}
-              type={"text"}
-              placeHolder={"..."}
-              onChange={this.onChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for={"cohort"}>Cohort</Label>
-            <Input
-              id={"cohort"}
-              name={"cohort"}
-              value={this.state.cohort}
-              type={"text"}
-              placeHolder={"..."}
-              onChange={this.onChange}
-            />
-          </FormGroup>
-          <Button type={"submit"}>Submit</Button>
-        </Form>
-      </div>
+      <Container fluid>
+        <Row>
+          <Col className="cover cover-3 stay" md={6} />
+          <Col md={6} className="text-center align-self-center">
+            <Link to="/">
+              <Button className="my-3">Back</Button>
+            </Link>
+            <Form onSubmit={this.submitForm}>
+              <FormGroup>
+                <Label for={'firstName'}>First Name</Label>
+                <Input
+                  id={'firstName'}
+                  name={'firstName'}
+                  value={this.state.firstName}
+                  type={'text'}
+                  placeHolder={'...'}
+                  onChange={this.onChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for={'lastName'}>Last Name</Label>
+                <Input
+                  id={'lastName'}
+                  name={'lastName'}
+                  value={this.state.lastName}
+                  type={'text'}
+                  placeHolder={'...'}
+                  onChange={this.onChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for={'cohort'}>Cohort</Label>
+                <Input
+                  id={'cohort'}
+                  name={'cohort'}
+                  value={this.state.cohort}
+                  type={'text'}
+                  placeHolder={'...'}
+                  onChange={this.onChange}
+                />
+              </FormGroup>
+              <Button type={'submit'} color="primary" outline>
+                Submit
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
 
 const mpts = state => ({
   user: state.auth.user,
-  uid: state.auth.uid
+  uid: state.auth.uid,
 });
 
 export default connect(
   mpts,
-  { editUser }
+  {editUser},
 )(EditUser);

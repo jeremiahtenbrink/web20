@@ -1,7 +1,7 @@
-import React from "react";
-import { connect } from "react-redux";
-import { getStudents } from "../actions";
-import Header from "../components/Header";
+import React from 'react';
+import {connect} from 'react-redux';
+import {getStudents} from '../actions';
+import Header from '../components/Header';
 import {
   Col,
   Container,
@@ -10,15 +10,15 @@ import {
   Card,
   Button,
   CardTitle,
-  CardText
-} from "reactstrap";
-import Students from "../components/students/Students";
-import { Link } from "react-router-dom";
+  CardText,
+} from 'reactstrap';
+import Students from '../components/students/Students';
+import {Link} from 'react-router-dom';
 
 class Dashboard extends React.Component {
   state = {
     isGettingStudents: false,
-    attemptedLoad: false
+    attemptedLoad: false,
   };
 
   componentWillUpdate(nextProps, nextState, nextContext) {
@@ -29,23 +29,23 @@ class Dashboard extends React.Component {
       !nextState.attemptedLoad
     ) {
       this.props.getStudents(nextProps.uid);
-      this.setState({ isGettingStudents: true, attemptedLoad: true });
+      this.setState({isGettingStudents: true, attemptedLoad: true});
     } else if (nextProps.students && nextState.isGettingStudents) {
-      this.setState({ isGettingStudents: false });
+      this.setState({isGettingStudents: false});
     }
   }
 
   render() {
     return (
-      <div>
+      <>
         {this.state.isGettingStudents ? (
           <Container fluid>
             <Row className="cover">
+              <Col xs="6" className="cover-img" />
               <Col xs="6" className="text-center align-self-center">
                 <Spinner type="grow" color="primary" />
                 <h6>Loading...</h6>
               </Col>
-              <Col xs="6" className="cover-img" />
             </Row>
           </Container>
         ) : (
@@ -59,8 +59,7 @@ class Dashboard extends React.Component {
                     <Card
                       body
                       inverse
-                      style={{ backgroundColor: "#333", borderColor: "#333" }}
-                    >
+                      style={{backgroundColor: '#333', borderColor: '#333'}}>
                       <CardTitle>Attendance Report</CardTitle>
                       <CardText>
                         Please make sure to take attendance every class day at
@@ -76,8 +75,9 @@ class Dashboard extends React.Component {
                     <Card body inverse color="primary">
                       <CardTitle>Daily Standup</CardTitle>
                       <CardText>
-                      Please make sure to take attendance every class day at
-                        the end of class. Make sure to leave feedback for the instructor.
+                        Please make sure to take attendance every class day at
+                        the end of class. Make sure to leave feedback for the
+                        instructor.
                       </CardText>
                       <Link to="/standup">
                         <Button>Standup Report</Button>
@@ -90,17 +90,17 @@ class Dashboard extends React.Component {
             </Row>
           </Container>
         )}
-      </div>
+      </>
     );
   }
 }
 
 const mapStateToProps = state => ({
   students: state.students.students,
-  uid: state.auth.uid
+  uid: state.auth.uid,
 });
 
 export default connect(
   mapStateToProps,
-  { getStudents }
+  {getStudents},
 )(Dashboard);

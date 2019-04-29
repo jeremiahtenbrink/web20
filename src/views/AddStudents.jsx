@@ -1,36 +1,38 @@
-import React from "react";
+import React from 'react';
 
-import { addStudent, getStudents, delStudent } from "../actions";
+import {addStudent, getStudents, delStudent} from '../actions';
 
-import { Container, Row, Col, Input, Button, Table, Spinner } from "reactstrap";
+import {Container, Row, Col, Input, Button, Table, Spinner} from 'reactstrap';
 
-import { connect } from "react-redux";
+import { FaTrash, FaPen } from 'react-icons/fa'
 
-import Skeleton from "react-loading-skeleton";
+import {connect} from 'react-redux';
 
-import { Link } from "react-router-dom";
+import Skeleton from 'react-loading-skeleton';
+
+import {Link} from 'react-router-dom';
 
 class AddStudents extends React.Component {
   state = {
     addStudent: {
-      firstName: "",
-      lastName: "",
-      github: ""
-    }
+      firstName: '',
+      lastName: '',
+      github: '',
+    },
   };
 
   addHandler = e => {
     e.preventDefault();
     this.props.addStudent({
       student: this.state.addStudent,
-      id: this.props.uid
+      id: this.props.uid,
     });
     this.setState({
       addStudent: {
-        firstName: "",
-        lastName: "",
-        github: ""
-      }
+        firstName: '',
+        lastName: '',
+        github: '',
+      },
     });
   };
 
@@ -38,22 +40,23 @@ class AddStudents extends React.Component {
     this.setState({
       addStudent: {
         ...this.state.addStudent,
-        [e.target.name]: e.target.value
-      }
+        [e.target.name]: e.target.value,
+      },
     });
   };
 
   render() {
     return (
       <Container fluid>
-        <Row className="cover">
+        <Row>
+          <Col xs="6" className="cover" className="cover-img-2" />
           <Col xs="6" className="text-center overflow-scroll">
             <Link to="/">
               <Button color="secondary" className="mt-3">
                 Back
               </Button>
             </Link>
-            <h2>Students</h2>
+            <h2>Manage Students</h2>
             <Table bordered className="form">
               <thead>
                 <tr>
@@ -97,18 +100,28 @@ class AddStudents extends React.Component {
                           <td>
                             <Button
                               color="danger"
+                              className="mr-2"
                               onClick={() =>
                                 this.props.delStudent(
                                   student.id,
-                                  this.props.uid
+                                  this.props.uid,
                                 )
-                              }
-                            >
-                              Delete
+                              }>
+                              <FaTrash />
                             </Button>
+                            {/* <Button
+                              color="warning"
+                              onClick={() =>
+                                this.props.delStudent(
+                                  student.id,
+                                  this.props.uid,
+                                )
+                              }>
+                              <FaPen />
+                            </Button> */}
                           </td>
                         </tr>
-                      )
+                      ),
                     )}
                   </>
                 )}
@@ -168,21 +181,20 @@ class AddStudents extends React.Component {
               </form>
             )}
           </Col>
-          <Col xs="6" className="cover-img-2" />
         </Row>
       </Container>
     );
   }
 }
 
-const mapStateToProps = ({ students, auth }) => ({
+const mapStateToProps = ({students, auth}) => ({
   isLoading: students.isLoading,
   uid: auth.uid,
   students: students.students,
-  isAdding: students.isAdding
+  isAdding: students.isAdding,
 });
 
 export default connect(
   mapStateToProps,
-  { addStudent, getStudents, delStudent }
+  {addStudent, getStudents, delStudent},
 )(AddStudents);

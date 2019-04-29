@@ -1,26 +1,27 @@
-import React from "react";
+import React from 'react';
 
-import { Container, Row, Col, Input, Button, Spinner } from "reactstrap";
+import Particles from 'react-particles-js';
 
-import { FaGoogle, FaGithub } from 'react-icons/fa';
+import {Container, Row, Col, Input, Button, Spinner} from 'reactstrap';
 
-import { GOOGLE_PROVIDER, GITHUB_PROVIDER} from '../actions'
+import {FaGoogle, FaGithub} from 'react-icons/fa';
 
+import {GOOGLE_PROVIDER, GITHUB_PROVIDER} from '../actions';
 
-import { signIn, createUser } from "../actions";
+import {signIn, createUser} from '../actions';
 
-import { connect } from "react-redux";
+import {connect} from 'react-redux';
 
 class GetStart extends React.Component {
   state = {
-    firstName: "",
-    lastName: "",
-    webNumber: ""
+    firstName: '',
+    lastName: '',
+    webNumber: '',
   };
 
   updateHandler = e => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -29,7 +30,7 @@ class GetStart extends React.Component {
       uid: this.props.uid,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
-      webNumber: "WEB" + this.state.webNumber
+      webNumber: 'WEB' + this.state.webNumber,
     });
   };
 
@@ -99,8 +100,18 @@ class GetStart extends React.Component {
               <>
                 <h1>Welcome PM</h1>
                 <h6>Login or Signup</h6>
-                <Button onClick={() => this.props.signIn(GOOGLE_PROVIDER)} color="primary" className="mr-3" size="lg"><FaGoogle /> Google</Button>
-                <Button onClick={() => this.props.signIn(GITHUB_PROVIDER)} size="lg"><FaGithub /> Github</Button>
+                <Button
+                  onClick={() => this.props.signIn(GOOGLE_PROVIDER)}
+                  color="primary"
+                  className="mr-3"
+                  size="lg">
+                  <FaGoogle /> Google
+                </Button>
+                <Button
+                  onClick={() => this.props.signIn(GITHUB_PROVIDER)}
+                  size="lg">
+                  <FaGithub /> Github
+                </Button>
               </>
             )}
           </Col>
@@ -111,13 +122,13 @@ class GetStart extends React.Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({auth}) => ({
   isLoading: auth.isLoading,
   newUser: auth.newUser,
-  uid: auth.uid
+  uid: auth.uid,
 });
 
 export default connect(
   mapStateToProps,
-  { signIn, createUser }
+  {signIn, createUser},
 )(GetStart);
