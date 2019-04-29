@@ -13,6 +13,8 @@ import {
 import {editStudent} from '../actions';
 import {Link} from 'react-router-dom';
 
+import Skeleton from 'react-loading-skeleton';
+
 class Student extends Component {
   state = {
     loaded: false,
@@ -63,7 +65,6 @@ class Student extends Component {
     }
     student.id = this.state.studentId;
     this.props.editStudent(student, this.props.uid);
-    this.props.history.push('/');
   };
 
   render() {
@@ -72,39 +73,55 @@ class Student extends Component {
         <Row>
           <Col className="cover cover-3 stay" md={6} />
           <Col md={6} className="text-center align-self-center">
-            <Link to="/">
-              <Button className="my-3">Back</Button>
-            </Link>
-            <Form onSubmit={this.onSubmit}>
-              <FormGroup>
-                <Label for={'firstName'}>First Name</Label>
-                <Input
-                  id={'firstName'}
-                  value={this.state.firstName}
-                  name={'firstName'}
-                  onChange={this.onChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for={'lastName'}>Last Name</Label>
-                <Input
-                  id={'lastName'}
-                  value={this.state.lastName}
-                  name={'lastName'}
-                  onChange={this.onChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for={'github'}>Github</Label>
-                <Input
-                  id={'github'}
-                  value={this.state.github}
-                  name={'github'}
-                  onChange={this.onChange}
-                />
-              </FormGroup>
-              <Button color="primary">Submit</Button>
-            </Form>
+            {this.state.loaded ? (
+              <>
+                <Link to="/">
+                  <Button className="my-3">Back</Button>
+                </Link>
+                <Form onSubmit={this.submitForm}>
+                  <Input
+                    id={'firstName'}
+                    name={'firstName'}
+                    value={this.state.firstName}
+                    type={'text'}
+                    placeholder={'First Name'}
+                    onChange={this.onChange}
+                    className="mb-2"
+                  />
+                  <Input
+                    id={'lastName'}
+                    name={'lastName'}
+                    value={this.state.lastName}
+                    type={'text'}
+                    placeholder={'Last Name'}
+                    onChange={this.onChange}
+                    className="mb-2"
+                  />
+                  <Input
+                    id={'github'}
+                    name={'github'}
+                    value={this.state.github}
+                    type={'text'}
+                    placeholder={'Github'}
+                    onChange={this.onChange}
+                    className="mb-2"
+                  />
+                  <Button type={'submit'} color="primary" outline>
+                    Submit
+                  </Button>
+                </Form>
+              </>
+            ) : (
+              <>
+                <Link to="/">
+                  <Button className="my-3">Back</Button>
+                </Link>
+                <Form onSubmit={this.submitForm}>
+                  <Skeleton count={3} height={38} />
+                  <Skeleton height={38} width={75} />
+                </Form>
+              </>
+            )}
           </Col>
         </Row>
       </Container>

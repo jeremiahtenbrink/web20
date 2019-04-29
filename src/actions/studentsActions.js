@@ -11,6 +11,7 @@ export const getStudents = id => dispatch => {
       .collection('users')
       .doc(id)
       .collection('students')
+      .orderBy("firstName")
       .get()
       .then(students => {
         let studentData = [];
