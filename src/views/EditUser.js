@@ -22,6 +22,7 @@ class EditUser extends Component {
   };
 
   componentDidMount() {
+    debugger;
     if (this.props.user) {
       this.setState({
         firstName: this.props.user.firstName,

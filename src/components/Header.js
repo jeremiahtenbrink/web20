@@ -21,10 +21,6 @@ class Header extends React.Component {
     isOpen: false,
   };
 
-  toggle() {
-    this.setState(state => ({isOpen: !state.isOpen}));
-  }
-
   render() {
     return (
       <div className="mt-3 mx-3">
