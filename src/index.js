@@ -8,8 +8,6 @@ import { Provider } from "react-redux";
 
 import store, {history} from "./configStore";
 
-
-
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
