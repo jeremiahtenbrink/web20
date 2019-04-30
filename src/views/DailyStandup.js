@@ -7,6 +7,8 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { getSections } from "../actions";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import TypeAhead from "../components/typeAhead/TypeAhead";
 
 class DailyStandup extends Component{
     state = {
@@ -161,14 +163,7 @@ class DailyStandup extends Component{
                         </tbody>
                     </Table>
                     <Form>
-                        <Input
-                            type={ "text" }
-                            value={ this.state.module }
-                            placeholder={ "What did your students study" +
-                            " today?" }
-                            onChange={ this.onChange }
-                            name={ "module" }
-                        />
+                        <TypeAhead options={ this.props.sections }/>
                         <br/>
                         <Input
                             type={ "textarea" }
