@@ -26,6 +26,7 @@ class App extends React.Component{
     };
     
     componentDidMount(){
+        
         this.unregisterAuthObserver = firebase.auth().
             onAuthStateChanged( () => this.props.checkAuth() );
     }
@@ -35,7 +36,7 @@ class App extends React.Component{
     }
     
     componentWillUpdate( nextProps, nextState, nextContext ){
-        debugger;
+        
         if( nextProps.uid && !nextState.isGettingStudents &&
             !nextProps.students && !nextState.attemptedLoad ){
             this.props.getStudents( nextProps.uid );
