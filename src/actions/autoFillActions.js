@@ -13,15 +13,16 @@ export const getSections = () => dispatch => {
     .orderBy('order', 'asc')
     .get()
     .then(sections => {
-      console.log(sections);
-      let sectionsObject = {};
+      let sectionArray = [];
       sections.forEach(section => {
-        sectionsObject[section.id] = section.data();
+        let {name, isProject} = section.data()
+        if(isProject){
+          sectionArray.push(name);
+        }
       });
-      console.log(sectionsObject);
       dispatch({
         type: GET_SECTIONS_SUCCESS,
-        payload: sectionsObject,
+        payload: sectionArray,
       });
     })
     .catch(err => {

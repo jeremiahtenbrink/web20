@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import AttendanceStudent from '../components/attendanceReport/AttendanceStudent';
+import {Typeahead} from 'react-bootstrap-typeahead';
 import {
   Container,
   Row,
@@ -18,7 +19,7 @@ class DailyStandup extends Component {
   state = {
     students: null,
     loaded: false,
-    module: '',
+    module: [],
     wentWell: '',
     concerns: '',
     instructor: '',
@@ -80,7 +81,7 @@ class DailyStandup extends Component {
       })&prefill_Sections=${this.props.user.cohort}`;
 
       if (this.state.module !== '') {
-        url += `&prefill_Module=${encodeURI(this.state.module)}`;
+        url += `&prefill_Module=${encodeURI(this.state.module[0])}`;
       }
 
       if (this.state.students) {
@@ -183,12 +184,17 @@ class DailyStandup extends Component {
               </tbody>
             </Table>
             <Form>
-              <Input
-                type={'text'}
-                value={this.state.module}
-                placeholder={'What did your students study' + ' today?'}
-                onChange={this.onChange}
-                name={'module'}
+              <Typeahead
+                id="what-did-your-students-study"
+                onChange={selected => {
+                  this.setState({
+                    module: selected,
+                  });
+                }}
+                placeholder="What did your students study today?"
+                selected={this.state.module}
+                options={this.props.sections}
+                highlightOnlyResult={false}
               />
               <br />
               <Input
@@ -220,22 +226,15 @@ class DailyStandup extends Component {
               <Label for={'instructionRating'}>
                 How would you rate the instructor?
               </Label>
-
-              <ul>
-                <li>1 - Did not meet expectations</li>
-                <li>2 - Met expectations</li>
-                <li>3 - Exceeded expectations</li>
-              </ul>
-
               <Input
                 id={'instructionRating'}
                 type={'select'}
                 name={'instructionRating'}
                 value={this.state.instructionRating}
                 onChange={this.onChange}>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
+                <option value={1}>1 - Did not meet expectations</option>
+                <option value={2}>2 - Met expectations</option>
+                <option value={3}>3 - Exceeded expectations</option>
               </Input>
               <br />
               <Input
@@ -246,14 +245,14 @@ class DailyStandup extends Component {
                 name={'instructorFeedback'}
               />
               <br />
-              <Input
+              {/* <Input
                 type={'text'}
                 value={this.state.flexTa}
                 placeholder={'Who was the flex TA?'}
                 onChange={this.onChange}
                 name={'flexTa'}
               />
-              <br />
+              <br /> */}
               {/* <Label for={"flexTaRating"}>Flex Ta Guided Project Rating</Label>
                          <p>
                          <ul>
@@ -289,7 +288,7 @@ class DailyStandup extends Component {
                          /> */}
             </Form>
             <a
-              className="btn btn-success mt-3"
+              className="btn btn-success mb-3"
               target="_blank"
               href={this.getReportLink()}>
               Submit Standup
