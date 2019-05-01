@@ -1,58 +1,60 @@
-import { store } from "../firebase/firebase";
+import {store} from '../firebase/firebase';
 
-export const GET_SECTIONS_INIT = "GET_SECTIONS_INIT";
-export const GET_SECTIONS_SUCCESS = "GET_SECTIONS_SUCCESS";
-export const GET_SECTIONS_FAIL = "GET_SECTIONS_FAIL";
+export const GET_SECTIONS_INIT = 'GET_SECTIONS_INIT';
+export const GET_SECTIONS_SUCCESS = 'GET_SECTIONS_SUCCESS';
+export const GET_SECTIONS_FAIL = 'GET_SECTIONS_FAIL';
 
 export const getSections = () => dispatch => {
-    dispatch( { type: GET_SECTIONS_INIT } );
-    store.collection( "autoFill" ).
-        doc( "web" ).
-        collection( "sections" ).
-        orderBy( "order", "asc" ).
-        get().
-        then( sections => {
-            console.log( sections );
-            let sectionsObject = {};
-            sections.forEach( section => {
-                sectionsObject[ section.id ] = section.data();
-            } );
-            console.log( sectionsObject );
-            dispatch( {
-                type: GET_SECTIONS_SUCCESS, payload: sectionsObject,
-            } );
-        } ).
-        catch( err => {
-            dispatch( { type: GET_SECTIONS_FAIL, payload: err } );
-        } );
+  dispatch({type: GET_SECTIONS_INIT});
+  store
+    .collection('autoFill')
+    .doc('web')
+    .collection('sections')
+    .orderBy('order', 'asc')
+    .get()
+    .then(sections => {
+      let sectionsArray = [];
+      sections.forEach(section => {
+        const {name, isProject} = section.data();
+        if(isProject){
+          sectionsArray.push(name)
+        }
+      });
+      dispatch({
+        type: GET_SECTIONS_SUCCESS,
+        payload: sectionsArray,
+      });
+    })
+    .catch(err => {
+      dispatch({type: GET_SECTIONS_FAIL, payload: err});
+    });
 };
 
-export const GET_INSTRUCTORS_INIT = "GET_INSTRUCTORS_INIT";
-export const GET_INSTRUCTORS_SUCCESS = "GET_INSTRUCTORS_SUCCESS";
-export const GET_INSTRUCTORS_FAIL = "GET_INSTRUCTORS_FAIL";
+export const GET_INSTRUCTORS_INIT = 'GET_INSTRUCTORS_INIT';
+export const GET_INSTRUCTORS_SUCCESS = 'GET_INSTRUCTORS_SUCCESS';
+export const GET_INSTRUCTORS_FAIL = 'GET_INSTRUCTORS_FAIL';
 
 export const getInstructors = () => dispatch => {
-    
-    dispatch( { type: GET_INSTRUCTORS_INIT } );
-    store.collection( "autoFill" ).
-        doc( "web" ).
-        collection( "instructors" ).
-        orderBy( "name", "asc" ).
-        get().
-        then( instructors => {
-            console.log( instructors );
-            let instructorsObject = {};
-            instructors.forEach( instructor => {
-                instructorsObject[ instructor.id ] = instructor.data();
-            } );
-            console.log( instructorsObject );
-            dispatch( {
-                type: GET_INSTRUCTORS_SUCCESS, payload: instructorsObject,
-            } );
-        } ).
-        catch( err => {
-            dispatch( { type: GET_INSTRUCTORS_FAIL, payload: err } );
-        } );
+  dispatch({type: GET_INSTRUCTORS_INIT});
+  store
+    .collection('autoFill')
+    .doc('web')
+    .collection('instructors')
+    .orderBy('name', 'asc')
+    .get()
+    .then(instructors => {
+      let instructorArray = [];
+      instructors.forEach(instructor => {
+        instructorArray.push(instructor.data().name)
+      });
+      dispatch({
+        type: GET_INSTRUCTORS_SUCCESS,
+        payload: instructorArray,
+      });
+    })
+    .catch(err => {
+      dispatch({type: GET_INSTRUCTORS_FAIL, payload: err});
+    });
 };
 
 // export const makeSections = () => dispatch => {
