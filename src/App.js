@@ -15,6 +15,7 @@ import Attendance from "./views/Attendance";
 import DailyStandup from "./views/DailyStandup";
 import EditUser from "./views/EditUser";
 import Student from "./views/Student";
+import StudentStandupReport from "./views/StudentStandupReport";
 
 class App extends React.Component{
     state = {
@@ -76,6 +77,8 @@ class App extends React.Component{
                    render={ props => <Student { ...props } /> }/>
             <Route exact path="/"
                    render={ props => <Dashboard { ...props } /> }/>
+            <Route exact path="/student/reports/:id"
+                   render={ props => <StudentStandupReport { ...props } /> }/>
         </Switch> );
     }
 }

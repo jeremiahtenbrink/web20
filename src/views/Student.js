@@ -3,14 +3,19 @@ import { connect } from "react-redux";
 import {
     Form, Input, Button, Row, Col, Container,
 } from "reactstrap";
-import { editStudent } from "../actions";
+import { editStudent, generateStudentLink } from "../actions";
 import { Link } from "react-router-dom";
 
 import Skeleton from "react-loading-skeleton";
 
 class Student extends Component{
     state = {
-        loaded: false, studentId: "", firstName: "", lastName: "", github: "",
+        loaded: false,
+        studentId: "",
+        firstName: "",
+        lastName: "",
+        github: "",
+        link: "",
     };
     
     componentWillUpdate( nextProps, nextState, nextContext ){
@@ -51,6 +56,10 @@ class Student extends Component{
         this.props.history.push( "/" );
     };
     
+    generateLink = () => {
+        this.props.generateStudentLink( this.state.studentId, this.props.uid );
+    };
+    
     render(){
         return ( <Container fluid>
             <Row>
@@ -88,6 +97,14 @@ class Student extends Component{
                                 onChange={ this.onChange }
                                 className="mb-2"
                             />
+                            { }
+                            { this.props.students[ this.state.studentId ].link &&
+                            <Link
+                                to={ `/student/reports/${ this.props.students[ this.state.studentId ].link }` }>
+                                <h6>Link: { this.props.students[ this.state.studentId ].link }</h6>
+                            </Link> }
+                            <Button onClick={ this.generateLink }>Generate
+                                Link</Button>
                             <Button type={ "submit" } color="primary"
                                     outline>
                                 Submit
@@ -112,4 +129,7 @@ const mpts = state => ( {
     students: state.students.students, uid: state.auth.uid,
 } );
 
-export default connect( mpts, { editStudent }, )( Student );
+export default connect( mpts,
+    { editStudent, generateStudentLink },
+)(
+    Student );
