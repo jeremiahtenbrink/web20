@@ -116,14 +116,13 @@ class SprintForm extends Component{
     };
     
     render(){
-        return ( <Container>
+        return ( <Container fluid>
             <Row>
-                <Col xs={ 12 } md={ { size: 6, offset: 3 } }>
-                    <h3>Sprint Challenge Report</h3>
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={ 12 } md={ { size: 6, offset: 3 } }>
+                <Col className="cover cover-3 stay" md={ 6 }/>
+                
+                <Col md={ 6 } className="overflow-scroll">
+                    <h1 className={ "mb-5 mt-5 text-center" }>Sprint
+                        Challenge Report</h1>
                     <Form>
                         <FormGroup>
                             <Label>Sprint</Label>
@@ -176,7 +175,7 @@ class SprintForm extends Component{
                                 </Input>
                             </Label>
                         </FormGroup>
-                        <FormGroup check>
+                        <FormGroup check className={ "mb-3" }>
                             <Label check>
                                 <Input
                                     type={ "checkbox" }
@@ -258,7 +257,7 @@ class SprintForm extends Component{
                                 </Input>
                             </Label>
                         </FormGroup>
-                        <FormGroup check>
+                        <FormGroup check className={ "mb-3" }>
                             <Label check>
                                 <Input
                                     type={ "checkbox" }
@@ -373,13 +372,14 @@ class SprintForm extends Component{
                                    name={ "other" }
                             />
                         </FormGroup>
-                        <FormGroup>
-                            <Button color="info"
-                                    size={ "lg" }
-                                    href={ this.getSubmissionUrl() }
-                            >Submit</Button>
-                        </FormGroup>
                     </Form>
+                    <div className="d-flex justify-content-center">
+                        <a className="btn btn-success mb-5 mt-4"
+                           target="_blank"
+                           href={ this.getSubmissionUrl() }
+                        ><h4>Submit Sprint Retrospect</h4></a>
+                    </div>
+                
                 </Col>
             </Row>
         </Container> );
