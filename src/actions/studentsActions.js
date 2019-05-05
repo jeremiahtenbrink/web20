@@ -5,6 +5,7 @@ export const FETCH_STUDENTS_SUCCESS = "FETCH_STUDENTS_SUCCESS";
 export const FETCH_STUDENTS_FAILED = "FETCH_STUDENTS_FAILED";
 
 export const getStudents = id => dispatch => {
+    
     dispatch( { type: FETCH_STUDENTS_INIT } );
     if( id ){
         store.collection( "users" ).
@@ -15,8 +16,14 @@ export const getStudents = id => dispatch => {
             then( students => {
                 let studentData = [];
                 students.forEach( student => {
-                    studentData[ student.id ] = {
-                        id: student.id, ...student.data(),
+                    studentData.push( {
+                        id: student.id, ...student.data()
+                    } );
+                } );
+                studentData.forEach( ( student, index ) => {
+                    studentData[ index ] = {
+                        ...student,
+                        label: `${ student.firstName } ${ student.lastName }`
                     };
                 } );
                 dispatch( {
@@ -93,7 +100,7 @@ export const GENERATE_STUDENT_LINK_SUCCESS = "GENERATE_STUDENT_LINK_SUCCESS";
 export const GENERATE_STUDENT_LINK_FAILED = "GENERATE_STUDENT_LINK_FAILED";
 
 export const generateStudentLink = ( studentId, userId ) => dispatch => {
-    debugger;
+    
     dispatch( { type: GENERATE_STUDENT_LINK_INIT } );
     store.collection( "students" ).
         add( {

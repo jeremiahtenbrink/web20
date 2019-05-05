@@ -194,7 +194,7 @@ class DailyStandup extends Component {
                 }}
                 placeholder="What did your students study today?"
                 selected={this.state.module}
-                options={this.props.sections}
+                options={this.props.lessons}
                 highlightOnlyResult={false}
               />
               <br />
@@ -309,7 +309,7 @@ class DailyStandup extends Component {
 const mpts = state => ({
   students: state.students.students,
   user: state.auth.user,
-  sections: state.autoFill.sections,
+  lessons: state.autoFill.lessons,
   instructors: state.autoFill.instructors,
 });
 

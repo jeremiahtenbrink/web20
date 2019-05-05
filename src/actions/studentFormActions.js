@@ -5,7 +5,7 @@ export const GET_STUDENTS_INFO_SUCCESS = "GET_STUDENTS_INFO_SUCCESS";
 export const GET_STUDENTS_INFO_FAILED = "GET_STUDENTS_INFO_FAILED";
 
 export const getStudentsInfo = id => dispatch => {
-    debugger;
+    
     dispatch( { type: GET_STUDENTS_INFO_INIT } );
     
     store.collection( "students" ).
