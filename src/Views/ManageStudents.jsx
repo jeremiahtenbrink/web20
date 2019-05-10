@@ -61,7 +61,10 @@ class ManageStudents extends React.Component {
   };
 
   updateStudentSubmit = () => {
-    this.props.editStudent({...this.state.student, id: this.state.modalId}, this.props.uid);
+    this.props.editStudent(
+      {...this.state.student, id: this.state.modalId},
+      this.props.uid,
+    );
     this.setState({
       modalOpen: false,
       modalId: false,
@@ -148,7 +151,7 @@ class ManageStudents extends React.Component {
           title={this.state.modalId ? `Update Student` : 'Create a new student'}
           visible={this.state.modalOpen}
           okText={this.state.modalId ? 'Update Student' : 'Add Student'}
-          onOk={this.state.modalId ? this.updateStudentSubmit: this.addHandler}
+          onOk={this.state.modalId ? this.updateStudentSubmit : this.addHandler}
           onCancel={() => this.setState({modalOpen: false, modalId: false})}>
           <Row type="flex" gutter={24}>
             <Col xs={24} md={12}>

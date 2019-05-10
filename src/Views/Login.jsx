@@ -1,5 +1,7 @@
 import React from 'react';
 
+import firebase from '../firebase/firebase';
+
 import {GOOGLE_PROVIDER, GITHUB_PROVIDER} from '../actions';
 
 import {signIn, createUser} from '../actions';
@@ -23,6 +25,14 @@ class Login extends React.Component {
       webNumber: '',
     },
   };
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.props.history.push('/');
+      }
+    });
+  }
 
   updateHandler = e => {
     this.setState({
