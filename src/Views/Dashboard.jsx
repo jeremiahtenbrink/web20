@@ -14,8 +14,11 @@ import {
 } from 'antd';
 import axios from 'axios';
 import {getStudents, logout} from '../actions';
-import LambdaLogo from '../assets/logo.png';
 import {Link} from 'react-router-dom';
+
+import LambdaLogo from '../assets/logo.png';
+import AttendanceImage from '../assets/attendance.jpg';
+import Standup from '../assets/standup.jpg';
 
 class Dashboard extends React.Component {
   state = {
@@ -75,6 +78,35 @@ class Dashboard extends React.Component {
             <Table.Column title="Github" dataIndex="github" key="github" />
           </Table>
         </div>
+        <Row
+          type="flex"
+          gutter={24}
+          style={{maxWidth: '800px', margin: '30px auto'}}>
+          <Col xs={24} md={12}>
+            <Card
+              hoverable
+              style={{width: '100%', marginBottom: '10px'}}
+              onClick={() => this.props.history.push('/attendance')}
+              cover={<img alt="Attendance Report" src={AttendanceImage} />}>
+              <Card.Meta
+                title="Attendance Report"
+                description={`Please make sure to take attendance every class day at the start of class, including Sprint Challenge days, and for PT "A" week Mondays.`}
+              />
+            </Card>
+          </Col>
+          <Col xs={24} md={12}>
+            <Card
+              hoverable
+              style={{width: '100%'}}
+              onClick={() => this.props.history.push('/standup')}
+              cover={<img alt="Daily Standup" src={Standup} />}>
+              <Card.Meta
+                title="Daily Standup"
+                description="Please make sure to take attendance every class day at the end of class. Make sure to leave feedback for the instructor."
+              />
+            </Card>
+          </Col>
+        </Row>
       </div>
     );
   }
@@ -85,7 +117,7 @@ const mapStateToProps = ({students, auth}) => ({
   uid: auth.uid,
   user: auth.user,
   isLoading: students.isLoading,
-  displayName: auth.displayName
+  displayName: auth.displayName,
 });
 
 export default connect(
