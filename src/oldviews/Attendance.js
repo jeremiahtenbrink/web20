@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import AttendanceReport from "../components/attendanceReport/AttendanceReport";
+import AttendanceReport from "../oldcomponents/attendanceReport/AttendanceReport";
 
 const Attendance = props => {
   return (

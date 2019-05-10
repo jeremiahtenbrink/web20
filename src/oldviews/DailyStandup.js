@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import AttendanceStudent from '../components/attendanceReport/AttendanceStudent';
+import AttendanceStudent from '../oldcomponents/attendanceReport/AttendanceStudent';
 import {Typeahead} from 'react-bootstrap-typeahead';
 import {
   Container,

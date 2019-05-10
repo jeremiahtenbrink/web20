@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getStudents } from "../actions";
-import Header from "../components/Header";
+import Header from "../oldcomponents/Header";
 import {
     Col, Container, Row, Spinner, Card, Button, CardTitle, CardText,
 } from "reactstrap";
-import Students from "../components/students/Students";
+import Students from "../oldcomponents/students/Students";
 import { Link } from "react-router-dom";
 
 class Dashboard extends React.Component{

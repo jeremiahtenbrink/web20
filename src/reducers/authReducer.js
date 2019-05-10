@@ -62,9 +62,9 @@ export const authReducer = (state = initialState, action) => {
         token: action.token,
       };
     case SIGNIN_FAILED:
-      return {...state, isLoading: false, error: action.payload};
+      return {...state, error: action.payload};
     case CREATE_USER_INIT:
-      return {...state, isLoading: false, error: ''};
+      return {...state, isLoading: true, error: ''};
     case CREATE_USER_SUCCESS:
       return {...state, isLoading: false, error: ''};
     case LOGOUT_INIT:
