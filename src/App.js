@@ -1,6 +1,5 @@
 import React from 'react';
-//import './App.css';
-import {Route, Switch, NavLink} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 
 import {checkAuth, getStudents, getUser, getSections} from './actions';
 
@@ -8,16 +7,15 @@ import firebase from './firebase/firebase';
 
 import {connect} from 'react-redux';
 
-import {Layout} from 'antd';
+import {Layout, Spin} from 'antd';
 
 import Login from './Views/Login';
-import ManageStudents from './Views/ManageStudents';
-import Dashboard from './Views/Dashboard';
-import Attendance from './oldviews/Attendance';
-import DailyStandup from './oldviews/DailyStandup';
-import EditUser from './oldviews/EditUser';
-import Student from './oldviews/Student';
-import SprintForm from './oldviews/SprintForm';
+
+import AuthRoute from './AuthRoute';
+
+const Protected = ({component: Component, ...rest}) => (
+  <Route {...rest} render={props => <Component {...props} />} />
+);
 
 class App extends React.Component {
   state = {
@@ -29,71 +27,27 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    this.unregisterAuthObserver = firebase
-      .auth()
-      .onAuthStateChanged(() => this.props.checkAuth());
-  }
-
-  componentWillUnmount() {
-    this.unregisterAuthObserver();
-  }
-
-  componentWillUpdate(nextProps, nextState, nextContext) {
-    if (
-      nextProps.uid &&
-      !nextState.isGettingStudents &&
-      !nextProps.students &&
-      !nextState.attemptedLoad
-    ) {
-      this.props.getStudents(nextProps.uid);
-      this.props.getUser(nextProps.uid);
-      this.props.getSections();
-      this.setState({isGettingStudents: true, attemptedLoad: true});
-    } else if (
-      !nextProps.uid &&
-      (nextState.isGettingStudents || nextState.attemptedLoad)
-    ) {
-      this.setState({isGettingStudents: false, attemptedLoad: false});
-    }
+    firebase.auth().onAuthStateChanged(() => this.props.checkAuth());
   }
 
   render() {
+    if (this.props.authLoading) {
+      return (
+        <Layout>
+          <Layout.Content style={{minHeight: '100vh',}}>
+            <div style={{height: '100vh', width: '100%', verticalAlign: 'center', margin: '0 auto'}}>
+              <Spin size="large" description="Checking Authentication" />
+            </div>
+          </Layout.Content>
+        </Layout>
+      );
+    }
     return (
       <Layout>
         <Layout.Content style={{minHeight: '100vh', padding: '20px 10px'}}>
           <Switch>
             <Route exact path="/start" render={props => <Login {...props} />} />
-            <Route
-              exact
-              path="/students"
-              render={props => <ManageStudents {...props} />}
-            />
-            {/* <Route
-              exact
-              path="/attendance"
-              render={props => <Attendance {...props} />}
-            />
-            <Route
-              exact
-              path="/standup"
-              render={props => <DailyStandup {...props} />}
-            />
-            <Route
-              exact
-              path="/user"
-              render={props => <EditUser {...props} />}
-            />
-            <Route
-              exact
-              path="/student/:id"
-              render={props => <Student {...props} />}
-            />
-            <Route
-              exact
-              path="/sprint"
-              render={props => <SprintForm {...props} />}
-            /> */}
-            <Route exact path="/" render={props => <Dashboard {...props} />} />
+            <Protected path="/" component={props => <AuthRoute {...props} />} />
           </Switch>
         </Layout.Content>
       </Layout>
@@ -102,6 +56,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = ({auth}) => ({
+  authLoading: true,
   uid: auth.uid,
   user: auth.user,
 });

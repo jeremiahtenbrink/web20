@@ -14,11 +14,8 @@ import {
   Col,
   Form,
   Input,
-  Select,
   Popconfirm,
 } from 'antd';
-
-import {Link} from 'react-router-dom';
 
 class ManageStudents extends React.Component {
   state = {
@@ -128,6 +125,8 @@ class ManageStudents extends React.Component {
                 <span>
                   <Button
                     type="primary"
+                    icon="edit"
+                    loading={this.state.modalOpen}
                     onClick={() => this.updateStudent(student)}>
                     Edit
                   </Button>
@@ -140,7 +139,11 @@ class ManageStudents extends React.Component {
                     okText="Yes"
                     okButtonProps={{type: 'danger'}}
                     cancelText="No">
-                    <Button type="danger">Delete</Button>
+                    <Button
+                      type="danger"
+                      icon="delete">
+                      Delete
+                    </Button>
                   </Popconfirm>
                 </span>
               )}

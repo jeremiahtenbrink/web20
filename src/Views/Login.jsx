@@ -12,8 +12,6 @@ import {connect} from 'react-redux';
 
 import LoginImage from '../assets/login.svg';
 
-import MakeInput from '../Components/MakeInput';
-
 import '../assets/Login.scss';
 
 class Login extends React.Component {

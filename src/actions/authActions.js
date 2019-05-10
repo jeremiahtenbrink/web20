@@ -135,7 +135,7 @@ export const getUser = id => dispatch => {
     .doc(id)
     .get()
     .then(res => {
-      let data = res.data();
+      console.log(res)
       dispatch({type: GET_USER_SUCCESS, payload: res.data()});
     })
     .catch(err => {
