@@ -4,6 +4,7 @@ import {
 } from "reactstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 class SprintForm extends Component{
     
@@ -121,8 +122,12 @@ class SprintForm extends Component{
                 <Col className="cover cover-3 stay" md={ 6 }/>
                 
                 <Col md={ 6 } className="overflow-scroll">
+                    
                     <h1 className={ "mb-5 mt-5 text-center" }>Sprint
                         Challenge Report</h1>
+                    <Link to="/">
+                        <Button className="my-3">Back</Button>
+                    </Link>
                     <Form>
                         <FormGroup>
                             <Label>Sprint</Label>

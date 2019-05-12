@@ -128,3 +128,27 @@ export const generateStudentLink = ( studentId, userId ) => dispatch => {
             dispatch( { type: GENERATE_STUDENT_LINK_FAILED, payload: err } );
         } );
 };
+
+export const COLLECT_STUDENT_LESSONS_INIT = "COLLECT_STUDENT_LESSONS_INIT";
+export const COLLECT_STUDENT_LESSONS_SUCCESS = "COLLECT_STUDENT_LESSONS_SUCCESS";
+export const COLLECT_STUDENT_LESSONS_FAILED = "COLLECT_STUDENT_LESSONS_FAILED";
+
+export const getStudentLessons = ( studentID, userId ) => dispatch => {
+    debugger;
+    dispatch( { type: COLLECT_STUDENT_LESSONS_INIT } );
+    store.collection( "users" ).
+        doc( userId ).collection( "students" ).doc( studentID ).get().
+        then( ( res ) => {
+            debugger;
+            let studentData = res.data();
+            if( !studentData.lessons ){
+                dispatch( {
+                    type: COLLECT_STUDENT_LESSONS_SUCCESS,
+                    payload: []
+                } );
+            }
+        } ).
+        catch( err => {
+            dispatch( { type: COLLECT_STUDENT_LESSONS_FAILED, payload: err } );
+        } );
+};

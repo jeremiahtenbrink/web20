@@ -4,7 +4,8 @@ import {
     DEL_STUDENT_SUCCESS, DEL_STUDENT_FAILED, DEL_STUDENT_INIT,
     EDIT_STUDENT_INIT, EDIT_STUDENT_SUCCESS, EDIT_STUDENT_FAILED,
     GENERATE_STUDENT_LINK_INIT, GENERATE_STUDENT_LINK_SUCCESS,
-    GENERATE_STUDENT_LINK_FAILED,
+    GENERATE_STUDENT_LINK_FAILED, COLLECT_STUDENT_LESSONS_FAILED,
+    COLLECT_STUDENT_LESSONS_INIT, COLLECT_STUDENT_LESSONS_SUCCESS
 } from "../actions";
 
 const initialState = {
@@ -12,8 +13,10 @@ const initialState = {
     isLoading: true,
     isAdding: false,
     isEditing: false,
+    isGatheringLessons: false,
     error: "",
     isDeleting: false,
+    studentLessons: [],
 };
 
 export const studentsReducer = ( state = initialState, action ) => {
@@ -59,7 +62,21 @@ export const studentsReducer = ( state = initialState, action ) => {
             return { ...state, students: newLinkStudents, isEditing: false };
         case GENERATE_STUDENT_LINK_FAILED:
             return { ...state, isEditing: false, error: action.payload };
-        
+        case COLLECT_STUDENT_LESSONS_INIT:
+            return { ...state, studentLessons: [], isGatheringLessons: true };
+        case COLLECT_STUDENT_LESSONS_SUCCESS:
+            return {
+                ...state,
+                studentLessons: action.payload,
+                isGatheringLessons: false
+            };
+        case COLLECT_STUDENT_LESSONS_FAILED:
+            return {
+                ...state,
+                studentLessons: [],
+                isGatheringLessons: false,
+                error: action.payload
+            };
         default:
             return state;
     }
