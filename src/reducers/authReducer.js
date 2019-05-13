@@ -25,7 +25,7 @@ const initialState = {
   gettingUser: false,
   editingUser: false,
   uid: null,
-  user: null,
+  displayName: null,
   newUser: false,
   token: '',
   error: '',
@@ -41,8 +41,8 @@ export const authReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        uid: action.payload,
-        token: action.token,
+        uid: action.payload.uid,
+        displayName: action.payload.displayName
       };
     case SIGNIN_INIT:
       return {...state, isLoading: true};
@@ -51,7 +51,6 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         newUser: true,
         uid: action.payload,
-        token: action.token,
         isLoading: false,
       };
     case SIGNIN_SUCCESS:
@@ -62,9 +61,9 @@ export const authReducer = (state = initialState, action) => {
         token: action.token,
       };
     case SIGNIN_FAILED:
-      return {...state, isLoading: false, error: action.payload};
+      return {...state, error: action.payload};
     case CREATE_USER_INIT:
-      return {...state, isLoading: false, error: ''};
+      return {...state, isLoading: true, error: ''};
     case CREATE_USER_SUCCESS:
       return {...state, isLoading: false, error: ''};
     case LOGOUT_INIT:

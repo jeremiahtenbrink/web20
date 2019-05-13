@@ -1,0 +1,21 @@
+.instructors__actions {
+  display: flex;
+
+  &--icon {
+    display: flex;
+    margin-left: 1rem;
+    justify-content: center;
+    align-items: center;
+
+    &:not(:first-child) {
+      margin-left: 2rem;
+    }
+
+    p {
+      margin-top: 0.5rem;
+      padding-top: .2rem;
+      margin-left: .2rem;
+    }
+
+  }
+}

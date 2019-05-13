@@ -1,0 +1,24 @@
+.google-btn {
+  background-color: #3cba54 !important;
+  color: white !important;
+  border-color: #3cba54 !important;
+  margin-right: 10px;
+
+  &:hover {
+    background-color: white !important;
+    color: #3cba54 !important;
+    border-color: #3cba54 !important;
+  }
+}
+
+.github-btn {
+  background-color: #333 !important;
+  color: white !important;
+  border-color: #333 !important;
+
+  &:hover {
+    background-color: white !important;
+    color: #333 !important;
+    border-color: #333 !important;
+  }
+}

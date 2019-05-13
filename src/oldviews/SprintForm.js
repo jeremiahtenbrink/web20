@@ -34,7 +34,7 @@ class SprintForm extends Component{
     };
     
     getSubmissionUrl = () => {
-        debugger;
+        
         let url = "";
         if( this.props.user ){
             url = `https://airtable.com/shr6wexWV3RM4ITJP?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })`;

@@ -6,32 +6,84 @@ export const GET_SECTIONS_FAIL = "GET_SECTIONS_FAIL";
 
 export const getSections = () => dispatch => {
     dispatch( { type: GET_SECTIONS_INIT } );
-    store.collection( "autoFill" ).
-        doc( "web" ).
-        collection( "sections" ).
-        orderBy( "order", "asc" ).
-        get().
-        then( sections => {
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "sections" )
+        .orderBy( "order", "asc" )
+        .get()
+        .then( sections => {
             
             let sectionsArray = [];
             let sprintsArray = [];
             sections.forEach( section => {
-                const { name, isProject } = section.data();
-                if( isProject ){
-                    sectionsArray.push( name );
+                const data = section.data();
+                if( data.isProject ){
+                    sectionsArray.push( { ...data, id: section.id } );
                 }else{
-                    sprintsArray.push( name.replace( "Sprint Challenge -",
-                        ""
-                    ) );
+                    
+                    sprintsArray.push( {
+                        ...data,
+                        name: data.name.replace( "Sprint" + " Challenge -",
+                            ""
+                        ),
+                        id: section.id
+                    } );
                 }
             } );
+            
             dispatch( {
                 type: GET_SECTIONS_SUCCESS,
                 payload: { lessons: sectionsArray, sprints: sprintsArray }
             } );
-        } ).
-        catch( err => {
+        } )
+        .catch( err => {
             dispatch( { type: GET_SECTIONS_FAIL, payload: err } );
+        } );
+};
+
+export const UPDATE_INSTRUCTORS_INIT = "UPDATE_INSTRUCTORS_INIT";
+export const UPDATE_INSTRUCTORS_SUCCESS = "UPDATE_INSTRUCTORS_SUCCESS";
+export const UPDATE_INSTRUCTORS_FAIL = "UPDATE_INSTRUCTORS_FAIL";
+
+export const updateInstructor = instructor => dispatch => {
+    debugger;
+    dispatch( { type: UPDATE_INSTRUCTORS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "instructors" ).doc( instructor.id )
+        .update( instructor )
+        .then( res => {
+            debugger;
+            console.log( res );
+            dispatch( {
+                type: UPDATE_INSTRUCTORS_SUCCESS, payload: instructor,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: UPDATE_INSTRUCTORS_FAIL, payload: err } );
+        } );
+};
+
+export const DELETE_INSTRUCTORS_INIT = "DELETE_INSTRUCTORS_INIT";
+export const DELETE_INSTRUCTORS_SUCCESS = "DELETE_INSTRUCTORS_SUCCESS";
+export const DELETE_INSTRUCTORS_FAIL = "DELETE_INSTRUCTORS_FAIL";
+
+export const deleteInstructor = instructor => dispatch => {
+    debugger;
+    dispatch( { type: DELETE_INSTRUCTORS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "instructors" ).doc( instructor.id )
+        .delete()
+        .then( res => {
+            debugger;
+            console.log( res );
+            dispatch( {
+                type: DELETE_INSTRUCTORS_SUCCESS, payload: instructor,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: DELETE_INSTRUCTORS_FAIL, payload: err } );
         } );
 };
 
@@ -41,22 +93,70 @@ export const GET_INSTRUCTORS_FAIL = "GET_INSTRUCTORS_FAIL";
 
 export const getInstructors = () => dispatch => {
     dispatch( { type: GET_INSTRUCTORS_INIT } );
-    store.collection( "autoFill" ).
-        doc( "web" ).
-        collection( "instructors" ).
-        orderBy( "name", "asc" ).
-        get().
-        then( instructors => {
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "instructors" )
+        .orderBy( "name", "asc" )
+        .get()
+        .then( instructors => {
             let instructorArray = [];
             instructors.forEach( instructor => {
-                instructorArray.push( instructor.data().name );
+                instructorArray.push( {
+                    ...instructor.data(), id: instructor.id
+                } );
             } );
             dispatch( {
                 type: GET_INSTRUCTORS_SUCCESS, payload: instructorArray,
             } );
-        } ).
-        catch( err => {
+        } )
+        .catch( err => {
             dispatch( { type: GET_INSTRUCTORS_FAIL, payload: err } );
+        } );
+};
+
+export const ADD_INSTRUCTORS_INIT = "ADD_INSTRUCTORS_INIT";
+export const ADD_INSTRUCTORS_SUCCESS = "ADD_INSTRUCTORS_SUCCESS";
+export const ADD_INSTRUCTORS_FAIL = "ADD_INSTRUCTORS_FAIL";
+
+export const addInstructor = instructor => dispatch => {
+    dispatch( { type: ADD_INSTRUCTORS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "instructors" )
+        .add(instructor)
+        .then( res => {
+            console.log(res);
+            dispatch( {
+                type: ADD_INSTRUCTORS_SUCCESS, payload: instructor,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: ADD_INSTRUCTORS_FAIL, payload: err } );
+        } );
+};
+
+export const GET_TAS_INIT = "GET_TAS_INIT";
+export const GET_TAS_SUCCESS = "GET_TAS_SUCCESS";
+export const GET_TAS_FAIL = "GET_TAS_FAIL";
+
+export const getTas = () => dispatch => {
+    
+    dispatch( { type: GET_TAS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "tas" )
+        .get()
+        .then( tas => {
+            let tasArray = [];
+            tas.forEach( ta => {
+                tasArray.push( { ...ta.data(), id: ta.id } );
+            } );
+            dispatch( {
+                type: GET_TAS_SUCCESS, payload: tasArray,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: GET_TAS_FAIL, payload: err } );
         } );
 };
 
