@@ -19,14 +19,14 @@ class Instructors extends React.Component{
     };
     
     updateInstructor = () => {
-        debugger;
+
         const instructor = { id: this.state.selectedId, name: this.state.name };
         this.props.updateInstructor( instructor );
         this.setState( { name: "", selectedId: null, modalOpen: false } );
     };
     
     addInstructor = () => {
-        debugger;
+
         this.props.addInstructor( { name: this.state.name } );
         this.setState( { modalOpen: false, name: "" } );
     };

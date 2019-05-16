@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Col, Icon } from "antd";
+import Lessons from "../components/autoFill/Lessons";
 import Instructors from "../components/autoFill/Instructors";
+import Tas from '../components/autoFill/Tas';
 
 class AutoFill extends Component{
     state = {
@@ -31,8 +33,9 @@ class AutoFill extends Component{
             
             </Card>
             
-            { this.state.page === "instructors" &&
-            <Card><Instructors/></Card> }
+            { this.state.page === "instructors" && <Card><Instructors/></Card> }
+            { this.state.page === "lessons" && <Card><Lessons/></Card> }
+            { this.state.page === "tas" && <Card><Tas/></Card> }
         
         </div> );
     }
