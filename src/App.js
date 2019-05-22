@@ -9,11 +9,11 @@ import { Layout } from "antd";
 import Login from "./views/Login";
 import ManageStudents from "./views/ManageStudents";
 import Dashboard from "./views/Dashboard";
-import Attendance from "./oldviews/Attendance";
-import DailyStandup from "./oldviews/DailyStandup";
+import Attendance from "./views/Attendance";
+import DailyStandup from "./views/DailyStandup";
 import EditUser from "./oldviews/EditUser";
 import Student from "./oldviews/Student";
-import SprintForm from "./oldviews/SprintForm";
+import SprintForm from "./views/SprintForm";
 import AutoFill from "./views/AutoFill";
 
 class App extends React.Component{
@@ -26,8 +26,8 @@ class App extends React.Component{
     };
     
     componentDidMount(){
-        this.unregisterAuthObserver = firebase.auth().
-            onAuthStateChanged( () => this.props.checkAuth() );
+        this.unregisterAuthObserver = firebase.auth()
+            .onAuthStateChanged( () => this.props.checkAuth() );
     }
     
     componentWillUnmount(){
