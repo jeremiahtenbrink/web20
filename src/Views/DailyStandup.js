@@ -11,6 +11,7 @@ class DailyStandup extends Component{
         students: null,
         loaded: false,
         module: "Lesson",
+        sprintTopic: "Topic",
         wentWell: "",
         concerns: "",
         instructor: "Instructor",
@@ -29,7 +30,7 @@ class DailyStandup extends Component{
     }
     
     componentWillUpdate( nextProps, nextState, nextContext ){
-        debugger;
+        
         if( nextProps.students && nextProps.students.length > 0 &&
             !nextState.loaded ){
             this.setStudents( nextProps.students );
@@ -64,7 +65,7 @@ class DailyStandup extends Component{
     };
     
     getReportLink = () => {
-        debugger;
+        
         if( this.props.user ){
             let url = `https://airtable.com/shripCmauVlvxNrAT?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })&prefill_Sections=${ this.props.user.cohort }`;
             
@@ -73,7 +74,7 @@ class DailyStandup extends Component{
             }
             
             if( this.state.students ){
-                debugger;
+                
                 let afterFirst = false;
                 let absentString = "&prefill_Students+(Absent)=";
                 for( let i = 0; i < this.state.students.length; i++ ){
@@ -230,6 +231,33 @@ class DailyStandup extends Component{
                                     value={ "Instructor" }>Instructor</Option>
                             </Select>
                         </Form.Item>
+                        
+                        <Form.Item label={ "Sprint Topic" }>
+                            <Select
+                                showSearch
+                                style={ { width: 200 } }
+                                placeholder="Lesson"
+                                optionFilterProp="children"
+                                onChange={ ( e ) => {
+                                    this.onChangeSelect( e, "sprintTopic" );
+                                } }
+                                value={ this.state.sprintTopic }
+                                filterOption={ ( input,
+                                    option ) => option.props.children.toLowerCase()
+                                    .indexOf( input.toLowerCase() ) >= 0 }
+                            >
+                                { this.props.sprints &&
+                                Object.values( this.props.sprints )
+                                    .sort( ( a, b ) => a.week - b.week )
+                                    .map( sprint => {
+                                        debugger;
+                                        return <Option key={ sprint.id }
+                                                       value={ sprint.id }>{ `${ sprint.name }` }</Option>;
+                                    } ) }
+                                <Option value={ "Lesson" }>Lesson</Option>
+                            </Select>
+                        </Form.Item>
+                        
                         <Form.Item label={ "Lesson" }>
                             <Select
                                 showSearch
@@ -245,14 +273,18 @@ class DailyStandup extends Component{
                                     .indexOf( input.toLowerCase() ) >= 0 }
                             >
                                 { this.props.lessons &&
-                                this.props.lessons.map( lesson => {
-                                    
-                                    return <Option key={ lesson.id }
-                                                   value={ lesson.name }>{ `${ lesson.name }` }</Option>;
-                                } ) }
+                                this.props.lessons[ this.state.sprintTopic ] &&
+                                Object.values( this.props.lessons[ this.state.sprintTopic ] )
+                                    .sort( ( a, b ) => a.order - b.order )
+                                    .map( lesson => {
+                                        debugger;
+                                        return <Option key={ lesson.id }
+                                                       value={ lesson.name }>{ `${ lesson.name }` }</Option>;
+                                    } ) }
                                 <Option value={ "Lesson" }>Lesson</Option>
                             </Select>
                         </Form.Item>
+                        
                         <Form.Item label={ "Instructor Rating" }>
                             <RadioGroup name={ "instructionRating" }
                                         onChange={ this.onChange }
@@ -387,9 +419,10 @@ class DailyStandup extends Component{
 const mpts = state => ( {
     students: state.students.students,
     user: state.auth.user,
-    lessons: state.autoFill.lessons,
+    lessons: state.sprints.lessons,
     instructors: state.autoFill.instructors,
     flexTas: state.autoFill.tas,
+    sprints: state.sprints.sprints,
 } );
 
 export default connect( mpts, {}, )( DailyStandup );

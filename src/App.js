@@ -1,7 +1,7 @@
 import React from "react";
-import { Route, Switch, NavLink } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import {
-    checkAuth, getStudents, getUser, getInstructors, getSections, getTas
+    checkAuth, getStudents, getUser, getInstructors, getTas, getSprints
 } from "./actions";
 import firebase from "./firebase/firebase";
 import { connect } from "react-redux";
@@ -12,9 +12,10 @@ import Dashboard from "./views/Dashboard";
 import Attendance from "./views/Attendance";
 import DailyStandup from "./views/DailyStandup";
 import EditUser from "./oldviews/EditUser";
-import Student from "./oldviews/Student";
+import Student from "./views/Student";
 import SprintForm from "./views/SprintForm";
 import AutoFill from "./views/AutoFill";
+import "./App.scss";
 
 class App extends React.Component{
     state = {
@@ -39,7 +40,7 @@ class App extends React.Component{
             !nextProps.students && !nextState.attemptedLoad ){
             this.props.getStudents( nextProps.uid );
             this.props.getUser( nextProps.uid );
-            this.props.getSections();
+            this.props.getSprints();
             this.props.getInstructors();
             this.props.getTas();
             this.setState( { isGettingStudents: true, attemptedLoad: true } );
@@ -58,7 +59,7 @@ class App extends React.Component{
                            render={ props => <Login { ...props } /> }/>
                     <Route
                         exact
-                        path="/students"
+                        path="/manage-students"
                         render={ props => <ManageStudents { ...props } /> }
                     />
                     <Route
@@ -105,7 +106,6 @@ const mapStateToProps = ( { auth } ) => ( {
     uid: auth.uid, user: auth.user,
 } );
 
-export default connect( mapStateToProps,
-    { checkAuth, getStudents, getUser, getSections, getInstructors, getTas },
-)(
-    App );
+export default connect( mapStateToProps, {
+    checkAuth, getStudents, getUser, getInstructors, getTas, getSprints
+}, )( App );

@@ -1,0 +1,105 @@
+.cover {
+  height: 100vh;
+}
+
+.cover-img {
+  background-image: url(https://source.unsplash.com/collection/4720465/);
+  background-size: cover;
+}
+
+.cover-img-2 {
+  background-image: url(https://source.unsplash.com/collection/4720465/);
+  background-size: cover;
+  background-position-y: center;
+}
+
+.cover-3 {
+  background-image: url(https://source.unsplash.com/collection/4720465/);
+  background-size: cover;
+}
+
+.overflow-scroll {
+  height: 100vh;
+  overflow-y: scroll;
+}
+
+.inline {
+  display: flex;
+  flex-direction: row;
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+
+}
+
+.center-vert {
+  align-items: center;
+}
+
+
+.mg {
+
+  &-right {
+    &-sm {
+      margin-left: .5rem;
+    }
+
+    &-md {
+      margin-left: 1rem;
+    }
+
+    &-lg {
+      margin-left: 2rem;
+    }
+  }
+
+  &-left {
+    &-sm {
+      margin-left: .5rem;
+    }
+
+    &-md {
+      margin-left: 1rem;
+    }
+
+    &-lg {
+      margin-left: 2rem;
+    }
+  }
+
+  &-top {
+    &-sm {
+      margin-top: .5rem;
+    }
+
+    &-md {
+      margin-top: 1rem;
+    }
+
+    &-lg {
+      margin-top: 2rem;
+    }
+  }
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.text {
+  &-green {
+    color: green;
+  }
+
+  &-red {
+    color: red;
+  }
+}
+
+.align {
+  &-right {
+    justify-content: flex-end;
+  }
+}

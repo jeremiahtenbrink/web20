@@ -1,0 +1,10 @@
+.student {
+  &__sprint:nth-child(odd) {
+    background-color: #f0f2f5;
+  }
+
+  &__sprint {
+    border-radius: 3px;
+    padding: 2px;
+  }
+}

@@ -35,12 +35,11 @@ class SprintForm extends Component{
     };
     
     onChangeSelect = ( value, name ) => {
-        debugger;
+        
         this.setState( { [ name ]: value } );
     };
     
     getSubmissionUrl = () => {
-        debugger;
         
         let url = "";
         if( this.props.user ){
@@ -154,11 +153,13 @@ class SprintForm extends Component{
                                 .indexOf( input.toLowerCase() ) >= 0 }
                         >
                             { this.props.sprints &&
-                            this.props.sprints.map( sprint => {
-                                
-                                return <Option key={ sprint.id }
-                                               value={ sprint.name }>{ `${ sprint.name }` }</Option>;
-                            } ) }
+                            Object.values( this.props.sprints )
+                                .sort( ( a, b ) => a.week - b.week )
+                                .map( sprint => {
+                                    
+                                    return <Option key={ sprint.id }
+                                                   value={ sprint.name }>{ `${ sprint.name }` }</Option>;
+                                } ) }
                             <Option
                                 value={ "Sprint" }>Sprint</Option>
                         </Select>
@@ -170,7 +171,7 @@ class SprintForm extends Component{
                             placeholder="Student"
                             optionFilterProp="children"
                             onChange={ ( e ) => {
-                                debugger;
+                                
                                 this.onChangeSelect( e, "student" );
                             } }
                             value={ this.state.student }
@@ -466,7 +467,7 @@ const mstp = state => {
     return {
         students: state.students.students,
         user: state.auth.user,
-        sprints: state.autoFill.sprints,
+        sprints: state.sprints.sprints,
     };
 };
 

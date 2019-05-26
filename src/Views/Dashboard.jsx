@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-    Card, Icon, Skeleton, Avatar, Table, Button, Col
+    Card, Icon, Skeleton, Avatar, Table, Button, Col, Divider, Popconfirm
 } from "antd";
 import axios from "axios";
 import { getStudents, logout } from "../actions";
@@ -29,7 +29,8 @@ class Dashboard extends React.Component{
                 actions={ [
                     <Icon type="reload" onClick={ this.getJoke }/>,
                     <Icon type="usergroup-add"
-                          onClick={ () => this.props.history.push( "/students" ) }
+                          onClick={ () => this.props.history.push(
+                              "/manage-students" ) }
                     />, <Icon type="logout" onClick={ this.props.logout }/>,
                 ] }>
                 <Skeleton loading={ this.props.isLoading } avatar active>
@@ -85,7 +86,22 @@ class Dashboard extends React.Component{
                     <Table.Column title="Github" dataIndex="github"
                                   key="github" render={ ( text, record ) => (
                         <a href={ `https://github.com/${ text }` }
-                           target="_blank">{ text }</a> ) }/>
+                           target="_blank">{ text }</a> ) }
+                    />
+                    <Table.Column
+                        title="Action"
+                        key="action"
+                        render={ student => (
+                            <Link to={ `/student/${ student.id }` }>
+                                <div className={ "inline pointer center" }>
+                                    <Icon type={ "user" }/>
+                                    <h3 className={ "mg-left-md" }>
+                                        Student Dashboard
+                                    </h3>
+                                </div>
+                            </Link> ) }
+                    />
+                
                 </Table>
             </div>
         </div> );
