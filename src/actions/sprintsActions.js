@@ -31,7 +31,7 @@ export const deleteSprint = sprint => dispatch => {
     store.collection( "autoFill" )
         .doc( "web" )
         .collection( "sprints" )
-        .doc( sprint.name ).delete()
+        .doc( sprint.id ).delete()
         .then( res => {
             console.log( res );
             dispatch( {
@@ -48,12 +48,12 @@ export const UPDATE_SPRINT_SUCCESS = "UPDATE_SPRINT_SUCCESS";
 export const UPDATE_SPRINT_FAIL = "UPDATE_SPRINT_FAIL";
 
 export const updateSprint = sprint => dispatch => {
-    
+    debugger;
     dispatch( { type: UPDATE_SPRINT_INIT } );
     store.collection( "autoFill" )
         .doc( "web" )
         .collection( "sprints" )
-        .doc( sprint.name ).set( sprint )
+        .doc( sprint.id ).set( sprint )
         .then( res => {
             console.log( res );
             dispatch( {
@@ -116,8 +116,9 @@ export const getLessons = ( sprint ) => dispatch => {
                     lessonData.sprint = sprint.id;
                     lessonsObject.lessons[ lesson.id ] = lessonData;
                 } );
-                lessonsObject.sprintId = sprint.id;
+                
             }
+            lessonsObject.sprintId = sprint.id;
             dispatch( {
                 type: GET_LESSONS_SUCCESS, payload: lessonsObject,
             } );
