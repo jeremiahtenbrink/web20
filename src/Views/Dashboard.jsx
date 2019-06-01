@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-    Card, Icon, Skeleton, Avatar, Table, Button, Col, Divider, Popconfirm
+    Card, Icon, Skeleton, Avatar, Table, Col, Popover
 } from "antd";
 import axios from "axios";
 import { getStudents, logout } from "../actions";
@@ -24,15 +24,27 @@ class Dashboard extends React.Component{
     };
     
     render(){
+        const actions = [
+            <Popover content={ <p>Reload Joke</p> }>
+                <Icon type="reload" onClick={ this.getJoke }/>
+            </Popover>, <Popover content={ <p>Manage Students</p> }>
+                <Icon type="usergroup-add"
+                      onClick={ () => this.props.history.push(
+                          "/manage-students" ) }/>
+            </Popover>, <Popover content={ <p>Logout</p> }>
+                <Icon type="logout" onClick={ this.props.logout }/>
+            </Popover>,
+        ];
+        
+        if( this.props.user && this.props.user.isAdmin ){
+            actions.push( <Popover content={ <p>Admin</p> }><Icon
+                onClick={ () => this.props.history.push( "/autofill" ) }
+                type="setting"/></Popover> );
+        }
+        
         return ( <div style={ { maxWidth: "800px", margin: "20px auto" } }>
             <Card
-                actions={ [
-                    <Icon type="reload" onClick={ this.getJoke }/>,
-                    <Icon type="usergroup-add"
-                          onClick={ () => this.props.history.push(
-                              "/manage-students" ) }
-                    />, <Icon type="logout" onClick={ this.props.logout }/>,
-                ] }>
+                actions={ actions }>
                 <Skeleton loading={ this.props.isLoading } avatar active>
                     <Card.Meta
                         avatar={ <Avatar src={ LambdaLogo }/> }
@@ -43,27 +55,38 @@ class Dashboard extends React.Component{
             </Card>
             
             <Card>
-                <Col span={ 8 } align={ "center" }>
-                    <Link to={ "/attendance" }>
-                        <Icon type="schedule" onClick={ this.getJoke }/>
-                        <p>Attendance</p>
-                    </Link>
-                </Col>
-                <Col span={ 8 } align={ "center" }>
-                    <Link to={ "/standup" }>
-                        <Icon type="profile"
-                              onClick={ () => this.props.history.push(
-                                  "/students" ) }
+                <Popover content={ <p>Attendance</p> }>
+                    <Col span={ 8 } align={ "center" }
+                         className={ "color-grey hover-blue" }
+                         onClick={ () => this.props.history.push( "/attendance" ) }
+                    >
+                        <Icon type="schedule"
+                              className={ "font-32" }
+                        
                         />
-                        <p>Daily Standup</p>
-                    </Link>
-                </Col>
-                <Col span={ 8 } align={ "center" }>
-                    <Link to={ "/sprint" }>
-                        <Icon type="project" onClick={ this.props.logout }/>
-                        <p>Sprint</p>
-                    </Link>
-                </Col>
+                    </Col>
+                </Popover>
+                <Popover content={ <p>Daily Standup</p> }>
+                    <Col span={ 8 } align={ "center" }
+                         className={ "color-grey hover-blue" }
+                         onClick={ () => this.props.history.push( "/standup" ) }
+                    >
+                        <Icon type="profile"
+                              className={ "font-32" }
+                        />
+                    </Col>
+                </Popover>
+                <Popover content={ <p>Sprint Retro</p> }>
+                    <Col span={ 8 } align={ "center" }
+                         className={ "color-grey hover-blue" }
+                         onClick={ () => this.props.history.push( "/sprint" ) }
+                    >
+                        <Icon type="project"
+                        
+                              className={ "font-32" }
+                        />
+                    </Col>
+                </Popover>
             </Card>
             
             <div style={ { backgroundColor: "white" } }>
