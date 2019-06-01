@@ -90,6 +90,7 @@ class Student extends Component{
             studentId: this.state.studentId,
         };
         this.props.editStudent( student );
+        
     };
     
     completeLesson = lesson => {
@@ -110,101 +111,111 @@ class Student extends Component{
     };
     
     render(){
-        return ( <div style={ { maxWidth: "800px", margin: "30px auto" } }>
-            { this.state.loaded ? ( <>
-                <div className={ "inline" }>
-                    <Link to="/">
-                        <Button type={ "primary" } size={ "large" }>
-                            Back
-                        </Button>
-                    </Link>
-                    <Button size={ "large" } className={ "mg-left-sm" }
-                            onClick={ () => this.setState( { modalOpen: true } ) }
-                    >
-                        Edit User
-                    </Button>
-                    <h1 className={ "mg-left-lg" }>
-                        { this.props.selectedStudent.firstName } { this.props.selectedStudent.lastName }
-                    </h1>
-                </div>
-                <div className={ "mg-top-lg" }>
-                    <h3>Github Handle: { this.props.selectedStudent.github ?
-                        this.props.selectedStudent.github : "" }
-                    </h3>
-                
-                </div>
-                
-                <div className={ "mg-top-lg" }>
-                    <h3>Link:
-                        { this.props.selectedStudent.link ?
-                            this.props.selectedStudent.link : "" }
-                    </h3>
-                </div>
-                <div className={ "mg-top-lg" }>
-                    <Button onClick={ this.generateLink }>
-                        { this.props.selectedStudent.link ? "Generate New ID" :
-                            "Generate ID" }
-                    </Button>
-                </div>
-                
-                <div style={ { backgroundColor: "white" } }>
-                    { Object.values( this.props.sprints )
-                        .sort( ( a, b ) => a.week - b.week ).map( sprint => {
-                            return <Sprint sprint={ sprint }/>;
-                        } ) }
-                </div>
-                
-                
-                <Modal
-                    title={ `Update Student` }
-                    visible={ this.state.modalOpen }
-                    okText={ "Update Student" }
-                    onOk={ this.updateStudentSubmit }
-                    onCancel={ () => this.cancelEdit() }>
-                    <Row type="flex" gutter={ 24 }>
-                        <Form onSubmit={ this.onSubmit }>
-                            <Form.Item label={ "First Name" }>
-                                <Input
-                                    id={ "firstName" }
-                                    name={ "firstName" }
-                                    value={ this.state.firstName }
-                                    placeholder={ "First Name" }
-                                    onChange={ this.onChange }
-                                />
-                            </Form.Item>
-                            <Form.Item label={ "Last Name" }>
-                                <Input
-                                    id={ "lastName" }
-                                    name={ "lastName" }
-                                    value={ this.state.lastName }
-                                    placeholder={ "Last Name" }
-                                    onChange={ this.onChange }
-                                />
-                            </Form.Item>
-                            <Form.Item label={ "Github Handle" }>
-                                <Input
-                                    id={ "github" }
-                                    name={ "github" }
-                                    value={ this.state.github }
-                                    placeholder={ "Github" }
-                                    onChange={ this.onChange }
-                                />
-                            </Form.Item>
-                        </Form>
-                    </Row>
-                </Modal>
+        return (
             
-            </> ) : ( <>
-                <Link to="/">
-                    <Button className="my-3">Back</Button>
-                </Link>
-                <Form onSubmit={ this.submitForm }>
-                    <Skeleton count={ 3 } height={ 38 }/>
-                    <Skeleton height={ 38 } width={ 75 }/>
-                </Form>
-            </> ) }
-        
-        </div> );
+            <div style={ { maxWidth: "800px", margin: "30px auto" } }>
+                { this.state.loaded ? (
+                    
+                    <>
+                        <div className={ "inline" }>
+                            <Link to="/">
+                                <Button type={ "primary" } size={ "large" }>
+                                    Back
+                                </Button>
+                            </Link>
+                            <Button size={ "large" } className={ "mg-left-sm" }
+                                    onClick={ () => this.setState( { modalOpen: true } ) }
+                            >
+                                Edit User
+                            </Button>
+                            <h1 className={ "mg-left-lg" }>
+                                { this.props.selectedStudent.firstName } { this.props.selectedStudent.lastName }
+                            </h1>
+                        </div>
+                        
+                        <div className={ "mg-top-lg" }>
+                            <h3>Github
+                                Handle: { this.props.selectedStudent.github ?
+                                    this.props.selectedStudent.github : "" }
+                            </h3>
+                        </div>
+                        
+                        <div className={ "mg-top-lg" }>
+                            <h3>Link:
+                                { this.props.selectedStudent.id ?
+                                    this.props.selectedStudent.id : "" }
+                            </h3>
+                        </div>
+                        
+                        <div className={ "mg-top-lg" }>
+                            <Button onClick={ this.generateLink }>
+                                { this.props.selectedStudent.link ?
+                                    "Generate New ID" : "Generate ID" }
+                            </Button>
+                        </div>
+                        
+                        <div style={ { backgroundColor: "white" } }>
+                            { Object.values( this.props.sprints )
+                                .sort( ( a, b ) => a.week - b.week )
+                                .map( sprint => {
+                                    return <Sprint key={ sprint.id }
+                                                   sprint={ sprint }/>;
+                                } ) }
+                        </div>
+                        
+                        <Modal
+                            title={ `Update Student` }
+                            visible={ this.state.modalOpen }
+                            okText={ "Update Student" }
+                            onOk={ this.updateStudentSubmit }
+                            onCancel={ () => this.cancelEdit() }>
+                            <Row type="flex" gutter={ 24 }>
+                                <Form onSubmit={ this.onSubmit }>
+                                    <Form.Item label={ "First Name" }>
+                                        <Input
+                                            id={ "firstName" }
+                                            name={ "firstName" }
+                                            value={ this.state.firstName }
+                                            placeholder={ "First Name" }
+                                            onChange={ this.onChange }
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label={ "Last Name" }>
+                                        <Input
+                                            id={ "lastName" }
+                                            name={ "lastName" }
+                                            value={ this.state.lastName }
+                                            placeholder={ "Last Name" }
+                                            onChange={ this.onChange }
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label={ "Github Handle" }>
+                                        <Input
+                                            id={ "github" }
+                                            name={ "github" }
+                                            value={ this.state.github }
+                                            placeholder={ "Github" }
+                                            onChange={ this.onChange }
+                                        />
+                                    </Form.Item>
+                                </Form>
+                            </Row>
+                        </Modal>
+                    
+                    </> ) : (
+                    
+                    <>
+                        <Link to="/">
+                            <Button className="my-3">Back</Button>
+                        </Link>
+                        
+                        <Form onSubmit={ this.submitForm }>
+                            <Skeleton count={ 3 } height={ 38 }/>
+                            <Skeleton height={ 38 } width={ 75 }/>
+                        </Form>
+                    </> ) }
+            
+            </div> );
     }
 }
 

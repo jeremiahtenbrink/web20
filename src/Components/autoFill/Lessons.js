@@ -143,7 +143,8 @@ class Lessons extends Component{
 const mstp = state => {
     
     return {
-        sprints: state.sprints.sprints.sort( ( a, b ) => a.week - b.week ),
+        sprints: Object.values( state.sprints.sprints )
+            .sort( ( a, b ) => a.week - b.week ),
         selectedSprint: state.sprints.selectedSprint,
     };
 };

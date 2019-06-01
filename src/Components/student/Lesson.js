@@ -4,8 +4,6 @@ import { Checkbox, Col } from "antd";
 import { connect } from "react-redux";
 
 const Lesson = props => {
-    debugger;
-    
     let checked = false;
     if( props.studentLessons[ props.lesson.id ] &&
         props.studentLessons[ props.lesson.id ].completed ){

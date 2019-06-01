@@ -38,6 +38,10 @@
   align-items: center;
 }
 
+.baseline {
+  align-items: baseline;
+}
+
 
 .mg {
 
@@ -102,4 +106,28 @@
   &-right {
     justify-content: flex-end;
   }
+}
+
+.color {
+  &-light-grey {
+    color: lightgrey;
+  }
+
+  &-grey {
+    color: grey;
+  }
+}
+
+.font {
+  &-24 {
+    font-size: 24px;
+  }
+
+  &-32 {
+    font-size: 32px;
+  }
+}
+
+.hover-blue:hover {
+  color: lightskyblue;
 }

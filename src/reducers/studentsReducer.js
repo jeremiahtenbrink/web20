@@ -117,7 +117,7 @@ export const studentsReducer = ( state = initialState, action ) => {
         case COMPLETE_LESSON_INIT:
             return { ...state, updatingLessons: true };
         case COMPLETE_LESSON_SUCCESS:
-            debugger;
+            
             
             state.selectedStudentLessons[ action.payload.id ] = { ...action.payload };
             return {

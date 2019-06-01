@@ -250,7 +250,7 @@ class DailyStandup extends Component{
                                 Object.values( this.props.sprints )
                                     .sort( ( a, b ) => a.week - b.week )
                                     .map( sprint => {
-                                        debugger;
+                                        
                                         return <Option key={ sprint.id }
                                                        value={ sprint.id }>{ `${ sprint.name }` }</Option>;
                                     } ) }
@@ -277,7 +277,7 @@ class DailyStandup extends Component{
                                 Object.values( this.props.lessons[ this.state.sprintTopic ] )
                                     .sort( ( a, b ) => a.order - b.order )
                                     .map( lesson => {
-                                        debugger;
+                                        
                                         return <Option key={ lesson.id }
                                                        value={ lesson.name }>{ `${ lesson.name }` }</Option>;
                                     } ) }

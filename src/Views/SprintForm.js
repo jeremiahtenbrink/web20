@@ -267,7 +267,7 @@ class SprintForm extends Component{
                     </Form.Item>
                     
                     <Form.Item label={ "Sprint Rating" }>
-                        <RadioGroup name={ "generalRating" }
+                        <RadioGroup name={ "sprintRating" }
                                     onChange={ this.onChange }
                                     value={ this.state.sprintRating }>
                             <Radio value={ 1 }>

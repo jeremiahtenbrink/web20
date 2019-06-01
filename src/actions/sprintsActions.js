@@ -152,6 +152,32 @@ export const addLesson = ( sprint, lesson ) => dispatch => {
         } );
 };
 
+export const EDIT_LESSON_INIT = "EDIT_LESSON_INIT";
+export const EDIT_LESSON_SUCCESS = "EDIT_LESSON_SUCCESS";
+export const EDIT_LESSON_FAIL = "EDIT_LESSON_FAIL";
+
+export const editLesson = ( sprint, lesson ) => dispatch => {
+    debugger;
+    lesson.sprint = sprint.id;
+    dispatch( { type: EDIT_LESSON_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "sprints" )
+        .doc( sprint.id )
+        .collection( "lessons" )
+        .doc( lesson.id )
+        .set( lesson )
+        .then( res => {
+            console.log( res );
+            dispatch( {
+                type: EDIT_LESSON_SUCCESS, payload: lesson,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: EDIT_LESSON_FAIL, payload: err } );
+        } );
+};
+
 export const CHANGE_SELECTED_SPRINT = "CHANGE_SELECTED_SPRINT";
 
 export const changeSelectedSprint = sprint => dispatch => {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Col, Icon, Row } from "antd";
+import { Col, Icon, Row, Checkbox } from "antd";
 import { getLessons, completeStudentLesson } from "../../actions";
 import { connect } from "react-redux";
 import "./sprint.scss";
@@ -21,8 +21,8 @@ class Sprint extends Component{
         } ) );
     };
     
-    completeLesson = lesson => {
-        debugger;
+    completeLesson = ( lesson = this.state.sprint ) => {
+        
         lesson.completed = true;
         if( this.props.selectedStudentLessons &&
             this.props.selectedStudentLessons[ lesson.id ] &&
@@ -47,6 +47,13 @@ class Sprint extends Component{
             
             </div>
             { this.state.open && <Row className={ "inline" }>
+                <Row className={ "mg-left-lg" }>
+                    <Checkbox onClick={ e => this.completeLesson() }
+                              checked={ this.props.selectedStudentLessons[ this.state.sprint.id ] &&
+                              this.props.selectedStudentLessons[ this.state.sprint.id ].completed }>Sprint
+                        Complete</Checkbox>
+                </Row>
+                
                 <Col sm={ 24 } md={ 1 } offset={ 2 }>
                     <h4>Complete</h4>
                 </Col>

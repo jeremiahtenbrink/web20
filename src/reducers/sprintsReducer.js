@@ -4,7 +4,8 @@ import {
     DELETE_SPRINT_SUCCESS, DELETE_SPRINT_FAIL, GET_SPRINT_INIT,
     GET_SPRINT_SUCCESS, GET_SPRINT_FAIL, GET_LESSONS_INIT, GET_LESSONS_SUCCESS,
     GET_LESSONS_FAIL, ADD_LESSON_INIT, ADD_LESSON_SUCCESS, ADD_LESSON_FAIL,
-    CHANGE_SELECTED_SPRINT,
+    CHANGE_SELECTED_SPRINT, EDIT_LESSON_INIT, EDIT_LESSON_SUCCESS,
+    EDIT_LESSON_FAIL
 } from "../actions";
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
     gettingSprints: false,
     gettingLessons: false,
     updatingLessons: false,
+    editingLesson: false,
     lessonsLoaded: false,
     addingLesson: false,
     selectedSprint: null,
@@ -124,6 +126,23 @@ export const sprintsReducer = ( state = initialState, action ) => {
             }
         case ADD_LESSON_FAIL:
             return { ...state, gettingLessons: false, error: action.payload };
+        
+        
+        //LESSONS EDIT ---------------------------------------------------------
+        
+        case EDIT_LESSON_INIT:
+            return { ...state, editingLesson: true };
+        case EDIT_LESSON_SUCCESS:
+            debugger;
+            state.lessons[ action.payload.sprint ][ action.payload.id ] = { ...action.payload };
+            return {
+                ...state,
+                editingLesson: false,
+                lessons: { ...state.lessons },
+                error: ""
+            };
+        case EDIT_LESSON_FAIL:
+            return { ...state, editingLesson: false, error: action.payload };
         
         
         //DEFAULT ------------------------------------------------------------

@@ -94,7 +94,7 @@ export const COLLECT_STUDENT_LESSONS_SUCCESS = "COLLECT_STUDENT_LESSONS_SUCCESS"
 export const COLLECT_STUDENT_LESSONS_FAILED = "COLLECT_STUDENT_LESSONS_FAILED";
 
 export const getStudentLessons = ( student, userId ) => dispatch => {
-   
+    
     dispatch( { type: COLLECT_STUDENT_LESSONS_INIT } );
     store.collection( "students" )
         .doc( student.id ).get().then( ( res ) => {
@@ -173,5 +173,9 @@ export const CHANGE_SELECTED_STUDENT = "CHANGE_SELECTED_STUDENT";
 
 export const changeSelectedStudent = studentId => dispatch => {
     dispatch( { type: CHANGE_SELECTED_STUDENT, payload: studentId } );
+};
+
+export const copyStudentsOverToTheirOwnCollection = () => dispatch => {
+
 };
 
