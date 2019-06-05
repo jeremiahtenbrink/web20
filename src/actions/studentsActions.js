@@ -54,6 +54,7 @@ export const DEL_STUDENT_SUCCESS = "DEL_STUDENT_SUCCESS";
 export const DEL_STUDENT_FAILED = "DEL_STUDENT_FAILED";
 
 export const delStudent = ( studentId ) => dispatch => {
+    debugger;
     dispatch( { type: DEL_STUDENT_INIT } );
     store
         .collection( "students" )
@@ -176,6 +177,44 @@ export const changeSelectedStudent = studentId => dispatch => {
 };
 
 export const copyStudentsOverToTheirOwnCollection = () => dispatch => {
-
+    debugger;
+    store.collection( "users" ).get().then( res => {
+        let users = [];
+        res.docs.forEach( user => {
+            let data = user.data();
+            data.id = user.id;
+            users.push( data );
+        } );
+        
+        users.forEach( user => {
+            store.collection( "users" )
+                .doc( user.id )
+                .collection( "students" )
+                .get()
+                .then( res => {
+                    let students = [];
+                    if( !res.empty ){
+                        res.docs.forEach( student => {
+                            let studentData = student.data();
+                            studentData.id = student.id;
+                            students.push( studentData );
+                        } );
+                    }
+                    
+                    students.forEach( student => {
+                        student.pm = user.id;
+                        store.collection( "students" )
+                            .doc( student.id )
+                            .set( student )
+                            .then( res => {
+                                console.log( `${ student.firstName } ${ student.lastName } ${ student.id } created successfully.` );
+                            } );
+                    } );
+                    
+                } );
+        } );
+    } ).catch( err => {
+        console.log( err );
+    } );
 };
 

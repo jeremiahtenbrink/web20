@@ -64,9 +64,10 @@ export const studentsReducer = ( state = initialState, action ) => {
         case DEL_STUDENT_INIT:
             return { ...state, deletingStudent: true };
         case DEL_STUDENT_SUCCESS:
-            let students = state.students;
-            delete students[ action.payload ];
-            return { ...state, students: { ...students } };
+            debugger;
+            let students = state.students.filter(
+                student => student.id !== action.payload );
+            return { ...state, students: [ ...students ] };
         case DEL_STUDENT_FAILED:
             return { ...state, deletingStudent: false, error: action.payload };
         
@@ -117,7 +118,6 @@ export const studentsReducer = ( state = initialState, action ) => {
         case COMPLETE_LESSON_INIT:
             return { ...state, updatingLessons: true };
         case COMPLETE_LESSON_SUCCESS:
-            
             
             state.selectedStudentLessons[ action.payload.id ] = { ...action.payload };
             return {

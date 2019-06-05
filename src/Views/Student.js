@@ -77,9 +77,6 @@ class Student extends Component{
         this.setStudentInfo();
     };
     
-    generateLink = () => {
-    };
-    
     updateStudentSubmit = e => {
         
         let student = {
@@ -141,17 +138,11 @@ class Student extends Component{
                         </div>
                         
                         <div className={ "mg-top-lg" }>
-                            <h3>Link:
+                            <h3>Link: <span className={ "mg-left-lg" }>
                                 { this.props.selectedStudent.id ?
                                     this.props.selectedStudent.id : "" }
+                                    </span>
                             </h3>
-                        </div>
-                        
-                        <div className={ "mg-top-lg" }>
-                            <Button onClick={ this.generateLink }>
-                                { this.props.selectedStudent.link ?
-                                    "Generate New ID" : "Generate ID" }
-                            </Button>
                         </div>
                         
                         <div style={ { backgroundColor: "white" } }>

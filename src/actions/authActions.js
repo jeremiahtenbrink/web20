@@ -14,6 +14,7 @@ export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAILED = "AUTH_FAILED";
 
 export const checkAuth = () => dispatch => {
+    debugger;
     dispatch( { type: AUTH_INIT } );
     const { currentUser } = firebase.auth();
     if( currentUser ){
@@ -32,6 +33,7 @@ export const SIGNIN_NEW_USER = "SIGNIN_NEW_USER";
 export const SIGNIN_FAILED = "SIGNIN_FAILED";
 
 export const signIn = authType => dispatch => {
+    debugger;
     dispatch( { type: SIGNIN_INIT } );
     switch( authType ){
         case GOOGLE_PROVIDER:
@@ -57,6 +59,7 @@ export const signIn = authType => dispatch => {
                 .catch( function( error ){
                     dispatch( { type: SIGNIN_FAILED, payload: error.message } );
                 } );
+            return;
         case GITHUB_PROVIDER:
             firebase
                 .auth()

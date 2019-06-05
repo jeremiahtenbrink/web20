@@ -24,6 +24,7 @@ class Dashboard extends React.Component{
     };
     
     render(){
+        debugger;
         const actions = [
             <Popover content={ <p>Reload Joke</p> }>
                 <Icon type="reload" onClick={ this.getJoke }/>
