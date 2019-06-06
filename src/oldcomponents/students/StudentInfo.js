@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import types from "prop-types";
 import Input from "reactstrap/es/Input";
 
 class StudentInfo extends React.Component {
@@ -56,10 +56,10 @@ class StudentInfo extends React.Component {
 }
 
 StudentInfo.propTypes = {
-  students: PropTypes.arrayOf({
-    id: PropTypes.string,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string
+  students: types.arrayOf({
+    id: types.string,
+    firstName: types.string,
+    lastName: types.string
   })
 };
 

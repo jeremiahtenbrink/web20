@@ -1,64 +1,184 @@
-import {store} from '../firebase/firebase';
+import { store } from "../firebase/firebase";
 
-export const GET_SECTIONS_INIT = 'GET_SECTIONS_INIT';
-export const GET_SECTIONS_SUCCESS = 'GET_SECTIONS_SUCCESS';
-export const GET_SECTIONS_FAIL = 'GET_SECTIONS_FAIL';
+export const UPDATE_INSTRUCTORS_INIT = "UPDATE_INSTRUCTORS_INIT";
+export const UPDATE_INSTRUCTORS_SUCCESS = "UPDATE_INSTRUCTORS_SUCCESS";
+export const UPDATE_INSTRUCTORS_FAIL = "UPDATE_INSTRUCTORS_FAIL";
 
-export const getSections = () => dispatch => {
-  dispatch({type: GET_SECTIONS_INIT});
-  store
-    .collection('autoFill')
-    .doc('web')
-    .collection('sections')
-    .orderBy('order', 'asc')
-    .get()
-    .then(sections => {
-      let sectionsArray = [];
-      sections.forEach(section => {
-        const {name, isProject} = section.data();
-        if(isProject){
-          sectionsArray.push(name)
-        }
-      });
-      dispatch({
-        type: GET_SECTIONS_SUCCESS,
-        payload: sectionsArray,
-      });
-    })
-    .catch(err => {
-      dispatch({type: GET_SECTIONS_FAIL, payload: err});
-    });
+export const updateInstructor = instructor => dispatch => {
+    
+    dispatch( { type: UPDATE_INSTRUCTORS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "instructors" ).doc( instructor.id )
+        .update( instructor )
+        .then( res => {
+            
+            console.log( res );
+            dispatch( {
+                type: UPDATE_INSTRUCTORS_SUCCESS, payload: instructor,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: UPDATE_INSTRUCTORS_FAIL, payload: err } );
+        } );
 };
 
-export const GET_INSTRUCTORS_INIT = 'GET_INSTRUCTORS_INIT';
-export const GET_INSTRUCTORS_SUCCESS = 'GET_INSTRUCTORS_SUCCESS';
-export const GET_INSTRUCTORS_FAIL = 'GET_INSTRUCTORS_FAIL';
+export const DELETE_INSTRUCTORS_INIT = "DELETE_INSTRUCTORS_INIT";
+export const DELETE_INSTRUCTORS_SUCCESS = "DELETE_INSTRUCTORS_SUCCESS";
+export const DELETE_INSTRUCTORS_FAIL = "DELETE_INSTRUCTORS_FAIL";
+
+export const deleteInstructor = instructor => dispatch => {
+    
+    dispatch( { type: DELETE_INSTRUCTORS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "instructors" ).doc( instructor.id )
+        .delete()
+        .then( res => {
+            
+            console.log( res );
+            dispatch( {
+                type: DELETE_INSTRUCTORS_SUCCESS, payload: instructor,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: DELETE_INSTRUCTORS_FAIL, payload: err } );
+        } );
+};
+
+export const GET_INSTRUCTORS_INIT = "GET_INSTRUCTORS_INIT";
+export const GET_INSTRUCTORS_SUCCESS = "GET_INSTRUCTORS_SUCCESS";
+export const GET_INSTRUCTORS_FAIL = "GET_INSTRUCTORS_FAIL";
 
 export const getInstructors = () => dispatch => {
-  dispatch({type: GET_INSTRUCTORS_INIT});
-  store
-    .collection('autoFill')
-    .doc('web')
-    .collection('instructors')
-    .orderBy('name', 'asc')
-    .get()
-    .then(instructors => {
-      let instructorArray = [];
-      instructors.forEach(instructor => {
-        instructorArray.push(instructor.data().name)
-      });
-      dispatch({
-        type: GET_INSTRUCTORS_SUCCESS,
-        payload: instructorArray,
-      });
-    })
-    .catch(err => {
-      dispatch({type: GET_INSTRUCTORS_FAIL, payload: err});
-    });
+    dispatch( { type: GET_INSTRUCTORS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "instructors" )
+        .orderBy( "name", "asc" )
+        .get()
+        .then( instructors => {
+            let instructorArray = [];
+            instructors.forEach( instructor => {
+                instructorArray.push( {
+                    ...instructor.data(), id: instructor.id
+                } );
+            } );
+            dispatch( {
+                type: GET_INSTRUCTORS_SUCCESS, payload: instructorArray,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: GET_INSTRUCTORS_FAIL, payload: err } );
+        } );
+};
+
+export const ADD_INSTRUCTORS_INIT = "ADD_INSTRUCTORS_INIT";
+export const ADD_INSTRUCTORS_SUCCESS = "ADD_INSTRUCTORS_SUCCESS";
+export const ADD_INSTRUCTORS_FAIL = "ADD_INSTRUCTORS_FAIL";
+
+export const addInstructor = instructor => dispatch => {
+    dispatch( { type: ADD_INSTRUCTORS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "instructors" )
+        .add( instructor )
+        .then( res => {
+            console.log( res );
+            dispatch( {
+                type: ADD_INSTRUCTORS_SUCCESS, payload: instructor,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: ADD_INSTRUCTORS_FAIL, payload: err } );
+        } );
+};
+
+export const GET_TAS_INIT = "GET_TAS_INIT";
+export const GET_TAS_SUCCESS = "GET_TAS_SUCCESS";
+export const GET_TAS_FAIL = "GET_TAS_FAIL";
+
+export const getTas = () => dispatch => {
+    
+    dispatch( { type: GET_TAS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "tas" )
+        .get()
+        .then( tas => {
+            let tasArray = [];
+            tas.forEach( ta => {
+                tasArray.push( { ...ta.data(), id: ta.id } );
+            } );
+            dispatch( {
+                type: GET_TAS_SUCCESS, payload: tasArray,
+            } );
+        } )
+        .catch( err => {
+            dispatch( { type: GET_TAS_FAIL, payload: err } );
+        } );
+};
+
+export const UPDATE_TAS_INIT = "UPDATE_TAS_INIT";
+export const UPDATE_TAS_SUCCESS = "UPDATE_TAS_SUCCESS";
+export const UPDATE_TAS_FAIL = "UPDATE_TAS_FAIL";
+
+export const updateTa = ( ta ) => dispatch => {
+    
+    dispatch( { type: UPDATE_TAS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "tas" ).doc( ta.id )
+        .update( ta )
+        .then( res => {
+            dispatch( { type: UPDATE_TAS_SUCCESS, payload: ta } );
+        } )
+        .catch( err => {
+            dispatch( { type: UPDATE_TAS_FAIL, payload: err } );
+        } );
+};
+
+export const DELETE_TAS_INIT = " DELETE_TAS_INIT";
+export const DELETE_TAS_SUCCESS = " DELETE_TAS_SUCCESS";
+export const DELETE_TAS_FAIL = " DELETE_TAS_FAIL";
+
+export const deleteTa = ( ta ) => dispatch => {
+    
+    dispatch( { type: DELETE_TAS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "tas" ).doc( ta.id )
+        .delete()
+        .then( res => {
+            dispatch( { type: DELETE_TAS_SUCCESS, payload: ta } );
+        } )
+        .catch( err => {
+            dispatch( { type: DELETE_TAS_FAIL, payload: err } );
+        } );
+};
+
+export const ADD_TAS_INIT = " ADD_TAS_INIT";
+export const ADD_TAS_SUCCESS = " ADD_TAS_SUCCESS";
+export const ADD_TAS_FAIL = " ADD_TAS_FAIL";
+
+export const addTa = ( ta ) => dispatch => {
+    
+    dispatch( { type: ADD_TAS_INIT } );
+    store.collection( "autoFill" )
+        .doc( "web" )
+        .collection( "tas" )
+        .add( ta )
+        .then( res => {
+            ta.id = res.id;
+            dispatch( { type: ADD_TAS_SUCCESS, payload: ta } );
+        } )
+        .catch( err => {
+            dispatch( { type: ADD_TAS_FAIL, payload: err } );
+        } );
 };
 
 // export const makeSections = () => dispatch => {
-//   const sections = [
+//   const lessons = [
 //     'User Interface I',
 //     'User Interface II',
 //     'User Interface III',
@@ -120,13 +240,13 @@ export const getInstructors = () => dispatch => {
 //     'Testing IV',
 //     'Sprint Challenge - Testing Sprint Challenge',
 //   ];
-//   sections.forEach((section, index) => {
+//   lessons.forEach((section, index) => {
 //     console.log({
 //       order: index + 1,
 //       name: section,
 //       isProject: (index + 1) % 5 === 0 ? false : true,
 //     });
-//     store.collection('autoFill').doc('web').collection('sections').add({
+//     store.collection('autoFill').doc('web').collection('lessons').add({
 //       order: index + 1,
 //       name: section,
 //       isProject: (index + 1) % 5 === 0 ? false : true,

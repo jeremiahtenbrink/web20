@@ -1,14 +1,17 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { ConnectedRouter as Router } from "connected-react-router";
-import { Provider } from "react-redux";
-import store, { history } from "./configStore";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+import 'antd/dist/antd.css';
+import {ConnectedRouter as Router} from 'connected-react-router';
+import {Provider} from 'react-redux';
+import store, {history} from './configStore';
 
-ReactDOM.render( <Provider store={ store }>
-    <Router history={ history }>
-        <App/>
+ReactDOM.render(
+  <Provider store={store}>
+    <Router history={history}>
+      <App />
     </Router>
-</Provider>, document.getElementById( "root" ) );
+  </Provider>,
+  document.getElementById('root'),
+);

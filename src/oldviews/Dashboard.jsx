@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getStudents } from "../actions";
-import Header from "../components/Header";
+import Header from "../oldcomponents/Header";
 import {
     Col, Container, Row, Spinner, Card, Button, CardTitle, CardText,
 } from "reactstrap";
-import Students from "../components/students/Students";
+import Students from "../oldcomponents/students/Students";
 import { Link } from "react-router-dom";
 
 class Dashboard extends React.Component{
@@ -75,6 +75,22 @@ class Dashboard extends React.Component{
                                     </CardText>
                                     <Link to="/standup">
                                         <Button>Standup Report</Button>
+                                    </Link>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <Card body inverse color="success">
+                                    <CardTitle>Weekly Sprint Review</CardTitle>
+                                    <CardText>
+                                        At the end of the week please submit a
+                                        sprint review
+                                        for each one of your students. Each
+                                        student must have
+                                        a sprint retrospective submitted via
+                                        airtable.
+                                    </CardText>
+                                    <Link to="/sprint">
+                                        <Button>Sprint Review</Button>
                                     </Link>
                                 </Card>
                             </Col>
