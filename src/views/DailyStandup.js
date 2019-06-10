@@ -4,11 +4,16 @@ import {
     Row, Col, Button, Form, Select, Input, Card, Table, Radio, Icon
 } from "antd";
 import { Link } from "react-router-dom";
+import {
+    subscribeToInstructors, subscribeToStudents, subscribe, unsubscribe,
+    subscribeToTas, subscribeToSprints, subscribeToCourses
+} from "../actions/index";
 import "./dailyStandup.scss";
 
 class DailyStandup extends Component{
     state = {
         students: null,
+        subscribedToStudents: false,
         loaded: false,
         module: "Lesson",
         sprintTopic: "Topic",
@@ -24,34 +29,68 @@ class DailyStandup extends Component{
     };
     
     componentDidMount(){
+        debugger;
+        if( this.props.uid ){
+            this.subscribeToAutoFillData();
+        }
+        
         if( this.props.students && this.props.students.length > 0 ){
             this.setStudents( this.props.students );
         }
     }
     
-    componentWillUpdate( nextProps, nextState, nextContext ){
+    subscribeToAutoFillData = () => {
+        this.props.subscribe( "Students",
+            this.props.subscribeToStudents( this.props.uid )
+        );
+        this.props.subscribe( "Instructors",
+            this.props.subscribeToInstructors()
+        );
         
-        if( nextProps.students && nextProps.students.length > 0 &&
-            !nextState.loaded ){
-            this.setStudents( nextProps.students );
+        this.props.subscribe( "Tas", this.props.subscribeToTas() );
+        
+        this.props.subscribe( "Courses", this.props.subscribeToCourses() );
+        this.props.subscribe( "Sprints", this.props.subscribeToSprints() );
+        
+        this.setState( { subscribedToStudents: true } );
+        
+    };
+    
+    componentWillUnmount(){
+        this.props.unsubscribe( "Students" );
+        this.props.unsubscribe( "Instructors" );
+        this.props.unsubscribe( "Tas" );
+        this.props.unsubscribe( "Courses" );
+        this.props.unsubscribe( "Sprints" );
+    }
+    
+    componentDidUpdate( prevProps, prevState, snapshot ){
+        
+        if( !this.state.subscribedToStudents && this.props.uid ){
+            this.subscribeToAutoFillData();
+        }
+        
+        if( this.props.students && Object.values( this.props.students ).length >
+            0 && !this.state.loaded ){
+            this.setStudents( this.props.students );
         }
     }
     
     setStudents = students => {
-        for( let i = 0; i < students.length; i++ ){
-            students[ i ].isPresent = false;
-        }
+        Object.values( students ).forEach( student => {
+            student.isPresent = false;
+        } );
         this.setState( {
-            students: students, loaded: true,
+            students, loaded: true,
         } );
     };
     
     onChangeAttendance = id => {
-        
         this.setState( state => {
-            let student = state.students.filter( student => student.id === id );
-            student[ 0 ].isPresent = !student[ 0 ].isPresent;
-            return { students: [ ...state.students ] };
+            state.students[ id ].isPresent = !state.students[ id ].isPresent;
+            return {
+                students: state.students
+            };
         } );
     };
     
@@ -65,7 +104,7 @@ class DailyStandup extends Component{
     };
     
     getReportLink = () => {
-        
+        debugger;
         if( this.props.user ){
             let url = `https://airtable.com/shripCmauVlvxNrAT?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })&prefill_Sections=${ this.props.user.cohort }`;
             
@@ -77,17 +116,17 @@ class DailyStandup extends Component{
                 
                 let afterFirst = false;
                 let absentString = "&prefill_Students+(Absent)=";
-                for( let i = 0; i < this.state.students.length; i++ ){
-                    if( !this.state.students[ i ].isPresent ){
+                Object.values( this.state.students ).forEach( student => {
+                    if( !student.isPresent ){
                         if( afterFirst ){
                             absentString += ",";
                         }
-                        absentString += `${ this.state.students[ i ].firstName.trim() }+${ this.state.students[ i ].lastName.trim() }`;
+                        absentString += `${ student.firstName.trim() }+${ student.lastName.trim() }`;
                         if( !afterFirst ){
                             afterFirst = true;
                         }
                     }
-                }
+                } );
                 
                 if( absentString !== "&prefill_Absent+Students=" ){
                     url += absentString;
@@ -113,18 +152,11 @@ class DailyStandup extends Component{
             if( this.state.instructorFeedback !== "" ){
                 url += `&prefill_Instruction+Feedback=${ encodeURI( this.state.instructorFeedback, ) }`;
             }
-            
+            debugger;
             if( this.state.flexTa !== null ){
-                let flexTaName = "";
-                let flexTaCohort = "";
-                for( let i = 0; i < this.props.flexTas.length; i++ ){
-                    if( this.props.flexTas[ i ].id === this.state.flexTa ){
-                        flexTaName = this.props.flexTas[ i ].firstName + " " +
-                            this.props.flexTas[ i ].lastName;
-                        flexTaCohort = this.props.flexTas[ i ].cohort;
-                        break;
-                    }
-                }
+                let flexTaName = this.props.flexTas[ this.state.flexTa ].firstName +
+                    "+" + this.props.flexTas[ this.state.flexTa ].lastName;
+                let flexTaCohort = this.props.flexTas[ this.state.flexTa ].cohort;
                 url += `&prefill_Who+was+the+Flex+TA?=${ encodeURI( flexTaName ) }+(${ flexTaCohort })`;
             }
             
@@ -164,9 +196,12 @@ class DailyStandup extends Component{
                     
                     <Table
                         dataIndex={ "id" }
-                        dataSource={ this.state.students }
+                        dataSource={ this.state.students &&
+                        Object.values( this.state.students )
+                            .sort( ( a, b ) => a.firstName - b.firstName ) }
                         style={ { marginTop: "30px" } }
                         bordered
+                        rowKey={ "id" }
                         loading={ this.props.isLoading }
                         pagination={ false }>
                         <Table.Column
@@ -222,11 +257,12 @@ class DailyStandup extends Component{
                                     .indexOf( input.toLowerCase() ) >= 0 }
                             >
                                 { this.props.instructors &&
-                                this.props.instructors.map( instructor => {
-                                    
-                                    return <Option key={ instructor.id }
-                                                   value={ instructor.name }>{ `${ instructor.name }` }</Option>;
-                                } ) }
+                                Object.values( this.props.instructors )
+                                    .map( instructor => {
+                                        
+                                        return <Option key={ instructor.id }
+                                                       value={ instructor.name }>{ `${ instructor.name }` }</Option>;
+                                    } ) }
                                 <Option
                                     value={ "IInstructor" }>Instructor</Option>
                             </Select>
@@ -347,7 +383,7 @@ class DailyStandup extends Component{
                                     option ) => option.props.children.toLowerCase()
                                     .indexOf( input.toLowerCase() ) >= 0 }
                             >{ this.props.flexTas &&
-                            this.props.flexTas.map( ta => {
+                            Object.values( this.props.flexTas ).map( ta => {
                                 
                                 return <Option key={ ta.id }
                                                value={ `${ ta.id }` }>{ `${ ta.firstName } ${ ta.lastName }` }</Option>;
@@ -423,6 +459,15 @@ const mpts = state => ( {
     instructors: state.autoFill.instructors,
     flexTas: state.autoFill.tas,
     sprints: state.sprints.sprints,
+    uid: state.auth.uid,
 } );
 
-export default connect( mpts, {}, )( DailyStandup );
+export default connect( mpts, {
+    subscribeToStudents,
+    subscribeToInstructors,
+    subscribe,
+    unsubscribe,
+    subscribeToTas,
+    subscribeToCourses,
+    subscribeToSprints
+}, )( DailyStandup );

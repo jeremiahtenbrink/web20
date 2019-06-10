@@ -15,7 +15,7 @@ class AttendanceReport extends Component{
     };
     
     componentDidMount(){
-        debugger;
+        
         if( this.props.uid ){
             this.props.subscribe( this.props.subscribeToStudents( this.props.uid ) );
             this.setState( { subscribedToStudents: true } );

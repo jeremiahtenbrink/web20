@@ -8,7 +8,7 @@ export const FETCH_STUDENTS_SUCCESS = "FETCH_STUDENTS_SUCCESS";
 export const FETCH_STUDENTS_FAILED = "FETCH_STUDENTS_FAILED";
 
 export const subscribeToStudents = id => dispatch => {
-    debugger;
+    
     dispatch( action( FETCH_STUDENTS_INIT ) );
     if ( id ) {
         return store
