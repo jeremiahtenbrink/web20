@@ -14,7 +14,7 @@ class DailyStandup extends Component{
         sprintTopic: "Topic",
         wentWell: "",
         concerns: "",
-        instructor: "Instructor",
+        instructor: "IInstructor",
         instructionRating: 3,
         instructorFeedback: "",
         flexTa: null,
@@ -207,7 +207,7 @@ class DailyStandup extends Component{
                     </Table>
                     
                     <Form className={ "dailyStandUp__form" }>
-                        <Form.Item label={ "Instructor" }>
+                        <Form.Item label={ "IInstructor" }>
                             <Select
                                 showSearch
                                 style={ { width: 200 } }
@@ -228,7 +228,7 @@ class DailyStandup extends Component{
                                                    value={ instructor.name }>{ `${ instructor.name }` }</Option>;
                                 } ) }
                                 <Option
-                                    value={ "Instructor" }>Instructor</Option>
+                                    value={ "IInstructor" }>Instructor</Option>
                             </Select>
                         </Form.Item>
                         
@@ -285,7 +285,7 @@ class DailyStandup extends Component{
                             </Select>
                         </Form.Item>
                         
-                        <Form.Item label={ "Instructor Rating" }>
+                        <Form.Item label={ "IInstructor Rating" }>
                             <RadioGroup name={ "instructionRating" }
                                         onChange={ this.onChange }
                                         value={ this.state.instructionRating }>

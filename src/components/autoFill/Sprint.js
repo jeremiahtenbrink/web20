@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button, Form, Icon, Input } from "antd";
+import { Button, Form, Icon, Input, Popconfirm, Popover } from "antd";
 import ModalComponent from "../Modal";
 import InputComponent from "../InputComponent";
-import { addLesson, editLesson } from "../../actions";
+import {
+    addLesson, editLesson, deleteLesson, subscribeToSprints, subscribe,
+    unsubscribe
+} from "../../actions";
 
 class Sprint extends Component{
     
@@ -17,12 +20,19 @@ class Sprint extends Component{
         id: null,
     };
     
+    componentDidMount(){
+    }
+    
+    componentWillUnmount(){
+    
+    }
+    
     openModal = () => {
         this.setState( { modalOpen: true } );
     };
     
     addLesson = () => {
-        debugger;
+        
         const lesson = {
             name: this.state.name,
             order: this.state.order,
@@ -38,6 +48,10 @@ class Sprint extends Component{
         
         this.props.addLesson( this.props.selectedSprint, lesson );
         this.cancel();
+    };
+    
+    delLesson = ( lesson ) => {
+        this.props.deleteLesson( this.props.selectedSprint, lesson );
     };
     
     onChange = ( name, value ) => {
@@ -95,12 +109,31 @@ class Sprint extends Component{
     };
     
     render(){
-        debugger;
+        
         return ( <div className={ "lessons__add-sprint" }>
             { this.props.selectedLessons.map( lesson => {
-                return <div className={ "inline baseline" }>
-                    <Icon onClick={ () => this.openModalEdit( lesson ) }
-                          type="edit"/>
+                return <div className={ "inline baseline" } key={ lesson.id }>
+                    <Popover placement={ "leftBottom" }
+                             content={ <p>{ `Edit ${ lesson.name }` }</p> }>
+                        <Icon onClick={ () => this.openModalEdit( lesson ) }
+                              type="edit"/>
+                    </Popover>
+                    <Popconfirm
+                        title={ `Are you sure delete the ${ lesson.name } lesson?
+                Deleting this lesson will remove it from the db.\n Adding a course with the same name will not move the completed course on the students profile. May I suggest you edit this lesson instead.` }
+                        onConfirm={ () => this.delLesson( lesson ) }
+                        onCancel={ this.cancel }
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Popover placement={ "leftBottom" }
+                                 content={
+                                     <p>{ `Delete ${ lesson.name }` }</p> }>
+                            <Icon
+                                type={ "delete" } className={ "mg-left-md" }/>
+                        </Popover>
+                    </Popconfirm>
+                    
                     <h3 className={ "mg-left-lg" }
                         key={ lesson.id }>{ lesson.name }</h3>
                 </div>;
@@ -147,7 +180,7 @@ class Sprint extends Component{
 Sprint.propTypes = {};
 
 const mstp = state => {
-    debugger;
+    
     return {
         selectedSprint: state.sprints.selectedSprint,
         selectedLessons: Object.values( state.sprints.selectedLessons.lessons )
@@ -155,4 +188,11 @@ const mstp = state => {
     };
 };
 
-export default connect( mstp, { addLesson, editLesson } )( Sprint );
+export default connect( mstp, {
+    addLesson,
+    editLesson,
+    deleteLesson,
+    subscribeToSprints,
+    subscribe,
+    unsubscribe
+} )( Sprint );

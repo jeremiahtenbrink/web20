@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {addStudent, getStudents, delStudent} from '../actions';
+import {addStudent, subscribeToStudents, delStudent} from '../actions';
 
 import {Container, Row, Col, Input, Button, Table, Spinner} from 'reactstrap';
 
@@ -196,5 +196,5 @@ const mapStateToProps = ({students, auth}) => ({
 
 export default connect(
   mapStateToProps,
-  {addStudent, getStudents, delStudent},
+  {addStudent, getStudents: subscribeToStudents, delStudent},
 )(AddStudents);

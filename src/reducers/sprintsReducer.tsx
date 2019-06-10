@@ -5,10 +5,11 @@ import {
     GET_SPRINT_SUCCESS, GET_SPRINT_FAIL, GET_LESSONS_INIT, GET_LESSONS_SUCCESS,
     GET_LESSONS_FAIL, ADD_LESSON_INIT, ADD_LESSON_SUCCESS, ADD_LESSON_FAIL,
     CHANGE_SELECTED_SPRINT, EDIT_LESSON_INIT, EDIT_LESSON_SUCCESS,
-    EDIT_LESSON_FAIL
+    EDIT_LESSON_FAIL, DEL_LESSON_FAIL, DEL_LESSON_INIT, DEL_LESSON_SUCCESS
 } from "../actions";
+import { ISprintsReducer } from "../types/SprintsReducerInterface";
 
-const initialState = {
+const initialState: ISprintsReducer = {
     addingSprint: false,
     deletingSprint: false,
     updatingSprint: false,
@@ -18,15 +19,17 @@ const initialState = {
     editingLesson: false,
     lessonsLoaded: false,
     addingLesson: false,
+    deletingLesson: false,
     selectedSprint: null,
     selectedLessons: [],
     lessons: {},
-    sprints: [],
+    sprints: {},
     error: "",
 };
 
-export const sprintsReducer = ( state = initialState, action ) => {
-    switch( action.type ){
+export const sprintsReducer = ( state = initialState,
+                                action ): ISprintsReducer => {
+    switch ( action.type ) {
         
         //SPRINTS CHANGE SELECTED SPRINT -------------------------------------
         
@@ -38,9 +41,13 @@ export const sprintsReducer = ( state = initialState, action ) => {
         case GET_SPRINT_INIT:
             return { ...state, gettingSprints: true };
         case GET_SPRINT_SUCCESS:
-            return { ...state, gettingSprints: false, sprints: action.payload };
+            return {
+                ...state,
+                gettingSprints: false,
+                sprints: { ...state.sprints, ...action.payload }
+            };
         case GET_SPRINT_FAIL:
-            return { ...state, gettingSprints: false, err: action.payload };
+            return { ...state, gettingSprints: false, error: action.payload };
         
         //SPRINTS ADD -----------------------------------------------
         
@@ -51,7 +58,6 @@ export const sprintsReducer = ( state = initialState, action ) => {
             return {
                 ...state,
                 addingSprint: false,
-                sprints: [ ...state.sprints, action.payload ]
             };
         case ADD_SPRINT_FAIL:
             return { ...state, addingSprint: false, error: action.payload };
@@ -64,7 +70,6 @@ export const sprintsReducer = ( state = initialState, action ) => {
             return {
                 ...state,
                 updatingSprint: false,
-                sprints: [ ...state.sprints, action.payload ]
             };
         case UPDATE_SPRINT_FAIL:
             return { ...state, updatingSprint: false, error: action.payload };
@@ -74,10 +79,8 @@ export const sprintsReducer = ( state = initialState, action ) => {
         case DELETE_SPRINT_INIT:
             return { ...state, deletingSprint: true };
         case DELETE_SPRINT_SUCCESS:
-            let sprints = state.sprints.filter(
-                sprint => sprint.name !== action.payload );
             return {
-                ...state, deletingSprint: false, sprints
+                ...state, deletingSprint: false,
             };
         case DELETE_SPRINT_FAIL:
             return { ...state, deletingSprint: false, error: action.payload };
@@ -88,7 +91,7 @@ export const sprintsReducer = ( state = initialState, action ) => {
             return { ...state, gettingLessons: true, lessonsLoaded: false };
         case GET_LESSONS_SUCCESS:
             
-            if( !action.payload.sprintId ){
+            if ( !action.payload.sprintId ) {
                 return {
                     ...state, gettingLessons: false, lessonsLoaded: true,
                 };
@@ -115,14 +118,22 @@ export const sprintsReducer = ( state = initialState, action ) => {
         case ADD_LESSON_INIT:
             return { ...state, addingLesson: true };
         case ADD_LESSON_SUCCESS:
-            if( state.selectedSprint.id === action.payload.sprint ){
+            
+            let lessonsToAddTo = state.lessons;
+            lessonsToAddTo[ action.payload.sprint ][ action.payload.id ] =
+                action.payload;
+            if ( state.selectedSprint.id === action.payload.sprint ) {
                 return {
                     ...state, addingLesson: false, selectedLessons: [
                         ...state.selectedLessons, action.payload
-                    ]
+                    ], lessons: { ...lessonsToAddTo }
                 };
-            }else{
-                return { ...state, addingLesson: false };
+            } else {
+                return {
+                    ...state,
+                    addingLesson: false,
+                    lessons: { ...lessonsToAddTo }
+                };
             }
         case ADD_LESSON_FAIL:
             return { ...state, gettingLessons: false, error: action.payload };
@@ -130,11 +141,29 @@ export const sprintsReducer = ( state = initialState, action ) => {
         
         //LESSONS EDIT ---------------------------------------------------------
         
+        case DEL_LESSON_INIT:
+            return { ...state, deletingLesson: true };
+        case DEL_LESSON_SUCCESS:
+            
+            delete state.lessons[ action.payload.sprint ][ action.payload.id ];
+            return {
+                ...state,
+                deletingLesson: false,
+                lessons: { ...state.lessons },
+                error: ""
+            };
+        case DEL_LESSON_FAIL:
+            return { ...state, deletingLesson: false, error: action.payload };
+        
+        //LESSON DELETE
+        // ---------------------------------------------------------
+        
         case EDIT_LESSON_INIT:
             return { ...state, editingLesson: true };
         case EDIT_LESSON_SUCCESS:
-            debugger;
-            state.lessons[ action.payload.sprint ][ action.payload.id ] = { ...action.payload };
+            
+            state.lessons[ action.payload.sprint ][ action.payload.id ] =
+                { ...action.payload };
             return {
                 ...state,
                 editingLesson: false,
@@ -151,3 +180,4 @@ export const sprintsReducer = ( state = initialState, action ) => {
             return state;
     }
 };
+

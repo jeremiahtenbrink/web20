@@ -2,14 +2,26 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Card, Row, Col, Button, Table, Form, Input } from "antd";
 import { Link } from "react-router-dom";
+import {
+    subscribe, unsubscribe, subscribeToStudents
+} from "../../actions/index";
 
 class AttendanceReport extends Component{
     state = {
-        students: this.props.students, loaded: false, notes: "",
+        students: this.props.students,
+        loaded: false,
+        notes: "",
+        subscribedToStudents: false,
     };
     
     componentDidMount(){
-        if( this.props.students && !this.state.loaded ){
+        debugger;
+        if( this.props.uid ){
+            this.props.subscribe( this.props.subscribeToStudents( this.props.uid ) );
+            this.setState( { subscribedToStudents: true } );
+        }
+        if( this.props.students && Object.values( this.props.students ).length >
+            0 && !this.state.loaded ){
             let keys = Object.keys( this.props.students );
             for( let i = 0; i < keys.length; i++ ){
                 this.props.students[ keys[ i ] ].isPresent = false;
@@ -20,15 +32,26 @@ class AttendanceReport extends Component{
         }
     }
     
-    componentWillUpdate( nextProps, nextState, nextContext ){
-        if( nextProps.students && !nextState.loaded ){
-            let keys = Object.keys( nextProps.students );
+    componentWillUnmount(){
+        this.props.unsubscribe( "Students" );
+    }
+    
+    componentDidUpdate( prevProps, prevState, snapshot ){
+        
+        if( this.props.uid && !this.state.subscribedToStudents ){
+            this.props.subscribe( this.props.subscribeToStudents( this.props.uid ) );
+            this.setState( { subscribedToStudents: true } );
+        }
+        
+        if( this.props.students && Object.values( this.props.students ).length >
+            0 && !this.state.loaded ){
+            let keys = Object.keys( this.props.students );
             
             for( let i = 0; i < keys.length; i++ ){
-                nextProps.students[ keys[ i ] ].isPresent = false;
+                this.props.students[ keys[ i ] ].isPresent = false;
             }
             this.setState( {
-                students: nextProps.students, loaded: true,
+                students: this.props.students, loaded: true,
             } );
         }
     }
@@ -40,9 +63,8 @@ class AttendanceReport extends Component{
     onChange = id => {
         
         this.setState( state => {
-            let student = state.students.filter( student => student.id === id );
-            student[ 0 ].isPresent = !student[ 0 ].isPresent;
-            return { students: [ ...state.students ] };
+            state.students[ id ].isPresent = !state.students[ id ].isPresent;
+            return { students: { ...state.students } };
         } );
     };
     
@@ -101,9 +123,10 @@ class AttendanceReport extends Component{
                             <Button>Back</Button>
                         </Link>
                         <Table
-                            dataSource={ this.state.students }
+                            dataSource={ Object.values( this.state.students ) }
                             style={ { marginTop: "30px" } }
                             bordered
+                            rowKey={ "id" }
                             loading={ this.props.isLoading }
                             pagination={ false }>
                             <Table.Column
@@ -169,4 +192,7 @@ const mpts = state => ( {
     user: state.auth.user,
 } );
 
-export default connect( mpts, {}, )( AttendanceReport );
+export default connect( mpts,
+    { subscribe, unsubscribe, subscribeToStudents }
+)(
+    AttendanceReport );

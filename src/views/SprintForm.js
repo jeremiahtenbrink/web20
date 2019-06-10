@@ -180,11 +180,12 @@ class SprintForm extends Component{
                                 .indexOf( input.toLowerCase() ) >= 0 }
                         >
                             { this.props.students &&
-                            this.props.students.map( student => {
-                                
-                                return <Option key={ student.id }
-                                               value={ `${ student.firstName.trim() }+${ student.lastName.trim() }` }>{ `${ student.firstName } ${ student.lastName }` }</Option>;
-                            } ) }
+                            Object.values( this.props.students )
+                                .map( student => {
+                                    
+                                    return <Option key={ student.id }
+                                                   value={ `${ student.firstName.trim() }+${ student.lastName.trim() }` }>{ `${ student.firstName } ${ student.lastName }` }</Option>;
+                                } ) }
                             <Option
                                 value={ "Student" }>Sprint</Option>
                         </Select>

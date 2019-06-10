@@ -1,6 +1,6 @@
 import React from "react";
-
-import { addStudent, getStudents, delStudent, editStudent } from "../actions";
+import MakeInput from "../components/MakeInput";
+import { addStudent, subscribeToStudents, delStudent, editStudent } from "../actions";
 
 import { connect } from "react-redux";
 
@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 class ManageStudents extends React.Component{
     state = {
         modalOpen: false, modalId: false, student: {
-            firstName: "", lastName: "", github: "",
+            firstName: "", lastName: "", github: "", course: ""
         },
     };
     
@@ -31,10 +31,10 @@ class ManageStudents extends React.Component{
         } );
     };
     
-    updateStudent = ( { id, firstName, lastName, github } ) => {
+    updateStudent = ( { id, firstName, lastName, github, course } ) => {
         this.setState( {
             modalOpen: true, modalId: id, student: {
-                firstName, lastName, github,
+                firstName, lastName, github, course
             },
         } );
     };
@@ -58,10 +58,19 @@ class ManageStudents extends React.Component{
         } );
     };
     
+    changeSelect = ( value, name ) => {
+        this.setState( {
+            student: {
+                ...this.state.student, [ name ]: value
+            }
+        } );
+    };
+    
     render(){
         return ( <div style={ { maxWidth: "800px", margin: "30px auto" } }>
             <div className={ "inline" }>
-                <Link to={ "/" }><Button size={ "large" }>Back</Button></Link>
+                <Link to={ "/" }><Button
+                    size={ "large" }>Back</Button></Link>
                 <Button type={ "primary" }
                         onClick={ () => this.setState( { modalOpen: true } ) }
                         size={ "large" }
@@ -127,45 +136,60 @@ class ManageStudents extends React.Component{
                 } ) }>
                 <Row type="flex" gutter={ 24 }>
                     <Col xs={ 24 } md={ 12 }>
-                        <h3>
-                                <span
-                                    style={ { color: "#f5222d" } }>*</span> First
-                            Name
-                        </h3>
-                        <Form.Item>
-                            <Input
-                                style={ { width: "100%" } }
-                                value={ this.state.student.firstName }
-                                onChange={ this.inputHandler }
-                                name="firstName"
-                                required
-                            />
-                        </Form.Item>
+                        <MakeInput onChange={ this.inputHandler }
+                                   required={ true }
+                                   value={ this.state.student.firstName }
+                                   name={ "firstName" }
+                                   isLoading={ false }
+                                   type={ "input" }
+                                   title={ "First Name" }
+                        />
                     </Col>
+                    
                     <Col xs={ 24 } md={ 12 }>
-                        <h3>
-                                <span
-                                    style={ { color: "#f5222d" } }>*</span> Last
-                            Name
-                        </h3>
-                        <Form.Item>
-                            <Input
-                                style={ { width: "100%" } }
-                                value={ this.state.student.lastName }
-                                onChange={ this.inputHandler }
-                                name="lastName"
-                                required
-                            />
-                        </Form.Item>
+                        <MakeInput onChange={ this.inputHandler }
+                                   required={ true }
+                                   value={ this.state.student.lastName }
+                                   name={ "lastName" }
+                                   isLoading={ false }
+                                   type={ "input" }
+                                   title={ "Last Name" }
+                        />
                     </Col>
                     <Col xs={ 24 }>
-                        <h3>Github</h3>
-                        <Input
-                            style={ { width: "100%" } }
-                            value={ this.state.student.github }
-                            onChange={ this.inputHandler }
-                            name="github"
+                        <MakeInput onChange={ this.inputHandler }
+                                   required={ false }
+                                   value={ this.state.student.github }
+                                   name={ "github" }
+                                   isLoading={ false }
+                                   type={ "input" }
+                                   title={ "Github Handle" }
                         />
+                    </Col>
+                    <Col xs={ 24 } md={ 12 }>
+                        <Form.Item label={ "Course" }>
+                            <Select
+                                showSearch
+                                style={ { width: 200 } }
+                                placeholder="Course"
+                                optionFilterProp="children"
+                                onChange={ ( value ) => {
+                                    
+                                    this.changeSelect( value, "course" );
+                                } }
+                                value={ this.state.student.course }
+                                filterOption={ ( input,
+                                    option ) => option.props.children.toLowerCase()
+                                    .indexOf( input.toLowerCase() ) >= 0 }
+                            >
+                                { this.props.courses &&
+                                this.props.courses.map( course => {
+                                    
+                                    return <Select.Option key={ course.id }
+                                                          value={ course.id }>{ course.courseName }</Select.Option>;
+                                } ) }
+                            </Select>
+                        </Form.Item>
                     </Col>
                 </Row>
             </Modal>
@@ -173,14 +197,15 @@ class ManageStudents extends React.Component{
     }
 }
 
-const mapStateToProps = ( { students, auth } ) => ( {
+const mapStateToProps = ( { students, auth, autoFill } ) => ( {
     isLoading: students.isLoading,
     uid: auth.uid,
     students: students.students,
     isAdding: students.isAdding,
+    courses: autoFill.courses,
 } );
 
 export default connect( mapStateToProps,
-    { addStudent, editStudent, getStudents, delStudent },
+    { addStudent, editStudent, getStudents: subscribeToStudents, delStudent },
 )(
     ManageStudents );

@@ -3,9 +3,12 @@ import { Button, Icon, Popover } from "antd";
 import { connect } from "react-redux";
 import ModalComponent from "../Modal";
 import InputComponent from "../InputComponent";
-import { addSprint, updateSprint } from "../../actions";
+import {
+    addSprint, updateSprint, changeSelectedSprint, subscribeToSprints,
+    subscribe, unsubscribe
+} from "../../actions/index";
 import Sprint from "./Sprint";
-import { changeSelectedSprint } from "../../actions";
+import Courses from "./Courses";
 import "./lessons.scss";
 
 class Lessons extends Component{
@@ -19,9 +22,31 @@ class Lessons extends Component{
         sprintName: "",
         sprintTK: "",
         sprintId: null,
+        selectedCourse: "FSW",
+    };
+    
+    componentDidMount(){
+        
+        this.props.subscribe( "Sprints", this.props.subscribeToSprints() );
+        
+    }
+    
+    componentWillUnmount(){
+        
+        this.props.unsubscribe( "Sprints" );
+    }
+    
+    componentDidUpdate( prevProps, prevState, snapshot ){
+        if( this.state.selectedCourse === "" ){
+        }
+    }
+    
+    removeSelectedCourse = () => {
+        this.setState( { selectedCourse: "" } );
     };
     
     updateLesson = () => {
+        
         const lesson = {
             id: this.state.selectedId,
             isProject: this.state.isProject,
@@ -29,6 +54,7 @@ class Lessons extends Component{
             name: this.state.name,
             week: this.state.week,
             sprintName: this.state.sprintName,
+            course: this.state.selectedCourse,
         };
         
         this.props.updateLesson( lesson );
@@ -59,10 +85,6 @@ class Lessons extends Component{
         } );
     };
     
-    onCheckBoxChange = () => {
-        this.setState( state => ( { isProject: !state.isProject } ) );
-    };
-    
     clearState = () => {
         this.setState( {
             selectedId: null,
@@ -87,6 +109,7 @@ class Lessons extends Component{
             name: this.state.sprintName,
             week: this.state.week,
             tk: this.state.sprintTK,
+            course: this.state.selectedCourse,
         };
         
         if( this.state.sprintId ){
@@ -143,42 +166,53 @@ class Lessons extends Component{
     render(){
         
         return ( <>
+            
+            <Courses changeCourseSelect={ this.onChange }
+                     selectedCourse={ this.state.selectedCourse }
+                     removeSelectedCourse={ this.removeSelectedCourse }
+            />
+            
             <Button type={ "primary" } className={ "lessons__create-sprint" }
                     onClick={ () => this.setState( { modalOpen: true } ) }>Create
                 Sprint
             </Button>
             
-            { this.props.sprints.map( sprint => {
-                
-                return (
+            { this.props.sprints && Object.values( this.props.sprints )
+                .sort( ( a, b ) => a.week - b.week )
+                .filter( sprint => sprint.course === this.state.selectedCourse )
+                .map( sprint => {
                     
-                    <div key={ sprint.id }>
-                        <div className={ "inline baseline pointer" }>
-                            <Popover placement={ "leftBottom" }
-                                     content={
-                                         <p>{ `Edit ${ sprint.name }` }</p> }>
-                                <Button
-                                    onClick={ () => this.setSprintModal( sprint ) }>
-                                    <Icon type={ "edit" }
-                                          style={ { fontSize: "20px" } }/>
-                                </Button>
-                            </Popover>
-                            <div className={ "inline center-vert pointer" +
-                            " lessons__row mg-left-lg" }
-                                 onClick={ () => this.sprintClick( sprint ) }
-                            >
-                                { this.props.selectedSprint &&
-                                this.props.selectedSprint === sprint ?
-                                    <Icon type={ "caret-down" }/> :
-                                    <Icon type="caret-right"/> }
+                    return (
+                        
+                        <div key={ sprint.id }>
+                            <div className={ "inline baseline pointer" }>
+                                <Popover placement={ "leftBottom" }
+                                         content={
+                                             <p>{ `Edit ${ sprint.name }` }</p> }>
+                                    <Button
+                                        onClick={ () => this.setSprintModal(
+                                            sprint ) }>
+                                        <Icon type={ "edit" }
+                                              style={ { fontSize: "20px" } }/>
+                                    </Button>
+                                </Popover>
+                                <div className={ "inline center-vert pointer" +
+                                " lessons__row mg-left-lg" }
+                                     onClick={ () => this.sprintClick( sprint ) }
+                                >
+                                    { this.props.selectedSprint &&
+                                    this.props.selectedSprint === sprint ?
+                                        <Icon type={ "caret-down" }/> :
+                                        <Icon type="caret-right"/> }
+                                    
+                                    <h1 className={ "mg-left-lg" }>{ sprint.name }</h1>
                                 
-                                <h1 className={ "mg-left-lg" }>{ sprint.name }</h1>
-                            
+                                </div>
                             </div>
-                        </div>
-                        { this.props.selectedSprint === sprint && <Sprint/> }
-                    </div> );
-            } ) }
+                            { this.props.selectedSprint === sprint &&
+                            <Sprint/> }
+                        </div> );
+                } ) }
             { this.getModalContent() }
         </> );
     }
@@ -187,13 +221,17 @@ class Lessons extends Component{
 const mstp = state => {
     
     return {
-        sprints: Object.values( state.sprints.sprints )
-            .sort( ( a, b ) => a.week - b.week ),
+        sprints: state.sprints.sprints,
         selectedSprint: state.sprints.selectedSprint,
+        courses: state.autoFill.courses,
     };
 };
 
-export default connect( mstp,
-    { addSprint, changeSelectedSprint, updateSprint }
-)(
-    Lessons );
+export default connect( mstp, {
+    addSprint,
+    changeSelectedSprint,
+    updateSprint,
+    subscribeToSprints,
+    subscribe,
+    unsubscribe
+} )( Lessons );

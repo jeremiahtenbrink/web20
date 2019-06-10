@@ -1,8 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import {
-    checkAuth, getStudents, getUser, getInstructors, getTas, getSprints
-} from "./actions";
+import { checkAuth } from "./actions";
 import firebase from "./firebase/firebase";
 import { connect } from "react-redux";
 import { Layout } from "antd";
@@ -18,36 +16,15 @@ import AutoFill from "./views/AutoFill";
 import "./App.scss";
 
 class App extends React.Component{
-    state = {
-        students: [],
-        firstName: "",
-        lastName: "",
-        isGettingStudents: false,
-        attemptedLoad: false,
-    };
     
     componentDidMount(){
+        
         this.unregisterAuthObserver = firebase.auth()
             .onAuthStateChanged( () => this.props.checkAuth() );
     }
     
     componentWillUnmount(){
         this.unregisterAuthObserver();
-    }
-    
-    componentWillUpdate( nextProps, nextState, nextContext ){
-        if( nextProps.uid && !nextState.isGettingStudents &&
-            !nextProps.students && !nextState.attemptedLoad ){
-            this.props.getStudents( nextProps.uid );
-            this.props.getUser( nextProps.uid );
-            this.props.getSprints();
-            this.props.getInstructors();
-            this.props.getTas();
-            this.setState( { isGettingStudents: true, attemptedLoad: true } );
-        }else if( !nextProps.uid &&
-            ( nextState.isGettingStudents || nextState.attemptedLoad ) ){
-            this.setState( { isGettingStudents: false, attemptedLoad: false } );
-        }
     }
     
     render(){
@@ -103,10 +80,6 @@ class App extends React.Component{
     }
 }
 
-const mapStateToProps = ( { auth } ) => ( {
-    uid: auth.uid, user: auth.user,
-} );
+const mapStateToProps = () => ( {} );
 
-export default connect( mapStateToProps, {
-    checkAuth, getStudents, getUser, getInstructors, getTas, getSprints
-}, )( App );
+export default connect( mapStateToProps, { checkAuth } )( App );

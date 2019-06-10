@@ -5,11 +5,14 @@ import {
     EDIT_STUDENT_INIT, EDIT_STUDENT_SUCCESS, EDIT_STUDENT_FAILED,
     COLLECT_STUDENT_LESSONS_FAILED, COLLECT_STUDENT_LESSONS_INIT,
     COLLECT_STUDENT_LESSONS_SUCCESS, COMPLETE_LESSON_INIT,
-    COMPLETE_LESSON_SUCCESS, COMPLETE_LESSON_FAILED, CHANGE_SELECTED_STUDENT
+    COMPLETE_LESSON_SUCCESS, COMPLETE_LESSON_FAILED, CHANGE_SELECTED_STUDENT,
 } from "../actions";
+import { IStudentReducer } from "../types/StudentsReducerInterface";
+import { Action } from "../types/ActionInterface";
 
-const initialState = {
-    students: [],
+const initialState: IStudentReducer = {
+    students: {},
+    unsubscribeStudents: null,
     fetchingStudents: true,
     isAdding: false,
     editingStudent: false,
@@ -20,17 +23,19 @@ const initialState = {
     deletingStudent: false,
     selectedStudent: null,
     selectedStudentLessons: null,
+    updatingLessons: false,
 };
 
-export const studentsReducer = ( state = initialState, action ) => {
+export const studentsReducer = ( state: IStudentReducer = initialState,
+                                 action: Action ): IStudentReducer => {
     
-    switch( action.type ){
+    switch ( action.type ) {
         
         //CHANGE SELECTED STUDENT ---------------------------------------
         
         case CHANGE_SELECTED_STUDENT:
-            let selectedStudent = state.students.filter(
-                student => student.id === action.payload )[ 0 ];
+            
+            let selectedStudent = state.students[ action.payload ];
             return { ...state, selectedStudent };
         
         //STUDENT ADD ----------------------------------------------------
@@ -38,11 +43,9 @@ export const studentsReducer = ( state = initialState, action ) => {
         case ADD_STUDENT_INIT:
             return { ...state, isAdding: true };
         case ADD_STUDENT_SUCCESS:
-            
+            state.students[ action.payload.id ] = action.payload;
             return {
-                ...state, students: [
-                    ...state.students, action.payload
-                ], isAdding: false,
+                ...state, students: { ...state.students },
             };
         case ADD_STUDENT_FAILED:
             return { ...state, isAdding: false, error: action.payload };
@@ -59,15 +62,14 @@ export const studentsReducer = ( state = initialState, action ) => {
         case FETCH_STUDENTS_FAILED:
             return { ...state, fetchingStudents: false, error: action.payload };
         
+        
         //STUDENT DELETE ----------------------------------------------------
         
         case DEL_STUDENT_INIT:
             return { ...state, deletingStudent: true };
         case DEL_STUDENT_SUCCESS:
-            debugger;
-            let students = state.students.filter(
-                student => student.id !== action.payload );
-            return { ...state, students: [ ...students ] };
+            delete state.students[ action.payload ];
+            return { ...state, students: { ...state.students } };
         case DEL_STUDENT_FAILED:
             return { ...state, deletingStudent: false, error: action.payload };
         
@@ -76,14 +78,9 @@ export const studentsReducer = ( state = initialState, action ) => {
         case EDIT_STUDENT_INIT:
             return { ...state, editingStudent: true };
         case EDIT_STUDENT_SUCCESS:
-            let studentsEdited = state.students.map( student => {
-                if( student.id === action.payload.id ){
-                    return action.payload;
-                }
-                return student;
-            } );
+            state.students[ action.payload.id ] = action.payload;
             return {
-                ...state, students: studentsEdited, editingStudent: false
+                ...state, students: { ...state.students }, editingStudent: false
             };
         case EDIT_STUDENT_FAILED:
             return { ...state, editingStudent: false, error: action.payload };
@@ -119,7 +116,8 @@ export const studentsReducer = ( state = initialState, action ) => {
             return { ...state, updatingLessons: true };
         case COMPLETE_LESSON_SUCCESS:
             
-            state.selectedStudentLessons[ action.payload.id ] = { ...action.payload };
+            state.selectedStudentLessons[ action.payload.id ] =
+                { ...action.payload };
             return {
                 ...state,
                 updatingLessons: false,

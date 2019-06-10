@@ -4,6 +4,7 @@ import { studentsReducer } from "./studentsReducer";
 import { authReducer } from "./authReducer";
 import { autoFillReducer } from "./autoFillReducer";
 import { sprintsReducer } from "./sprintsReducer";
+import { subscriptionReducer } from "./subscriptionReducer";
 
 export default ( history ) => combineReducers( {
     router: connectRouter( history ),
@@ -11,4 +12,5 @@ export default ( history ) => combineReducers( {
     auth: authReducer,
     autoFill: autoFillReducer,
     sprints: sprintsReducer,
+    subscriptions: subscriptionReducer,
 } )

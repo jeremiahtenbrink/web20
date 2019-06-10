@@ -14,14 +14,16 @@ export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAILED = "AUTH_FAILED";
 
 export const checkAuth = () => dispatch => {
-    debugger;
+    
     dispatch( { type: AUTH_INIT } );
     const { currentUser } = firebase.auth();
-    if( currentUser ){
+    
+    if ( currentUser ) {
+        getUser( currentUser.uid )( dispatch );
         dispatch( {
             type: AUTH_SUCCESS, payload: currentUser,
         } );
-    }else{
+    } else {
         dispatch( { type: AUTH_FAILED } );
         dispatch( push( "/start" ) );
     }
@@ -32,31 +34,38 @@ export const SIGNIN_SUCCESS = "SIGNIN_SUCCESS";
 export const SIGNIN_NEW_USER = "SIGNIN_NEW_USER";
 export const SIGNIN_FAILED = "SIGNIN_FAILED";
 
-export const signIn = authType => dispatch => {
-    debugger;
+export const signIn = ( authType: string ) => dispatch => {
+    
     dispatch( { type: SIGNIN_INIT } );
-    switch( authType ){
+    switch ( authType ) {
         case GOOGLE_PROVIDER:
             firebase
                 .auth()
                 .signInWithPopup( googleProvider )
-                .then( function( result ){
-                    if( result.additionalUserInfo.isNewUser ){
-                        dispatch( {
-                            type: SIGNIN_NEW_USER,
-                            payload: result.user.uid,
-                            token: result.credential.accessToken,
-                        } );
-                    }else{
-                        dispatch( {
-                            type: SIGNIN_SUCCESS,
-                            payload: result.user.uid,
-                            token: result.credential.accessToken,
-                        } );
-                        dispatch( push( "/" ) );
+                .then( function ( result ) {
+                        if ( result.additionalUserInfo ) {
+                            
+                            dispatch( {
+                                type: SIGNIN_NEW_USER,
+                                payload: result.user.uid,
+                                // @ts-ignore
+                                token: result.credential.accessToken,
+                            } );
+                        } else {
+                            
+                            
+                            dispatch( {
+                                type: SIGNIN_SUCCESS,
+                                payload: result.user.uid,
+                                // @ts-ignore
+                                token: result.credential.accessToken,
+                            } );
+                            
+                            dispatch( push( "/" ) );
+                        }
                     }
-                } )
-                .catch( function( error ){
+                )
+                .catch( function ( error ) {
                     dispatch( { type: SIGNIN_FAILED, payload: error.message } );
                 } );
             return;
@@ -64,26 +73,28 @@ export const signIn = authType => dispatch => {
             firebase
                 .auth()
                 .signInWithPopup( githubProvider )
-                .then( function( result ){
-                    if( result.additionalUserInfo.isNewUser ){
+                .then( function ( result ) {
+                    if ( result.additionalUserInfo.isNewUser ) {
                         dispatch( {
                             type: SIGNIN_NEW_USER,
                             payload: result.user.uid,
+                            // @ts-ignore
                             token: result.credential.accessToken,
                         } );
-                    }else{
+                    } else {
                         dispatch( {
                             type: SIGNIN_SUCCESS,
                             payload: result.user.uid,
+                            // @ts-ignore
                             token: result.credential.accessToken,
                         } );
                         dispatch( push( "/" ) );
                     }
                 } )
-                .catch( function( error ){
+                .catch( function ( error ) {
                     dispatch( { type: SIGNIN_FAILED, payload: error.message } );
                 } );
-        
+            return;
         default:
             dispatch( { type: SIGNIN_FAILED } );
     }
@@ -122,7 +133,7 @@ export const createUser = user => dispatch => {
         } )
         .then( () => {
             dispatch( { type: CREATE_USER_SUCCESS } );
-            dispatch( push( "/students" ) );
+            dispatch( push( "/manage-students" ) );
         } );
 };
 

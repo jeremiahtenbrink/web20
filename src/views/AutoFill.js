@@ -3,13 +3,22 @@ import { Card, Icon, Popover, Button } from "antd";
 import Lessons from "../components/autoFill/Lessons";
 import Instructors from "../components/autoFill/Instructors";
 import Tas from "../components/autoFill/Tas";
-import { copyStudentsOverToTheirOwnCollection } from "../actions";
+import {
+    copySprints, unsubscribe, subscribe, subscribeToInstructors,
+    subscribeToCourses, subscribeToPms, subscribeToTas
+} from "../actions";
 import { connect } from "react-redux";
 
 class AutoFill extends Component{
     state = {
         page: "instructors", modalOpen: false, id: null,
     };
+    
+    componentDidMount(){
+    }
+    
+    componentWillUnmount(){
+    }
     
     render(){
         return ( <div style={ { maxWidth: "800px", margin: "20px auto" } }>
@@ -37,9 +46,8 @@ class AutoFill extends Component{
                 <h1>Autofill Dashboard: { this.state.page.toUpperCase() }</h1>
             
             </Card>
-            <Button
-                onClick={ () => this.props.copyStudentsOverToTheirOwnCollection() }>Copy
-                Students To Student Collection</Button>
+            {/*<Button*/ }
+            {/*onClick={ () => this.props.copySprints() }>Copy Sprints</Button>*/ }
             { this.state.page === "instructors" && <Card><Instructors/></Card> }
             { this.state.page === "lessons" && <Card><Lessons/></Card> }
             { this.state.page === "tas" && <Card><Tas/></Card> }
@@ -50,7 +58,12 @@ class AutoFill extends Component{
 
 const mstp = state => ( {} );
 
-export default connect( mstp,
-    { copyStudentsOverToTheirOwnCollection }
-)(
-    AutoFill );
+export default connect( mstp, {
+    copySprints,
+    subscribeToInstructors,
+    subscribe,
+    unsubscribe,
+    subscribeToCourses,
+    subscribeToPms,
+    subscribeToTas
+} )( AutoFill );

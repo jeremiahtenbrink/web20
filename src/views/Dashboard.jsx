@@ -5,7 +5,9 @@ import {
     Card, Icon, Skeleton, Avatar, Table, Col, Popover
 } from "antd";
 import axios from "axios";
-import { getStudents, logout } from "../actions";
+import {
+    subscribeToStudents, logout, subscribe, unsubscribe
+} from "../actions";
 import LambdaLogo from "../assets/logo.png";
 
 class Dashboard extends React.Component{
@@ -14,7 +16,18 @@ class Dashboard extends React.Component{
     };
     
     componentDidMount(){
+        
+        if( !this.props.uid ){
+            return this.props.history.push( "/start" );
+        }
         this.getJoke();
+        this.props.subscribe( "Students",
+            this.props.subscribeToStudents( this.props.uid ) );
+    }
+    
+    componentWillUnmount(){
+        
+        this.props.unsubscribe( "Students" );
     }
     
     getJoke = () => {
@@ -23,8 +36,16 @@ class Dashboard extends React.Component{
         } ).then( joke => this.setState( { joke: joke.data.joke } ) ).catch();
     };
     
+    logout = () => {
+        if( this.props.subscriptions ){
+            Object.values( this.props.subscriptions )
+                .forEach( unsubscribe => unsubscribe() );
+        }
+        this.props.logout();
+    };
+    
     render(){
-        debugger;
+        
         const actions = [
             <Popover content={ <p>Reload Joke</p> }>
                 <Icon type="reload" onClick={ this.getJoke }/>
@@ -92,10 +113,11 @@ class Dashboard extends React.Component{
             
             <div style={ { backgroundColor: "white" } }>
                 <Table
-                    dataSource={ this.props.students }
+                    dataSource={ Object.values( this.props.students ) }
                     style={ { marginTop: "30px" } }
                     bordered
                     loading={ this.props.isLoading }
+                    rowKey={ "id" }
                     pagination={ false }>
                     <Table.Column
                         title="First Name"
@@ -132,15 +154,16 @@ class Dashboard extends React.Component{
     }
 }
 
-const mapStateToProps = ( { students, auth } ) => ( {
+const mapStateToProps = ( { students, auth, subscriptions } ) => ( {
     students: students.students,
     uid: auth.uid,
     user: auth.user,
     isLoading: students.isLoading,
-    displayName: auth.displayName
+    displayName: auth.displayName,
+    subscriptions: subscriptions.subscriptions,
 } );
 
 export default connect( mapStateToProps,
-    { getStudents, logout },
+    { subscribeToStudents, logout, subscribe, unsubscribe },
 )(
     Dashboard );

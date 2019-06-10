@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getStudents } from "../actions";
+import { subscribeToStudents } from "../actions";
 import Header from "../oldcomponents/Header";
 import {
     Col, Container, Row, Spinner, Card, Button, CardTitle, CardText,
@@ -107,4 +107,4 @@ const mapStateToProps = state => ( {
     students: state.students.students, uid: state.auth.uid,
 } );
 
-export default connect( mapStateToProps, { getStudents }, )( Dashboard );
+export default connect( mapStateToProps, { getStudents: subscribeToStudents }, )( Dashboard );
