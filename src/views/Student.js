@@ -64,7 +64,7 @@ class Student extends Component{
             this.setState( { changingSelectedStudent: true } );
             this.props.changeSelectedStudent( this.props.match.params.id );
         }
-        debugger;
+        
         // check if we have a selected student and if so change the
         // changingSelectedStudent state back to false and get the students
         // lessons from db.

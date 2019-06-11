@@ -245,7 +245,7 @@ export const GET_PMS_SUCCESS = " GET_PMS_SUCCESS";
 export const GET_PMS_FAIL = " GET_PMS_FAIL";
 
 export const subscribeToPms = () => ( dispatch ) => {
-    debugger;
+    
     store.collection( "users" )
         .get()
         .then( res => {

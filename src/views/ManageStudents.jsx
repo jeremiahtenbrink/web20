@@ -22,7 +22,7 @@ class ManageStudents extends React.Component{
     };
     
     componentDidMount(){
-        debugger;
+        
         if( this.props.uid ){
             this.props.subscribe( "students",
                 this.props.subscribeToStudents( this.props.uid )

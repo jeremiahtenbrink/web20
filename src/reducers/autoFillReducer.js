@@ -212,7 +212,7 @@ export const autoFillReducer = ( state = initialState, action ) => {
                 ...state, gettingPms: true
             };
         case GET_PMS_SUCCESS:
-            debugger;
+            
             return {
                 ...state, gettingPms: false, pms: action.payload,
             };

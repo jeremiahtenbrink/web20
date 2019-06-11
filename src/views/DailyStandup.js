@@ -26,10 +26,12 @@ class DailyStandup extends Component{
         flexTaRating: null,
         flexTaFeedback: "",
         other: "",
+        lessons: [],
+        lessonsLoaded: false
     };
     
     componentDidMount(){
-        debugger;
+        
         if( this.props.uid ){
             this.subscribeToAutoFillData();
         }
@@ -66,6 +68,15 @@ class DailyStandup extends Component{
     
     componentDidUpdate( prevProps, prevState, snapshot ){
         
+        if( this.state.lessonsLoaded && prevProps.lessons !==
+            this.props.lessons ){
+            this.setLessons();
+        }
+        
+        if( !this.state.lessonsLoaded &&
+            Object.values( this.props.lessons ).length > 0 ){
+            this.setLessons();
+        }
         if( !this.state.subscribedToStudents && this.props.uid ){
             this.subscribeToAutoFillData();
         }
@@ -75,6 +86,17 @@ class DailyStandup extends Component{
             this.setStudents( this.props.students );
         }
     }
+    
+    setLessons = () => {
+        let lessons = [];
+        Object.values( this.props.lessons ).forEach( sprint => {
+            Object.values( sprint ).forEach( lesson => {
+                lessons.push( lesson );
+            } );
+        } );
+        
+        this.setState( { lessons, lessonsLoaded: true } );
+    };
     
     setStudents = students => {
         Object.values( students ).forEach( student => {
@@ -104,7 +126,7 @@ class DailyStandup extends Component{
     };
     
     getReportLink = () => {
-        debugger;
+        
         if( this.props.user ){
             let url = `https://airtable.com/shripCmauVlvxNrAT?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })&prefill_Sections=${ this.props.user.cohort }`;
             
@@ -152,7 +174,7 @@ class DailyStandup extends Component{
             if( this.state.instructorFeedback !== "" ){
                 url += `&prefill_Instruction+Feedback=${ encodeURI( this.state.instructorFeedback, ) }`;
             }
-            debugger;
+            
             if( this.state.flexTa !== null ){
                 let flexTaName = this.props.flexTas[ this.state.flexTa ].firstName +
                     "+" + this.props.flexTas[ this.state.flexTa ].lastName;
@@ -268,32 +290,6 @@ class DailyStandup extends Component{
                             </Select>
                         </Form.Item>
                         
-                        <Form.Item label={ "Sprint Topic" }>
-                            <Select
-                                showSearch
-                                style={ { width: 200 } }
-                                placeholder="Lesson"
-                                optionFilterProp="children"
-                                onChange={ ( e ) => {
-                                    this.onChangeSelect( e, "sprintTopic" );
-                                } }
-                                value={ this.state.sprintTopic }
-                                filterOption={ ( input,
-                                    option ) => option.props.children.toLowerCase()
-                                    .indexOf( input.toLowerCase() ) >= 0 }
-                            >
-                                { this.props.sprints &&
-                                Object.values( this.props.sprints )
-                                    .sort( ( a, b ) => a.week - b.week )
-                                    .map( sprint => {
-                                        
-                                        return <Option key={ sprint.id }
-                                                       value={ sprint.id }>{ `${ sprint.name }` }</Option>;
-                                    } ) }
-                                <Option value={ "Lesson" }>Lesson</Option>
-                            </Select>
-                        </Form.Item>
-                        
                         <Form.Item label={ "Lesson" }>
                             <Select
                                 showSearch
@@ -308,12 +304,10 @@ class DailyStandup extends Component{
                                     option ) => option.props.children.toLowerCase()
                                     .indexOf( input.toLowerCase() ) >= 0 }
                             >
-                                { this.props.lessons &&
-                                this.props.lessons[ this.state.sprintTopic ] &&
-                                Object.values( this.props.lessons[ this.state.sprintTopic ] )
-                                    .sort( ( a, b ) => a.order - b.order )
+                                { this.state.lessons &&
+                                this.state.lessons.sort( ( a, b ) => a.order -
+                                    b.order )
                                     .map( lesson => {
-                                        
                                         return <Option key={ lesson.id }
                                                        value={ lesson.name }>{ `${ lesson.name }` }</Option>;
                                     } ) }
@@ -458,7 +452,6 @@ const mpts = state => ( {
     lessons: state.sprints.lessons,
     instructors: state.autoFill.instructors,
     flexTas: state.autoFill.tas,
-    sprints: state.sprints.sprints,
     uid: state.auth.uid,
 } );
 
