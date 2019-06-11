@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import { Form, Input, Button, Row, Modal, Icon, Table, Select } from "antd";
 import {
     editStudent, getStudentLessons, completeStudentLesson, changeSelectedSprint,
-    changeSelectedStudent,
+    changeSelectedStudent, subscribe, unsubscribe, subscribeToPms,
+    subscribeToSprints, subscribeToStudents
 } from "../actions";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
@@ -14,6 +15,7 @@ class Student extends Component{
         changingSelectedStudent: false,
         populatedLessonsWithStudentLessons: false,
         populatingLessonsInit: false,
+        subscribedToStudents: false,
         lessons: [],
         loaded: false,
         course: "",
@@ -27,13 +29,33 @@ class Student extends Component{
     };
     
     componentDidMount(){
+        if( this.props.uid ){
+            this.props.subscribe( "Students",
+                this.props.subscribeToStudents( this.props.uid )
+            );
+            
+            this.setState( { subscribedToStudents: true } );
+        }
+        this.props.subscribe( "Sprints", this.props.subscribeToSprints() );
+        this.props.subscribe( "Pms", this.props.subscribeToPms() );
         if( Object.values( this.props.students ).length > 0 ){
             this.setState( { changingSelectedStudent: true } );
             this.props.changeSelectedStudent( this.props.match.params.id );
         }
     }
     
+    componentWillUnmount(){
+        this.props.unsubscribe( "Students" );
+        this.props.unsubscribe( "Pms" );
+        this.props.unsubscribe( "Sprints" );
+    }
+    
     componentDidUpdate( prevProps, prevState, snapshot ){
+        if( this.props.uid && !this.state.subscribedToStudents ){
+            this.props.subscribe( "Students",
+                this.props.subscribeToStudents( this.props.uid )
+            );
+        }
         // check if selected student is there and if not then change the
         // selected student to the correct student by id.
         if( !this.state.changingSelectedStudent &&
@@ -42,7 +64,7 @@ class Student extends Component{
             this.setState( { changingSelectedStudent: true } );
             this.props.changeSelectedStudent( this.props.match.params.id );
         }
-        
+        debugger;
         // check if we have a selected student and if so change the
         // changingSelectedStudent state back to false and get the students
         // lessons from db.
@@ -131,31 +153,11 @@ class Student extends Component{
                         { this.props.selectedStudent.lastName }
                     </h1>
                 </div>
-                
-                <Form.Item label={ "Project Manager" }>
-                    <Select
-                        showSearch
-                        style={ { width: 200 } }
-                        placeholder="Project Manager"
-                        optionFilterProp="children"
-                        onChange={ ( e ) => {
-                            
-                            this.onChangeSelect( e, "student" );
-                        } }
-                        value={ this.state.pm }
-                        filterOption={ ( input,
-                            option ) => option.props.children.toLowerCase()
-                            .indexOf( input.toLowerCase() ) >= 0 }
-                    >
-                        { this.props.pms &&
-                        Object.values( this.props.pms ).map( PM => {
-                            
-                            return <Select.Option key={ PM.id }
-                                                  value={ PM.id }>{ `${ PM.firstName } ${ PM.lastName }` }</Select.Option>;
-                        } ) }
-                    </Select>
-                </Form.Item>
-                
+                <h3>PM: <span
+                    className={ "mg-left-sm" }>{ this.state.pm &&
+                this.props.pms[ this.state.pm ] &&
+                `${ this.props.pms[ this.state.pm ].firstName } ${ this.props.pms[ this.state.pm ].lastName }` }</span>
+                </h3>
                 <div className={ "mg-top-lg" }>
                     <h3>
                         Github Handle:{ " " }
@@ -281,4 +283,9 @@ export default connect( mstp, {
     completeStudentLesson,
     changeSelectedSprint,
     changeSelectedStudent,
+    subscribeToPms,
+    subscribe,
+    unsubscribe,
+    subscribeToStudents,
+    subscribeToSprints,
 }, )( Student );

@@ -10,6 +10,7 @@ import {
 } from "../../actions/index";
 import { IInstructor } from "../../types/InstructorInterface";
 import { ICourse } from "../../types/CourseInterface";
+import { studentsReducer } from "../../reducers/studentsReducer";
 
 
 class Instructors extends React.Component<ComponentProps> {
@@ -37,7 +38,7 @@ class Instructors extends React.Component<ComponentProps> {
         this.props.deleteInstructor( instructor );
     };
     
-    updateInstructor = () => {
+    updateInstructor = (): void => {
         
         const instructor = {
             id: this.state.selectedId,
@@ -215,7 +216,8 @@ class Instructors extends React.Component<ComponentProps> {
 
 const mstp = state => {
     return {
-        instructors: state.autoFill.instructors, courses: state.autoFill.courses
+        instructors: state.autoFill.instructors, courses: state.autoFill.coursee
+        
     };
 };
 

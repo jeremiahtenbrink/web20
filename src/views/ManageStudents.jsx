@@ -1,6 +1,9 @@
 import React from "react";
 import MakeInput from "../components/MakeInput";
-import { addStudent, subscribeToStudents, delStudent, editStudent } from "../actions";
+import {
+    addStudent, subscribeToStudents, delStudent, editStudent, subscribe,
+    unsubscribe,
+} from "../actions";
 
 import { connect } from "react-redux";
 
@@ -15,8 +18,31 @@ class ManageStudents extends React.Component{
     state = {
         modalOpen: false, modalId: false, student: {
             firstName: "", lastName: "", github: "", course: ""
-        },
+        }, subscribedToStudents: false,
     };
+    
+    componentDidMount(){
+        debugger;
+        if( this.props.uid ){
+            this.props.subscribe( "students",
+                this.props.subscribeToStudents( this.props.uid )
+            );
+            this.setState( { subscribedToStudents: true } );
+        }
+    }
+    
+    componentDidUpdate( prevProps, prevState, snapshot ){
+        if( !this.state.subscribedToStudents && this.props.uid ){
+            this.props.subscribe( "students",
+                this.props.subscribeToStudents( this.props.uid )
+            );
+            this.setState( { subscribedToStudents: true } );
+        }
+    }
+    
+    componentWillUnmount(){
+        this.props.unsubscribe( "students" );
+    }
     
     addHandler = e => {
         
@@ -82,7 +108,7 @@ class ManageStudents extends React.Component{
             </div>
             <div style={ { backgroundColor: "white" } }>
                 <Table
-                    dataSource={ this.props.students }
+                    dataSource={ Object.values( this.props.students ) }
                     style={ { marginTop: "30px" } }
                     bordered
                     loading={ this.props.isLoading }
@@ -183,11 +209,12 @@ class ManageStudents extends React.Component{
                                     .indexOf( input.toLowerCase() ) >= 0 }
                             >
                                 { this.props.courses &&
-                                this.props.courses.map( course => {
-                                    
-                                    return <Select.Option key={ course.id }
-                                                          value={ course.id }>{ course.courseName }</Select.Option>;
-                                } ) }
+                                Object.values( this.props.courses )
+                                    .map( course => {
+                                        
+                                        return <Select.Option key={ course.id }
+                                                              value={ course.id }>{ course.courseName }</Select.Option>;
+                                    } ) }
                             </Select>
                         </Form.Item>
                     </Col>
@@ -206,6 +233,13 @@ const mapStateToProps = ( { students, auth, autoFill } ) => ( {
 } );
 
 export default connect( mapStateToProps,
-    { addStudent, editStudent, getStudents: subscribeToStudents, delStudent },
+    {
+        addStudent,
+        editStudent,
+        subscribeToStudents,
+        delStudent,
+        subscribe,
+        unsubscribe
+    },
 )(
     ManageStudents );
