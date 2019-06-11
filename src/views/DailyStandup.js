@@ -9,6 +9,7 @@ import {
     subscribeToTas, subscribeToSprints, subscribeToCourses
 } from "../actions/index";
 import "./dailyStandup.scss";
+import InputComponent from "../components/InputComponent";
 
 class DailyStandup extends Component{
     state = {
@@ -215,7 +216,6 @@ class DailyStandup extends Component{
                         </Link>
                         <h1>Daily Standup</h1>
                     </div>
-                    
                     <Table
                         dataIndex={ "id" }
                         dataSource={ this.state.students &&

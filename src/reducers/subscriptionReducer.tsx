@@ -1,25 +1,30 @@
 import {
     SUBSCRIBE, UNSUBSCRIBE
 } from "../actions/index";
+import { ISubscriptions } from "../types/SubscriptionsInterface";
+import { IAction } from "../types/ActionInterface";
 
-const initialState = {
+const initialState: IState = {
     subscriptions: {}
 };
-export const subscriptionReducer = ( state = initialState, action ) => {
+
+export const subscriptionReducer = ( state: IState = initialState,
+                                     action: IAction ): IState => {
     
-    switch( action.type ){
+    switch ( action.type ) {
         case SUBSCRIBE:
             
-            if( state.subscriptions[ action.payload.name ] ){
+            if ( state.subscriptions[ action.payload.name ] ) {
                 const unsubscribe = state.subscriptions[ action.payload.name ];
                 unsubscribe();
             }
-            state.subscriptions[ action.payload.name ] = action.payload.subscription;
+            state.subscriptions[ action.payload.name ] =
+                action.payload.subscription;
             return { subscriptions: { ...state.subscriptions } };
         case UNSUBSCRIBE:
             
             const unSubScribe = state.subscriptions[ action.payload ];
-            if( unSubScribe ){
+            if ( unSubScribe ) {
                 unSubScribe();
             }
             delete state.subscriptions[ action.payload ];
@@ -31,3 +36,7 @@ export const subscriptionReducer = ( state = initialState, action ) => {
     }
     
 };
+
+interface IState {
+    subscriptions: ISubscriptions;
+}

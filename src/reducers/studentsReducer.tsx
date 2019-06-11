@@ -8,7 +8,7 @@ import {
     COMPLETE_LESSON_SUCCESS, COMPLETE_LESSON_FAILED, CHANGE_SELECTED_STUDENT,
 } from "../actions";
 import { IStudentReducer } from "../types/StudentsReducerInterface";
-import { Action } from "../types/ActionInterface";
+import { IAction } from "../types/ActionInterface";
 
 const initialState: IStudentReducer = {
     students: {},
@@ -27,7 +27,7 @@ const initialState: IStudentReducer = {
 };
 
 export const studentsReducer = ( state: IStudentReducer = initialState,
-                                 action: Action ): IStudentReducer => {
+                                 action: IAction ): IStudentReducer => {
     
     switch ( action.type ) {
         

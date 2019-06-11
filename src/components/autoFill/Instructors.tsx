@@ -10,10 +10,9 @@ import {
 } from "../../actions/index";
 import { IInstructor } from "../../types/InstructorInterface";
 import { ICourse } from "../../types/CourseInterface";
-import { studentsReducer } from "../../reducers/studentsReducer";
 
 
-class Instructors extends React.Component<ComponentProps> {
+class Instructors extends React.Component<IComponentProps, IComponentState> {
     
     state = {
         modalOpen: false,
@@ -24,9 +23,16 @@ class Instructors extends React.Component<ComponentProps> {
     };
     
     componentDidMount(): void {
+        debugger;
         this.props.subscribe( "Instructors",
             this.props.subscribeToInstructors() );
         this.props.subscribe( "Courses", this.props.subscribeToCourses() )
+    }
+    
+    componentDidUpdate( prevProps: Readonly<IComponentProps>,
+                        prevState: Readonly<IComponentState>,
+                        snapshot?: any ): void {
+        debugger;
     }
     
     componentWillUnmount(): void {
@@ -34,7 +40,7 @@ class Instructors extends React.Component<ComponentProps> {
         this.props.unsubscribe( "Courses" );
     }
     
-    deleteInstructor = ( instructor: IInstructor ) => {
+    deleteInstructor = ( instructor: IInstructor ): void => {
         this.props.deleteInstructor( instructor );
     };
     
@@ -51,33 +57,33 @@ class Instructors extends React.Component<ComponentProps> {
         } );
     };
     
-    addInstructor = () => {
+    addInstructor = (): void => {
         
         this.props.addInstructor( { name: this.state.name } );
         this.setState( { modalOpen: false, name: "" } );
     };
     
-    onChange = e => {
+    onChange = ( e: React.SyntheticEvent ): void => {
+        //@ts-ignore
         this.setState( { [ e.target.name ]: e.target.value } );
     };
     
-    addCourse = () => {
-        this.setState( ( state: ComponentState ) => ( {
+    addCourse = (): void => {
+        this.setState( ( state: IComponentState ) => ( {
             courses: [
                 ...state.courses, this.state.selectedCourse
             ], selectedCourse: ""
         } ) );
     };
     
-    removeCourse = courseToRemove => {
-        this.setState( ( state: ComponentState ) => ( {
+    removeCourse = ( courseToRemove: string ): void => {
+        this.setState( ( state: IComponentState ) => ( {
             courses: state.courses.filter( course => course !== courseToRemove )
         } ) );
     };
     
     render() {
         
-        // @ts-ignore
         return ( <>
             <Button type={ "primary" }
                     onClick={ () => this.setState( { modalOpen: true } ) }>Create
@@ -154,7 +160,7 @@ class Instructors extends React.Component<ComponentProps> {
                 onOk={ this.state.selectedId ? this.updateInstructor :
                     this.addInstructor }
                 onCancel={ () => this.setState( {
-                    modalOpen: false, modalId: null
+                    modalOpen: false,
                 } ) }>
                 <Row type="flex" gutter={ 24 }>
                     <Col xs={ 24 } md={ 12 }>
@@ -216,7 +222,7 @@ class Instructors extends React.Component<ComponentProps> {
 
 const mstp = state => {
     return {
-        instructors: state.autoFill.instructors, courses: state.autoFill.coursee
+        instructors: state.autoFill.instructors, courses: state.autoFill.courses
         
     };
 };
@@ -228,7 +234,7 @@ export default connect( mstp,
     }
 )( Instructors );
 
-interface ComponentProps {
+interface IComponentProps {
     updateInstructor: Function,
     deleteInstructor: Function,
     addInstructor: Function,
@@ -240,7 +246,7 @@ interface ComponentProps {
     subscribeToCourses: Function
 }
 
-interface ComponentState {
+interface IComponentState {
     modalOpen: boolean,
     selectedId: string,
     name: string,

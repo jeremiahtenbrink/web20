@@ -1,4 +1,4 @@
-export interface TASInterface {
+export interface ITas {
     id: string,
     firstName: string,
     lastName: string,

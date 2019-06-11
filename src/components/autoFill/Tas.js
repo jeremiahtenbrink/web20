@@ -127,7 +127,7 @@ class Tas extends Component{
                     name: "",
                     order: null,
                     isProject: true,
-                } ) }>
+                } ) } align={ "center" }>
                 <Row type="flex" gutter={ 24 }>
                     <Col xs={ 24 } md={ 12 }>
                         <h3>

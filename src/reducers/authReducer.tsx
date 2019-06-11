@@ -5,8 +5,10 @@ import {
     GET_USER_INIT, GET_USER_SUCCESS, GET_USER_FAILED, EDIT_USER_FAIL,
     EDIT_USER_INIT, EDIT_USER_SUCCESS,
 } from "../actions";
+import { IAuthReducer } from "../types/AuthReducerInterface";
+import { IAction } from "../types/ActionInterface";
 
-const initialState = {
+const initialState: IAuthReducer = {
     isLoading: false,
     gettingUser: false,
     editingUser: false,
@@ -15,10 +17,12 @@ const initialState = {
     newUser: false,
     token: "",
     error: "",
+    user: {}
 };
 
-export const authReducer = ( state = initialState, action ) => {
-    switch( action.type ){
+export const authReducer = ( state: IAuthReducer = initialState,
+                             action: IAction ): IAuthReducer => {
+    switch ( action.type ) {
         case AUTH_INIT:
             return { ...state, isLoading: true };
         case AUTH_FAILED:
@@ -29,7 +33,8 @@ export const authReducer = ( state = initialState, action ) => {
                 ...state,
                 isLoading: false,
                 uid: action.payload.uid,
-                displayName: action.payload.displayName
+                displayName: action.payload.displayName,
+                user: action.payload,
             };
         case SIGNIN_INIT:
             return { ...state, isLoading: true };
@@ -58,7 +63,6 @@ export const authReducer = ( state = initialState, action ) => {
                 ...state,
                 isLoading: false,
                 uid: null,
-                user: null,
                 newUser: false,
                 token: "",
                 error: "",
@@ -71,7 +75,7 @@ export const authReducer = ( state = initialState, action ) => {
             return { ...state, gettingUser: false, error: action.payload };
         case GET_USER_SUCCESS:
             return {
-                ...state, gettingUser: false, user: action.payload, error: "",
+                ...state, gettingUser: false, error: "", user: action.payload
             };
         case EDIT_USER_INIT:
             return { ...state, editingUser: true };
@@ -79,7 +83,6 @@ export const authReducer = ( state = initialState, action ) => {
             return {
                 ...state,
                 editingUser: false,
-                user: { ...state.user, ...action.payload },
             };
         case EDIT_USER_FAIL:
             return { ...state, editingUser: false, error: action.payload };

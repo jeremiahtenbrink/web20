@@ -11,8 +11,10 @@ import {
     ADD_COURSE_INIT, ADD_COURSE_SUCCESS, GET_PMS_FAIL, GET_PMS_INIT,
     GET_PMS_SUCCESS
 } from "../actions";
+import { IAutoFillReducer } from "../types/AutoFillReducerInterface";
+import { IAction } from "../types/ActionInterface";
 
-const initialState = {
+const initialState: IAutoFillReducer = {
     gettingSections: false,
     gettingInstructors: false,
     gettingTas: false,
@@ -31,16 +33,17 @@ const initialState = {
     gettingCourses: false,
     addingCourse: false,
     deletingCourse: false,
-    tas: [],
-    sprints: [],
+    tas: {},
+    sprints: {},
     instructors: {},
     courses: {},
     pms: {},
     error: "",
 };
 
-export const autoFillReducer = ( state = initialState, action ) => {
-    switch( action.type ){
+export const autoFillReducer = ( state: IAutoFillReducer = initialState,
+                                 action: IAction ): IAutoFillReducer => {
+    switch ( action.type ) {
         
         
         // GETTING INSTRUCTORS ------------------------------------------
@@ -164,6 +167,7 @@ export const autoFillReducer = ( state = initialState, action ) => {
                 ...state, gettingCourses: true
             };
         case GET_COURSES_SUCCESS:
+            debugger;
             return {
                 ...state, gettingCourses: false, courses: action.payload
             };
@@ -171,7 +175,7 @@ export const autoFillReducer = ( state = initialState, action ) => {
             return {
                 ...state,
                 gettingCourses: false,
-                courses: [],
+                courses: {},
                 error: action.payload,
             };
         

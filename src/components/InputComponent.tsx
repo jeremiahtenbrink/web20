@@ -1,17 +1,23 @@
-import React, { Component } from "react";
+import React from "react";
 import { Input, Form } from "antd";
-import PropTypes from "prop-types";
 
-const InputComponent = ( props ) => {
+interface IProps {
+    name: string,
+    value: string,
+    onChange: Function,
+    required: boolean,
+}
+
+const InputComponent = ( props: IProps ) => {
     
     const nameArray = props.name.split( " " );
     let first = true;
     let variableName = "";
-    for( let i = 0; i < nameArray.length; i++ ){
-        if( first ){
+    for ( let i = 0; i < nameArray.length; i++ ) {
+        if ( first ) {
             variableName = nameArray[ i ].toLowerCase();
             first = false;
-        }else{
+        } else {
             variableName += nameArray[ i ].charAt( 0 ).toUpperCase() +
                 nameArray[ i ].slice( 1 );
         }
@@ -25,15 +31,6 @@ const InputComponent = ( props ) => {
             required={ props.required ? props.required : false }
         />
     </Form.Item> );
-};
-
-InputComponent.propTypes = {
-    name: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    required: PropTypes.bool,
-    value: PropTypes.oneOfType( [
-        PropTypes.string, PropTypes.number
-    ] ),
 };
 
 export default InputComponent;
