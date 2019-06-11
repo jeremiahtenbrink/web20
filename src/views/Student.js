@@ -4,7 +4,7 @@ import { Form, Input, Button, Row, Modal, Icon, Table, Select } from "antd";
 import {
     editStudent, getStudentLessons, completeStudentLesson, changeSelectedSprint,
     changeSelectedStudent, subscribe, unsubscribe, subscribeToPms,
-    subscribeToSprints, subscribeToStudents
+    subscribeToSprints, subscribeToStudents, subscribeToCourses
 } from "../actions";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
@@ -38,6 +38,7 @@ class Student extends Component{
         }
         this.props.subscribe( "Sprints", this.props.subscribeToSprints() );
         this.props.subscribe( "Pms", this.props.subscribeToPms() );
+        this.props.subscribe( "Courses", this.props.subscribeToCourses() );
         if( Object.values( this.props.students ).length > 0 ){
             this.setState( { changingSelectedStudent: true } );
             this.props.changeSelectedStudent( this.props.match.params.id );
@@ -48,6 +49,7 @@ class Student extends Component{
         this.props.unsubscribe( "Students" );
         this.props.unsubscribe( "Pms" );
         this.props.unsubscribe( "Sprints" );
+        this.props.unsubscribe( "Courses" );
     }
     
     componentDidUpdate( prevProps, prevState, snapshot ){
@@ -77,13 +79,13 @@ class Student extends Component{
     }
     
     setStudentInfo = ( student = this.props.selectedStudent ) => {
+        debugger;
         this.setState( {
             modalOpen: false,
             changingSelectedStudent: false,
             firstName: student.firstName,
             lastName: student.lastName,
             github: student.github,
-            link: student.link,
             loaded: true,
             pm: student.pm,
             course: student.course,
@@ -100,6 +102,7 @@ class Student extends Component{
     };
     
     updateStudentSubmit = e => {
+        debugger;
         let student = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -107,6 +110,7 @@ class Student extends Component{
             github: this.state.github,
             id: this.state.id,
             course: this.state.course,
+            pm: this.state.pm,
         };
         this.props.editStudent( student );
         this.setState( { modalOpen: false } );
@@ -193,6 +197,33 @@ class Student extends Component{
                     onCancel={ () => this.cancelEdit() }>
                     <Row type="flex" gutter={ 24 }>
                         <Form onSubmit={ this.onSubmit }>
+                            
+                            <Form.Item label={ "Project Manager" }>
+                                <Select
+                                    showSearch
+                                    style={ { width: 200 } }
+                                    placeholder="PM"
+                                    optionFilterProp="children"
+                                    onChange={ ( value ) => {
+                                        
+                                        this.changeSelect( value, "pm" );
+                                    } }
+                                    value={ this.state.pm }
+                                    filterOption={ ( input,
+                                        option ) => option.props.children.toLowerCase()
+                                        .indexOf( input.toLowerCase() ) >= 0 }
+                                >
+                                    { this.props.pms &&
+                                    Object.values( this.props.pms )
+                                        .map( pm => {
+                                            
+                                            return <Select.Option
+                                                key={ pm.id }
+                                                value={ pm.id }>{ `${ pm.firstName } ${ pm.lastName }` }</Select.Option>;
+                                        } ) }
+                                </Select>
+                            </Form.Item>
+                            
                             <Form.Item label={ "First Name" }>
                                 <Input
                                     id={ "firstName" }
@@ -288,4 +319,5 @@ export default connect( mstp, {
     unsubscribe,
     subscribeToStudents,
     subscribeToSprints,
+    subscribeToCourses,
 }, )( Student );
