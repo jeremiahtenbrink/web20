@@ -60,7 +60,7 @@ class Dashboard extends React.Component{
         
         if( this.props.user && this.props.user.isAdmin ){
             actions.push( <Popover content={ <p>Admin</p> }><Icon
-                onClick={ () => this.props.history.push( "/autofill" ) }
+                onClick={ () => this.props.history.push( "/admin-dashboard" ) }
                 type="setting"/></Popover> );
         }
         
