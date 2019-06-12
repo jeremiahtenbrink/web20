@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Card, Icon, Popover, Button } from "antd";
 import Lessons from "../components/autoFill/Lessons";
 import Instructors from "../components/autoFill/Instructors";
-import Tas from "../components/autoFill/Tas";
+import Tas from "../components/autoFill/Tas.jsx";
 import {
     copySprints, unsubscribe, subscribe, subscribeToInstructors,
     subscribeToCourses, subscribeToPms, subscribeToTas
@@ -14,10 +14,10 @@ class AdminDashboard extends Component{
         page: "instructors", modalOpen: false, id: null,
     };
     
-    componentDidMount(){
+    componentDidMount() {
     }
     
-    componentWillUnmount(){
+    componentWillUnmount() {
     }
     
     render(){

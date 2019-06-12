@@ -1,3 +1,6 @@
+@import './styles/colors.scss';
+
+
 .cover {
   height: 100vh;
 }
@@ -131,3 +134,8 @@
 .hover-blue:hover {
   color: lightskyblue;
 }
+
+// Dark style
+// .ant-layout-content {
+//   background-color: $bg-dark;
+// }

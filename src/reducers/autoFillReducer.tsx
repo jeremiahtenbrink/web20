@@ -167,7 +167,7 @@ export const autoFillReducer = ( state: IAutoFillReducer = initialState,
                 ...state, gettingCourses: true
             };
         case GET_COURSES_SUCCESS:
-            debugger;
+            // debugger;
             return {
                 ...state, gettingCourses: false, courses: action.payload
             };
