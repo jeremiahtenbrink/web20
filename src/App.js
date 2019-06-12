@@ -11,7 +11,7 @@ import Attendance from "./views/Attendance.jsx";
 import DailyStandup from "./views/DailyStandup.jsx";
 import Student from "./views/Student.jsx";
 import SprintForm from "./views/SprintForm.jsx";
-import AutoFill from "./views/AutoFill.jsx";
+import AdminDashboard from "./views/AdminDashboard";
 import "./App.scss";
 
 class App extends React.Component{
@@ -39,7 +39,7 @@ class App extends React.Component{
                         render={ props => <ManageStudents { ...props } /> }
                     />
                     <Route
-                        exact
+                        exactgit
                         path="/attendance"
                         render={ props => <Attendance { ...props } /> }
                     />
@@ -65,8 +65,8 @@ class App extends React.Component{
                     />
                     <Route
                         exact
-                        path="/autofill"
-                        render={ props => <AutoFill { ...props } /> }
+                        path="/admin-dashboard"
+                        render={ props => <AdminDashboard { ...props } /> }
                     />
                     
                     

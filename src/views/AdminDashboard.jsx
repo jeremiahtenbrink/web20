@@ -8,9 +8,8 @@ import {
     subscribeToCourses, subscribeToPms, subscribeToTas
 } from "../actions";
 import { connect } from "react-redux";
-import InputComponent from "../components/InputComponent";
 
-class AutoFill extends Component{
+class AdminDashboard extends Component{
     state = {
         page: "instructors", modalOpen: false, id: null,
     };
@@ -44,7 +43,7 @@ class AutoFill extends Component{
                 </Popover>,
             ] }>
                 
-                <h1>Autofill Dashboard: { this.state.page.toUpperCase() }</h1>
+                <h1>Admin Dashboard: { this.state.page.toUpperCase() }</h1>
             
             </Card>
             {/*<Button*/ }
@@ -67,4 +66,4 @@ export default connect( mstp, {
     subscribeToCourses,
     subscribeToPms,
     subscribeToTas
-} )( AutoFill );
+} )( AdminDashboard );
