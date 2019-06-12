@@ -7,12 +7,11 @@ import { Layout } from "antd";
 import Login from "./views/Login";
 import ManageStudents from "./views/ManageStudents";
 import Dashboard from "./views/Dashboard";
-import Attendance from "./views/Attendance";
-import DailyStandup from "./views/DailyStandup";
-import EditUser from "./oldviews/EditUser";
-import Student from "./views/Student";
-import SprintForm from "./views/SprintForm";
-import AutoFill from "./views/AutoFill";
+import Attendance from "./views/Attendance.jsx";
+import DailyStandup from "./views/DailyStandup.jsx";
+import Student from "./views/Student.jsx";
+import SprintForm from "./views/SprintForm.jsx";
+import AutoFill from "./views/AutoFill.jsx";
 import "./App.scss";
 
 class App extends React.Component{
@@ -49,10 +48,10 @@ class App extends React.Component{
                         path="/standup"
                         render={ props => <DailyStandup { ...props } /> }
                     />
-                    <Route
-                        exact
-                        path="/user"
-                        render={ props => <EditUser { ...props } /> }
+                    {/*<Route*/ }
+                    {/*exact*/ }
+                    {/*path="/user"*/ }
+                    {/*render={ props => <EditUser { ...props } /> }*/ }
                     />
                     <Route
                         exact
