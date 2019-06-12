@@ -1,9 +1,21 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
-    Button, Checkbox, Col, Icon, Input, Modal, Popconfirm, Row, Table, Form
+    Button, 
+    // Checkbox, 
+    Col, 
+    Icon, 
+    Input, 
+    Modal, 
+    Popconfirm, 
+    Row, 
+    Table, 
+    Form
 } from "antd";
-import { deleteTa, updateTa, addTa } from "../../actions";
+import { 
+    deleteTa, updateTa, addTa,
+    subscribe, unsubscribe, subscribeToTas,
+} from "../../actions";
 
 class Tas extends Component{
     
@@ -14,6 +26,17 @@ class Tas extends Component{
         lastName: "",
         selectedId: null,
     };
+
+    componentDidMount(){
+        this.props.subscribe( "Tas",
+            this.props.subscribeToTas()
+        );
+    }
+    
+    componentWillUnmount(){
+        this.props.unsubscribe( "Tas" );
+    }
+    
     
     deleteTA = ta => {
         this.props.deleteTa( ta );
@@ -184,4 +207,7 @@ const mstp = state => ( {
     tas: state.autoFill.tas,
 } );
 
-export default connect( mstp, { deleteTa, updateTa, addTa } )( Tas );
+export default connect( mstp, { 
+    deleteTa, updateTa, addTa,
+    subscribe, unsubscribe, subscribeToTas,
+} )( Tas );
