@@ -8,6 +8,7 @@ import {
     subscribeToCourses, subscribeToPms, subscribeToTas
 } from "../actions";
 import { connect } from "react-redux";
+import InputComponent from "../components/InputComponent";
 
 class AutoFill extends Component{
     state = {
