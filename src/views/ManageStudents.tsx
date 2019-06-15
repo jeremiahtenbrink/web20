@@ -6,7 +6,7 @@ import {
     unsubscribe,
 } from "../actions";
 import {
-    Table, Divider, Button, Modal, Row, Col, Form, Input, Select,
+    Table, Divider, Button, Modal, Row, Col, Form, Select,
     Popconfirm,
 } from "antd";
 

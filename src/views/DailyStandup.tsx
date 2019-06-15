@@ -60,7 +60,8 @@ class DailyStandup extends Component<IProps, IState> {
             this.subscribeToAutoFillData();
         }
         
-        if ( this.props.students && Object.values(this.props.students).length > 0 ) {
+        if ( this.props.students &&
+            Object.values( this.props.students ).length > 0 ) {
             this.setStudents( this.props.students );
         }
     }
@@ -124,7 +125,7 @@ class DailyStandup extends Component<IProps, IState> {
     
     setStudents = students => {
         // @ts-ignore
-        Object.values( students ).forEach( (student: IStudent) => {
+        Object.values( students ).forEach( ( student: IStudent ) => {
             student.isPresent = false;
         } );
         this.setState( {
@@ -165,19 +166,23 @@ class DailyStandup extends Component<IProps, IState> {
                 
                 let afterFirst = false;
                 let absentString = "&prefill_Students+(Absent)=";
-                // @ts-ignore
-                Object.values( this.state.students ).forEach( (student: IStudent) => {
-                    if ( !student.isPresent ) {
-                        if ( afterFirst ) {
-                            absentString += ",";
+                
+                
+                Object.values( this.state.students ).forEach(( student ) => {
+                    {/*
+                //@ts-ignore */}
+                        if ( !student.isPresent ) {
+                            if ( afterFirst ) {
+                                absentString += ",";
+                            }
+                            {/*
+                            //@ts-ignore */}
+                            absentString +=`${ student.firstName.trim() }+${ student.lastName.trim() }`;
+                            if ( !afterFirst ) {
+                                afterFirst = true;
+                            }
                         }
-                        absentString +=
-                            `${ student.firstName.trim() }+${ student.lastName.trim() }`;
-                        if ( !afterFirst ) {
-                            afterFirst = true;
-                        }
-                    }
-                } );
+                    } );
                 
                 if ( absentString !== "&prefill_Absent+Students=" ) {
                     url += absentString;
@@ -252,19 +257,19 @@ class DailyStandup extends Component<IProps, IState> {
                         <h1>Daily Standup</h1>
                     </div>
                     {/*
-                    //@ts-ignore */}
+                    //@ts-ignore */ }
                     <Table
                         dataIndex={ "id" }
                         dataSource={ this.state.students &&
                         Object.values( this.state.students )
-                            .sort( ( a, b) => {
+                            .sort( ( a, b ) => {
                                 //@ts-ignore
                                 return a.firstName - b.firstName
                             } ) }
                         style={ { marginTop: "30px" } }
                         bordered
                         rowKey={ "id" }
-                        loading={ false}
+                        loading={ false }
                         pagination={ false }>
                         <Table.Column
                             title="First Name"
@@ -278,7 +283,8 @@ class DailyStandup extends Component<IProps, IState> {
                         />
                         <Table.Column title="Attendance"
                                       key="attendance"
-                                      render={ ( text: string, record: IStudent ) => {
+                                      render={ ( text: string,
+                                                 record: IStudent ) => {
                             
                                           return ( <Button.Group
                                               size={ "large" }>
@@ -317,7 +323,7 @@ class DailyStandup extends Component<IProps, IState> {
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
                                 "string" ? option.props.children.toLowerCase()
-                                    .indexOf( input.toLowerCase() ) >= 0 : ''}
+                                    .indexOf( input.toLowerCase() ) >= 0 : '' }
                             >
                                 { this.props.instructors &&
                                 Object.values( this.props.instructors )
@@ -344,7 +350,7 @@ class DailyStandup extends Component<IProps, IState> {
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
                                 "string" ? option.props.children.toLowerCase()
-                                    .indexOf( input.toLowerCase() ) >= 0 : ''}
+                                    .indexOf( input.toLowerCase() ) >= 0 : '' }
                             >
                                 { this.state.lessons &&
                                 this.state.lessons.sort( ( a, b ) => a.order -
@@ -418,7 +424,7 @@ class DailyStandup extends Component<IProps, IState> {
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
                                 "string" ? option.props.children.toLowerCase()
-                                    .indexOf( input.toLowerCase() ) >= 0 : ''}
+                                    .indexOf( input.toLowerCase() ) >= 0 : '' }
                             >{ this.props.flexTas &&
                             Object.values( this.props.flexTas ).map( ta => {
                                 
@@ -477,6 +483,7 @@ class DailyStandup extends Component<IProps, IState> {
                     <a
                         className="btn btn-success mb-3"
                         target="_blank"
+                        rel={ "noopener noreferrer" }
                         href={ this.getReportLink() }>
                         <Button type="primary" icon="download"
                                 size={ "large" }>

@@ -1,20 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
-    Button, 
-    // Checkbox, 
-    Col, 
-    Icon, 
-    Input, 
-    Modal, 
-    Popconfirm, 
-    Row, 
-    Table, 
-    Form
+    Button, // Checkbox,
+    Col, Icon, Input, Modal, Popconfirm, Row, Table, Form
 } from "antd";
-import { 
-    deleteTa, updateTa, addTa,
-    subscribe, unsubscribe, subscribeToTas,
+import {
+    deleteTa, updateTa, addTa, subscribe, unsubscribe, subscribeToTas,
 } from "../../actions";
 
 class Tas extends Component{
@@ -26,17 +17,14 @@ class Tas extends Component{
         lastName: "",
         selectedId: null,
     };
-
+    
     componentDidMount(){
-        this.props.subscribe( "Tas",
-            this.props.subscribeToTas()
-        );
+        this.props.subscribe( "Tas", this.props.subscribeToTas() );
     }
     
     componentWillUnmount(){
         this.props.unsubscribe( "Tas" );
     }
-    
     
     deleteTA = ta => {
         this.props.deleteTa( ta );
@@ -140,7 +128,7 @@ class Tas extends Component{
             </Table>
             
             <Modal
-                title={ this.state.selectedId ? `Update TA` : "Add" + " TA" }
+                title={ this.state.selectedId ? `Update TA` : "Add TA" }
                 visible={ this.state.modalOpen }
                 okText={ this.state.selectedId ? "Update TA" : "Add TA" }
                 onOk={ this.state.selectedId ? this.updateTA : this.addTA }
@@ -207,7 +195,6 @@ const mstp = state => ( {
     tas: state.autoFill.tas,
 } );
 
-export default connect( mstp, { 
-    deleteTa, updateTa, addTa,
-    subscribe, unsubscribe, subscribeToTas,
+export default connect( mstp, {
+    deleteTa, updateTa, addTa, subscribe, unsubscribe, subscribeToTas,
 } )( Tas );

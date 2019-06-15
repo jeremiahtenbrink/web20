@@ -488,6 +488,7 @@ class SprintForm extends Component<IProps, IState> {
                 <div className="d-flex justify-content-center">
                     <a className="btn btn-success mb-5 mt-4"
                        target="_blank"
+                       rel={"noopener noreferrer"}
                        href={ this.getSubmissionUrl() }
                     >
                         <Button>

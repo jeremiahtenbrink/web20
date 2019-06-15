@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 import LoginImage from "../assets/login.svg";
 import "../assets/Login.scss";
 import { history } from "history";
-import { IUser } from "../types/UserInterface";
 
 interface IState {
     isLoading: boolean;
@@ -69,7 +68,7 @@ class Login extends React.Component<IProps, IState> {
                 } }>
                 <Col xs={ 24 } md={ 12 }>
                     <img src={ LoginImage } style={ { width: "100%" } }
-                         alt="Login Image"/>
+                         alt="Login"/>
                 </Col>
                 <Col xs={ 24 } md={ 12 }>
                     { this.props.newUser ?

@@ -106,7 +106,6 @@ export const getStudentLessons = ( student: IStudent, userId: string ) =>
             .doc( student.id ).get().then( ( res ) => {
             
             if ( res.exists ) {
-                let studentData = res.data();
                 store.collection( "students" )
                     .doc( student.id )
                     .collection( "lessons" )

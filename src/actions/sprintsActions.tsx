@@ -1,8 +1,6 @@
 import { store } from "../firebase/firebase";
 import { GET_COURSES_INIT, GET_COURSES_SUCCESS } from "./autoFillActions";
 import { ISprint } from "../types/SprintInterface";
-
-import { ICourse } from "../types/CourseInterface";
 import { ILesson } from "../types/LessonInterface";
 import { action } from "./action";
 
