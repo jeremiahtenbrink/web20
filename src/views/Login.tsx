@@ -6,18 +6,27 @@ import { Row, Col, Button, Form, Input, Select } from "antd";
 import { connect } from "react-redux";
 import LoginImage from "../assets/login.svg";
 import "../assets/Login.scss";
+import { history } from "history";
+import { IUser } from "../types/UserInterface";
 
-class Login extends React.Component{
+interface IState {
+    isLoading: boolean;
+    inputs: {
+        firstName: string; lastName: string; webNumber: string;
+    },
+}
+
+class Login extends React.Component<IProps, IState> {
     state = {
         isLoading: false, inputs: {
             firstName: "", lastName: "", webNumber: "",
         },
     };
     
-    componentDidMount(){
+    componentDidMount() {
         
         firebase.auth().onAuthStateChanged( user => {
-            if( user ){
+            if ( user ) {
                 this.props.history.push( "/" );
             }
         } );
@@ -47,7 +56,7 @@ class Login extends React.Component{
         this.props.signIn( type );
     };
     
-    render(){
+    render() {
         return ( <>
             <Row
                 type="flex"
@@ -153,14 +162,16 @@ class Login extends React.Component{
                                 shape="round"
                                 icon="google"
                                 loading={ this.props.isLoading }
-                                onClick={ () => this.initLogin( GOOGLE_PROVIDER ) }
+                                onClick={ () => this.initLogin(
+                                    GOOGLE_PROVIDER ) }
                                 size="large">
                                 Google
                             </Button>
                             <Button
                                 className="github-btn"
                                 loading={ this.props.isLoading }
-                                onClick={ () => this.initLogin( GITHUB_PROVIDER ) }
+                                onClick={ () => this.initLogin(
+                                    GITHUB_PROVIDER ) }
                                 shape="round"
                                 icon="github"
                                 size="large">
@@ -176,5 +187,14 @@ class Login extends React.Component{
 const mapStateToProps = ( { auth } ) => ( {
     isLoading: auth.isLoading, newUser: auth.newUser, uid: auth.uid,
 } );
+
+interface IProps {
+    isLoading: boolean;
+    newUser: boolean;
+    uid: string;
+    signIn: Function;
+    createUser: Function;
+    history: history;
+}
 
 export default connect( mapStateToProps, { signIn, createUser }, )( Login );

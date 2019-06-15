@@ -1,29 +1,41 @@
 import React from "react";
 import MakeInput from "../components/MakeInput";
+import { connect } from "react-redux";
 import {
     addStudent, subscribeToStudents, delStudent, editStudent, subscribe,
     unsubscribe,
 } from "../actions";
-
-import { connect } from "react-redux";
-
 import {
-    PageHeader, Table, Divider, Button, Modal, Row, Col, Form, Input, Select,
+    Table, Divider, Button, Modal, Row, Col, Form, Input, Select,
     Popconfirm,
 } from "antd";
 
 import { Link } from "react-router-dom";
+import { IStudent } from "../types/StudentInterface";
+import { ICourse } from "../types/CourseInterface";
 
-class ManageStudents extends React.Component{
+interface IState {
+    modalOpen: boolean,
+    modalId: boolean,
+    student: {
+        firstName: string;
+        lastName: string;
+        github: string;
+        course: string;
+    }
+    subscribedToStudents: boolean,
+}
+
+class ManageStudents extends React.Component<IProps, IState> {
     state = {
         modalOpen: false, modalId: false, student: {
-            firstName: "", lastName: "", github: "", course: ""
+            firstName: "", lastName: "", github: "", course: ''
         }, subscribedToStudents: false,
     };
     
-    componentDidMount(){
+    componentDidMount() {
         
-        if( this.props.uid ){
+        if ( this.props.uid ) {
             this.props.subscribe( "students",
                 this.props.subscribeToStudents( this.props.uid )
             );
@@ -31,8 +43,8 @@ class ManageStudents extends React.Component{
         }
     }
     
-    componentDidUpdate( prevProps, prevState, snapshot ){
-        if( !this.state.subscribedToStudents && this.props.uid ){
+    componentDidUpdate( prevProps, prevState, snapshot ) {
+        if ( !this.state.subscribedToStudents && this.props.uid ) {
             this.props.subscribe( "students",
                 this.props.subscribeToStudents( this.props.uid )
             );
@@ -40,7 +52,7 @@ class ManageStudents extends React.Component{
         }
     }
     
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.unsubscribe( "students" );
     }
     
@@ -52,7 +64,7 @@ class ManageStudents extends React.Component{
         } );
         this.setState( {
             modalOpen: false, modalId: false, student: {
-                firstName: "", lastName: "", github: "",
+                firstName: "", lastName: "", github: "", course: ''
             },
         } );
     };
@@ -71,7 +83,7 @@ class ManageStudents extends React.Component{
         }, this.props.uid, );
         this.setState( {
             modalOpen: false, modalId: false, student: {
-                firstName: "", lastName: "", github: "",
+                firstName: "", lastName: "", github: "", course: ''
             },
         } );
     };
@@ -92,7 +104,7 @@ class ManageStudents extends React.Component{
         } );
     };
     
-    render(){
+    render() {
         return ( <div style={ { maxWidth: "800px", margin: "30px auto" } }>
             <div className={ "inline" }>
                 <Link to={ "/" }><Button
@@ -205,8 +217,9 @@ class ManageStudents extends React.Component{
                                 } }
                                 value={ this.state.student.course }
                                 filterOption={ ( input,
-                                    option ) => option.props.children.toLowerCase()
-                                    .indexOf( input.toLowerCase() ) >= 0 }
+                                                 option ) => typeof option.props.children ===
+                                "string" ? option.props.children.toLowerCase()
+                                    .indexOf( input.toLowerCase() ) >= 0 : ''}
                             >
                                 { this.props.courses &&
                                 Object.values( this.props.courses )
@@ -231,6 +244,20 @@ const mapStateToProps = ( { students, auth, autoFill } ) => ( {
     isAdding: students.isAdding,
     courses: autoFill.courses,
 } );
+
+interface IProps {
+    isLoading: boolean;
+    uid: string;
+    students: { [ id: string ]: IStudent };
+    isAdding: boolean;
+    courses: {[id: string]: ICourse};
+    addStudent: Function;
+    editStudent: Function;
+    subscribeToStudents: Function;
+    delStudent: Function;
+    subscribe: Function;
+    unsubscribe: Function;
+}
 
 export default connect( mapStateToProps,
     {

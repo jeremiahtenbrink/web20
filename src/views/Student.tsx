@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Form, Input, Button, Row, Modal, Icon, Table, Select } from "antd";
+import { match } from 'react-router';
+import { Form, Input, Button, Row, Modal, Select } from "antd";
 import {
     editStudent, getStudentLessons, completeStudentLesson, changeSelectedSprint,
     changeSelectedStudent, subscribe, unsubscribe, subscribeToPms,
@@ -9,8 +10,32 @@ import {
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import Sprint from "../components/student/Sprint";
+import { IStudent } from "../types/StudentInterface";
+import { IStudentLessons } from "../types/StudentLessonsInterface";
+import { ISprints } from "../types/SprintsInterface";
+import { ILessons } from "../types/LessonsInterface";
+import { IProjectManagers } from "../types/ProjectManagersInterface";
+import { ICourses } from "../types/CoursesInterface";
 
-class Student extends Component{
+
+interface IState {
+    changingSelectedStudent: boolean,
+    populatedLessonsWithStudentLessons: boolean,
+    populatingLessonsInit: boolean,
+    subscribedToStudents: boolean,
+    lessons: {},
+    loaded: boolean,
+    course: string,
+    id: string,
+    firstName: string,
+    lastName: string,
+    github: string,
+    link: string,
+    pm: string,
+    modalOpen: boolean,
+}
+
+class Student extends Component<IProps, IState> {
     state = {
         changingSelectedStudent: false,
         populatedLessonsWithStudentLessons: false,
@@ -28,8 +53,8 @@ class Student extends Component{
         modalOpen: false,
     };
     
-    componentDidMount(){
-        if( this.props.uid ){
+    componentDidMount() {
+        if ( this.props.uid ) {
             this.props.subscribe( "Students",
                 this.props.subscribeToStudents( this.props.uid )
             );
@@ -39,30 +64,30 @@ class Student extends Component{
         this.props.subscribe( "Sprints", this.props.subscribeToSprints() );
         this.props.subscribe( "Pms", this.props.subscribeToPms() );
         this.props.subscribe( "Courses", this.props.subscribeToCourses() );
-        if( Object.values( this.props.students ).length > 0 ){
+        if ( Object.values( this.props.students ).length > 0 ) {
             this.setState( { changingSelectedStudent: true } );
             this.props.changeSelectedStudent( this.props.match.params.id );
         }
     }
     
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.unsubscribe( "Students" );
         this.props.unsubscribe( "Pms" );
         this.props.unsubscribe( "Sprints" );
         this.props.unsubscribe( "Courses" );
     }
     
-    componentDidUpdate( prevProps, prevState, snapshot ){
-        if( this.props.uid && !this.state.subscribedToStudents ){
+    componentDidUpdate( prevProps, prevState, snapshot ) {
+        if ( this.props.uid && !this.state.subscribedToStudents ) {
             this.props.subscribe( "Students",
                 this.props.subscribeToStudents( this.props.uid )
             );
         }
         // check if selected student is there and if not then change the
         // selected student to the correct student by id.
-        if( !this.state.changingSelectedStudent &&
+        if ( !this.state.changingSelectedStudent &&
             Object.values( this.props.students ).length > 0 &&
-            !this.props.selectedStudent ){
+            !this.props.selectedStudent ) {
             this.setState( { changingSelectedStudent: true } );
             this.props.changeSelectedStudent( this.props.match.params.id );
         }
@@ -70,7 +95,8 @@ class Student extends Component{
         // check if we have a selected student and if so change the
         // changingSelectedStudent state back to false and get the students
         // lessons from db.
-        if( this.state.changingSelectedStudent && this.props.selectedStudent ){
+        if ( this.state.changingSelectedStudent &&
+            this.props.selectedStudent ) {
             this.setStudentInfo( this.props.selectedStudent );
             this.props.getStudentLessons( this.props.selectedStudent,
                 this.props.uid
@@ -79,7 +105,7 @@ class Student extends Component{
     }
     
     setStudentInfo = ( student = this.props.selectedStudent ) => {
-        debugger;
+        
         this.setState( {
             modalOpen: false,
             changingSelectedStudent: false,
@@ -94,6 +120,7 @@ class Student extends Component{
     };
     
     onChange = e => {
+        // @ts-ignore
         this.setState( { [ e.target.name ]: e.target.value } );
     };
     
@@ -102,7 +129,7 @@ class Student extends Component{
     };
     
     updateStudentSubmit = e => {
-        debugger;
+        
         let student = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -117,27 +144,11 @@ class Student extends Component{
     };
     
     changeSelect = ( value, name ) => {
+        // @ts-ignore
         this.setState( { [ name ]: value } );
     };
     
-    completeLesson = lesson => {
-        let studentLesson = {
-            id: lesson.id, completed: true, completedDate: new Date(),
-        };
-        let student = {
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            id: this.state.studentId,
-            github: this.state.github,
-            link: this.state.link,
-        };
-        this.props.completeStudentLesson( student,
-            this.props.uid,
-            studentLesson
-        );
-    };
-    
-    render(){
+    render() {
         return (
             
             <div style={ { maxWidth: "800px", margin: "30px auto" } }>
@@ -163,7 +174,8 @@ class Student extends Component{
                             <Button
                                 size={ "large" }
                                 className={ "mg-left-sm" }
-                                onClick={ () => this.setState( { modalOpen: true } ) }>
+                                onClick={ () => this.setState(
+                                    { modalOpen: true } ) }>
                                 Edit User
                             </Button>
                             <h1 className={ "mg-left-lg" }>
@@ -220,6 +232,8 @@ class Student extends Component{
                             onOk={ this.updateStudentSubmit }
                             onCancel={ () => this.cancelEdit() }>
                             <Row type="flex" gutter={ 24 }>
+                                {/*
+                                //@ts-ignore */ }
                                 <Form onSubmit={ this.onSubmit }>
                                     
                                     <Form.Item label={ "Project Manager" }>
@@ -236,9 +250,12 @@ class Student extends Component{
                                             } }
                                             value={ this.state.pm }
                                             filterOption={ ( input,
-                                                option ) => option.props.children.toLowerCase()
-                                                .indexOf( input.toLowerCase() ) >=
-                                                0 }
+                                                             option ) => typeof option.props.children ===
+                                            "string" ?
+                                                option.props.children.toLowerCase()
+                                                    .indexOf(
+                                                        input.toLowerCase() ) >=
+                                                0 : '' }
                                         >
                                             { this.props.pms &&
                                             Object.values( this.props.pms )
@@ -293,9 +310,12 @@ class Student extends Component{
                                             } }
                                             value={ this.state.course }
                                             filterOption={ ( input,
-                                                option ) => option.props.children.toLowerCase()
-                                                .indexOf( input.toLowerCase() ) >=
-                                                0 }
+                                                             option ) => typeof option.props.children ===
+                                            "string" ?
+                                                option.props.children.toLowerCase()
+                                                    .indexOf(
+                                                        input.toLowerCase() ) >=
+                                                0 : '' }
                                         >
                                             { this.props.courses &&
                                             Object.values( this.props.courses )
@@ -322,9 +342,11 @@ class Student extends Component{
                             <Button className="my-3">Back</Button>
                         </Link>
                         
+                        {/*
+                                //@ts-ignore */ }
                         <Form onSubmit={ this.submitForm }>
-                            <Skeleton count={ 3 } height={ 38 }/>
-                            <Skeleton height={ 38 } width={ 75 }/>
+                            <Skeleton count={ 3 } height={ "38" }/>
+                            <Skeleton height={ "38" } width={ "75" }/>
                         </Form>
                     </> ) }
             </div> );
@@ -344,6 +366,31 @@ const mstp = state => ( {
     pms: state.autoFill.pms,
     courses: state.autoFill.courses,
 } );
+
+interface IProps {
+    students: { [ id: string ]: IStudent };
+    uid: string;
+    selectedStudent: null | IStudent;
+    selectedStudentLessons: IStudentLessons,
+    sprints: ISprints,
+    fetchingStudentLessons: boolean,
+    lessons: ILessons,
+    studentLessonsLoaded: boolean,
+    lessonsLoaded: boolean,
+    pms: IProjectManagers,
+    courses: ICourses,
+    editStudent: Function;
+    getStudentLessons: Function;
+    completeStudentLesson: Function;
+    changeSelectedStudent: Function;
+    subscribeToPms: Function;
+    subscribe: Function;
+    unsubscribe: Function;
+    subscribeToStudents: Function;
+    subscribeToSprints: Function;
+    subscribeToCourses: Function;
+    match: match;
+}
 
 export default connect( mstp, {
     editStudent,

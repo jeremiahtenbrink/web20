@@ -5,8 +5,33 @@ import {
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import "./sprint.scss";
+import { IStudent } from "../types/StudentInterface";
+import { ISprints } from "../types/SprintsInterface";
+import { IUser } from "../types/UserInterface";
 
-class SprintForm extends Component{
+interface IState {
+    sprintChallenge: string;
+    student: string;
+    threeWords: string;
+    sprintChallengeRating: number;
+    reAttempt: boolean;
+    great: string;
+    improvements: string;
+    questions: string;
+    notes: string;
+    sprintRating: number;
+    generalRating: number;
+    completedOneOnOne: boolean;
+    postReviewSprintRating: number;
+    technicalAbility: number;
+    collaborationAbility: number;
+    drive: number;
+    teachability: number;
+    other: string;
+    numberArray: number[];
+}
+
+class SprintForm extends Component<IProps, IState> {
     
     state = {
         sprintChallenge: "Sprint",
@@ -31,98 +56,106 @@ class SprintForm extends Component{
     };
     
     onChange = e => {
+        // @ts-ignore
         this.setState( { [ e.target.name ]: e.target.value } );
     };
     
     onChangeSelect = ( value, name ) => {
-        
+        // @ts-ignore
         this.setState( { [ name ]: value } );
     };
     
     getSubmissionUrl = () => {
         
         let url = "";
-        if( this.props.user ){
-            url = `https://airtable.com/shr6wexWV3RM4ITJP?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })`;
+        if ( this.props.user ) {
+            url =
+                `https://airtable.com/shr6wexWV3RM4ITJP?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })`;
         }
         
-        if( this.state.student && this.state.sprintChallenge ){
-            url += `&prefill_Student+Submission=${ this.state.student.trim() }+(${ this.state.sprintChallenge.trim() })`;
+        if ( this.state.student && this.state.sprintChallenge ) {
+            url +=
+                `&prefill_Student+Submission=${ this.state.student.trim() }+(${ this.state.sprintChallenge.trim() })`;
         }
         
-        if( this.state.threeWords ){
-            url += `&prefill_3+Words+by+PM=${ encodeURI( this.state.threeWords ) }`;
+        if ( this.state.threeWords ) {
+            url += `&prefill_3+Words+by+PM=${ encodeURI(
+                this.state.threeWords ) }`;
         }
         
-        if( this.state.sprintChallengeRating ){
-            url += `&prefill_Sprint+Challenge+Rating=${ this.state.sprintChallengeRating }`;
+        if ( this.state.sprintChallengeRating ) {
+            url +=
+                `&prefill_Sprint+Challenge+Rating=${ this.state.sprintChallengeRating }`;
         }
         
-        if( this.state.reAttempt ){
+        if ( this.state.reAttempt ) {
             url += `&prefill_Will+Re-Attempt?=true`;
-        }else{
+        } else {
             url += `&prefill_Will+Re-Attempt?=false`;
         }
         
-        if( this.state.great ){
+        if ( this.state.great ) {
             url += `&prefill_Great=${ encodeURI( this.state.great ) }`;
         }
         
-        if( this.state.improvements ){
-            url += `&prefill_Requested+Improvements=${ encodeURI( this.state.improvements ) }`;
+        if ( this.state.improvements ) {
+            url += `&prefill_Requested+Improvements=${ encodeURI(
+                this.state.improvements ) }`;
         }
         
-        if( this.state.questions ){
+        if ( this.state.questions ) {
             url += `&prefill_Questions=${ encodeURI( this.state.questions ) }`;
         }
         
-        if( this.state.notes ){
+        if ( this.state.notes ) {
             url += `&prefill_General+Notes=${ encodeURI( this.state.notes ) }`;
         }
         
-        if( this.state.sprintRating ){
+        if ( this.state.sprintRating ) {
             url += `&prefill_Sprint+Rating=${ this.state.sprintRating }`;
         }
         
-        if( this.state.generalRating ){
+        if ( this.state.generalRating ) {
             url += `&prefill_General+Rating=${ this.state.generalRating }`;
         }
         
-        if( this.state.completedOneOnOne ){
+        if ( this.state.completedOneOnOne ) {
             url += `&prefill_Completed+1:1=true`;
-        }else{
+        } else {
             url += `&prefill_Completed+1:1=false`;
         }
         
-        if( this.state.postReviewSprintRating !==
-            "Select a number or leave blank" ){
-            url += `&prefill_Post+Review+Student+Sprint+Rating=${ this.state.postReviewSprintRating }`;
+        if ( this.state.postReviewSprintRating !== 0 ) {
+            url +=
+                `&prefill_Post+Review+Student+Sprint+Rating=${ this.state.postReviewSprintRating }`;
         }
         
-        if( this.state.technicalAbility ){
+        if ( this.state.technicalAbility ) {
             url += `&prefill_Technical+NPS=${ this.state.technicalAbility }`;
         }
         
-        if( this.state.collaborationAbility ){
-            url += `&prefill_Collaboration+NPS=${ this.state.collaborationAbility }`;
+        if ( this.state.collaborationAbility ) {
+            url +=
+                `&prefill_Collaboration+NPS=${ this.state.collaborationAbility }`;
         }
         
-        if( this.state.drive ){
+        if ( this.state.drive ) {
             url += `&prefill_Drive+NPS=${ this.state.drive }`;
         }
         
-        if( this.state.teachability ){
+        if ( this.state.teachability ) {
             url += `&prefill_Teachability+NPS=${ this.state.teachability }`;
         }
         
-        if( this.state.other ){
-            url += `&prefill_Other+(Internal)=${ encodeURI( this.state.other ) }`;
+        if ( this.state.other ) {
+            url +=
+                `&prefill_Other+(Internal)=${ encodeURI( this.state.other ) }`;
         }
         
         return url;
     };
     
-    render(){
+    render() {
         const Option = Select.Option;
         const RadioGroup = Radio.Group;
         const TextArea = Input.TextArea;
@@ -149,8 +182,9 @@ class SprintForm extends Component{
                             } }
                             value={ this.state.sprintChallenge }
                             filterOption={ ( input,
-                                option ) => option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 }
+                                             option ) => typeof option.props.children ===
+                            "string" ? option.props.children.toLowerCase()
+                                .indexOf( input.toLowerCase() ) >= 0 : '' }
                         >
                             { this.props.sprints &&
                             Object.values( this.props.sprints )
@@ -176,12 +210,13 @@ class SprintForm extends Component{
                             } }
                             value={ this.state.student }
                             filterOption={ ( input,
-                                option ) => option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 }
+                                             option ) => typeof option.props.children ===
+                            "string" ? option.props.children.toLowerCase()
+                                .indexOf( input.toLowerCase() ) >= 0 : '' }
                         >
                             { this.props.students &&
                             Object.values( this.props.students )
-                                .map( student => {
+                                .map( ( student ) => {
                                     
                                     return <Option key={ student.id }
                                                    value={ `${ student.firstName.trim() }+${ student.lastName.trim() }` }>{ `${ student.firstName } ${ student.lastName }` }</Option>;
@@ -360,8 +395,9 @@ class SprintForm extends Component{
                             } }
                             value={ this.state.technicalAbility }
                             filterOption={ ( input,
-                                option ) => option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 }
+                                             option ) => typeof option.props.children ===
+                            "string" ? option.props.children.toLowerCase()
+                                .indexOf( input.toLowerCase() ) >= 0 : '' }
                         >
                             { this.state.numberArray.map( number => {
                                 
@@ -383,8 +419,9 @@ class SprintForm extends Component{
                             } }
                             value={ this.state.collaborationAbility }
                             filterOption={ ( input,
-                                option ) => option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 }
+                                             option ) => typeof option.props.children ===
+                            "string" ? option.props.children.toLowerCase()
+                                .indexOf( input.toLowerCase() ) >= 0 : '' }
                         >
                             { this.state.numberArray.map( number => {
                                 
@@ -404,8 +441,9 @@ class SprintForm extends Component{
                             } }
                             value={ this.state.drive }
                             filterOption={ ( input,
-                                option ) => option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 }
+                                             option ) => typeof option.props.children ===
+                            "string" ? option.props.children.toLowerCase()
+                                .indexOf( input.toLowerCase() ) >= 0 : '' }
                         >
                             
                             { this.state.numberArray.map( number => {
@@ -426,8 +464,9 @@ class SprintForm extends Component{
                             } }
                             value={ this.state.teachability }
                             filterOption={ ( input,
-                                option ) => option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 }
+                                             option ) => typeof option.props.children ===
+                            "string" ? option.props.children.toLowerCase()
+                                .indexOf( input.toLowerCase() ) >= 0 : '' }
                         >
                             { this.state.numberArray.map( number => {
                                 
@@ -471,5 +510,11 @@ const mstp = state => {
         sprints: state.sprints.sprints,
     };
 };
+
+interface IProps {
+    students: { [ id: string ]: IStudent };
+    user: IUser;
+    sprints: ISprints;
+}
 
 export default connect( mstp )( SprintForm );

@@ -9,15 +9,23 @@ import {
     subscribeToStudents, logout, subscribe, unsubscribe
 } from "../actions";
 import LambdaLogo from "../assets/logo.png";
+import { IStudent } from "../types/StudentInterface";
+import { IUser } from "../types/UserInterface";
+import { ISubscriptions } from "../types/SubscriptionsInterface";
+import { history } from 'history';
 
-class Dashboard extends React.Component{
+interface IState {
+    joke: string;
+}
+
+class Dashboard extends React.Component<IProps, IState> {
     state = {
         joke: "",
     };
     
-    componentDidMount(){
+    componentDidMount() {
         
-        if( !this.props.uid ){
+        if ( !this.props.uid ) {
             return this.props.history.push( "/start" );
         }
         this.getJoke();
@@ -25,7 +33,7 @@ class Dashboard extends React.Component{
             this.props.subscribeToStudents( this.props.uid ) );
     }
     
-    componentWillUnmount(){
+    componentWillUnmount() {
         
         this.props.unsubscribe( "Students" );
     }
@@ -37,14 +45,14 @@ class Dashboard extends React.Component{
     };
     
     logout = () => {
-        if( this.props.subscriptions ){
+        if ( this.props.subscriptions ) {
             Object.values( this.props.subscriptions )
                 .forEach( unsubscribe => unsubscribe() );
         }
         this.props.logout();
     };
     
-    render(){
+    render() {
         
         const actions = [
             <Popover content={ <p>Reload Joke</p> }>
@@ -58,7 +66,7 @@ class Dashboard extends React.Component{
             </Popover>,
         ];
         
-        if( this.props.user && this.props.user.isAdmin ){
+        if ( this.props.user && this.props.user.isAdmin ) {
             actions.push( <Popover content={ <p>Admin</p> }><Icon
                 onClick={ () => this.props.history.push( "/admin-dashboard" ) }
                 type="setting"/></Popover> );
@@ -78,9 +86,12 @@ class Dashboard extends React.Component{
             
             <Card>
                 <Popover content={ <p>Attendance</p> }>
+                    {/*
+                    //@ts-ignore */ }
                     <Col span={ 8 } align={ "center" }
                          className={ "color-grey hover-blue" }
-                         onClick={ () => this.props.history.push( "/attendance" ) }
+                         onClick={ () => this.props.history.push(
+                             "/attendance" ) }
                     >
                         <Icon type="schedule"
                               className={ "font-32" }
@@ -89,6 +100,8 @@ class Dashboard extends React.Component{
                     </Col>
                 </Popover>
                 <Popover content={ <p>Daily Standup</p> }>
+                    {/*
+                    //@ts-ignore */ }
                     <Col span={ 8 } align={ "center" }
                          className={ "color-grey hover-blue" }
                          onClick={ () => this.props.history.push( "/standup" ) }
@@ -99,6 +112,8 @@ class Dashboard extends React.Component{
                     </Col>
                 </Popover>
                 <Popover content={ <p>Sprint Retro</p> }>
+                    {/*
+                    //@ts-ignore */ }
                     <Col span={ 8 } align={ "center" }
                          className={ "color-grey hover-blue" }
                          onClick={ () => this.props.history.push( "/sprint" ) }
@@ -162,6 +177,20 @@ const mapStateToProps = ( { students, auth, subscriptions } ) => ( {
     displayName: auth.displayName,
     subscriptions: subscriptions.subscriptions,
 } );
+
+interface IProps {
+    students: { [ id: string ]: IStudent };
+    uid: string;
+    user: IUser;
+    isLoading: boolean;
+    displayName: string;
+    subscriptions: ISubscriptions;
+    subscribeToStudents: Function;
+    logout: () => void;
+    subscribe: Function;
+    unsubscribe: Function;
+    history: history;
+}
 
 export default connect( mapStateToProps,
     { subscribeToStudents, logout, subscribe, unsubscribe },

@@ -2,7 +2,7 @@ import { store } from "../firebase/firebase";
 import { action } from "./action";
 import { subscribe, unsubscribe } from "./subscribe";
 import { IInstructor } from "../types/InstructorInterface";
-import { ITas } from "../types/TASInterface";
+import { ITa } from "../types/TASInterface";
 import { ICourse } from "../types/CourseInterface";
 
 export const UPDATE_INSTRUCTORS_INIT = "UPDATE_INSTRUCTORS_INIT";
@@ -123,7 +123,7 @@ export const UPDATE_TAS_INIT = "UPDATE_TAS_INIT";
 export const UPDATE_TAS_SUCCESS = "UPDATE_TAS_SUCCESS";
 export const UPDATE_TAS_FAIL = "UPDATE_TAS_FAIL";
 
-export const updateTa = ( ta: ITas ) => dispatch => {
+export const updateTa = ( ta: ITa ) => dispatch => {
     
     dispatch( action( UPDATE_TAS_INIT ) );
     store.collection( "autoFill" )
@@ -142,7 +142,7 @@ export const DELETE_TAS_INIT = " DELETE_TAS_INIT";
 export const DELETE_TAS_SUCCESS = " DELETE_TAS_SUCCESS";
 export const DELETE_TAS_FAIL = " DELETE_TAS_FAIL";
 
-export const deleteTa = ( ta: ITas ) => dispatch => {
+export const deleteTa = ( ta: ITa ) => dispatch => {
     
     dispatch( action( DELETE_TAS_INIT ) );
     store.collection( "autoFill" )
@@ -161,7 +161,7 @@ export const ADD_TAS_INIT = " ADD_TAS_INIT";
 export const ADD_TAS_SUCCESS = " ADD_TAS_SUCCESS";
 export const ADD_TAS_FAIL = " ADD_TAS_FAIL";
 
-export const addTa = ( ta: ITas ) => dispatch => {
+export const addTa = ( ta: ITa ) => dispatch => {
     
     dispatch( action( ADD_TAS_INIT ) );
     store.collection( "autoFill" )
@@ -201,7 +201,7 @@ export const GET_COURSES_SUCCESS = " GET_COURSES_SUCCESS";
 export const GET_COURSES_FAIL = " GET_COURSES_FAIL";
 
 export const subscribeToCourses = () => ( dispatch ): Function => {
-    // debugger;
+    //
     dispatch( { type: GET_COURSES_INIT } );
     return store.collection( "autoFill" )
         .doc( "web" )

@@ -23,7 +23,7 @@ class Instructors extends React.Component<IComponentProps, IComponentState> {
     };
     
     componentDidMount(): void {
-        // debugger;
+        //
         this.props.subscribe( "Instructors",
             this.props.subscribeToInstructors() );
         this.props.subscribe( "Courses", this.props.subscribeToCourses() )
@@ -32,7 +32,7 @@ class Instructors extends React.Component<IComponentProps, IComponentState> {
     componentDidUpdate( prevProps: Readonly<IComponentProps>,
                         prevState: Readonly<IComponentState>,
                         snapshot?: any ): void {
-        // debugger;
+        //
     }
     
     componentWillUnmount(): void {

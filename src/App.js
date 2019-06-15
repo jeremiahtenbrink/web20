@@ -8,9 +8,9 @@ import Login from "./views/Login";
 import ManageStudents from "./views/ManageStudents";
 import Dashboard from "./views/Dashboard";
 import Attendance from "./views/Attendance.jsx";
-import DailyStandup from "./views/DailyStandup.jsx";
-import Student from "./views/Student.jsx";
-import SprintForm from "./views/SprintForm.jsx";
+import DailyStandup from "./views/DailyStandup.tsx";
+import Student from "./views/Student.tsx";
+import SprintForm from "./views/SprintForm.tsx";
 import AdminDashboard from "./views/AdminDashboard";
 import "./App.scss";
 

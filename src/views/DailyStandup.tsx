@@ -9,11 +9,34 @@ import {
     subscribeToTas, subscribeToSprints, subscribeToCourses
 } from "../actions/index";
 import "./dailyStandup.scss";
-import InputComponent from "../components/InputComponent";
+import { IStudent } from "../types/StudentInterface";
+import { ITa } from "../types/TASInterface";
+import { IUser } from "../types/UserInterface";
+import { ILesson } from "../types/LessonInterface";
+import { IInstructor } from "../types/InstructorInterface";
 
-class DailyStandup extends Component{
+interface IState {
+    students: { [ id: string ]: IStudent };
+    subscribedToStudents: boolean;
+    loaded: boolean,
+    module: string,
+    sprintTopic: string,
+    wentWell: string,
+    concerns: string,
+    instructor: string,
+    instructionRating: number,
+    instructorFeedback: string,
+    flexTa: null | ITa,
+    flexTaRating: null | number
+    flexTaFeedback: string,
+    other: string,
+    lessons: ILesson[],
+    lessonsLoaded: boolean
+}
+
+class DailyStandup extends Component<IProps, IState> {
     state = {
-        students: null,
+        students: {},
         subscribedToStudents: false,
         loaded: false,
         module: "Lesson",
@@ -31,13 +54,13 @@ class DailyStandup extends Component{
         lessonsLoaded: false
     };
     
-    componentDidMount(){
+    componentDidMount() {
         
-        if( this.props.uid ){
+        if ( this.props.uid ) {
             this.subscribeToAutoFillData();
         }
         
-        if( this.props.students && this.props.students.length > 0 ){
+        if ( this.props.students && Object.values(this.props.students).length > 0 ) {
             this.setStudents( this.props.students );
         }
     }
@@ -59,7 +82,7 @@ class DailyStandup extends Component{
         
     };
     
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.unsubscribe( "Students" );
         this.props.unsubscribe( "Instructors" );
         this.props.unsubscribe( "Tas" );
@@ -67,40 +90,41 @@ class DailyStandup extends Component{
         this.props.unsubscribe( "Sprints" );
     }
     
-    componentDidUpdate( prevProps, prevState, snapshot ){
+    componentDidUpdate( prevProps, prevState, snapshot ) {
         
-        if( this.state.lessonsLoaded && prevProps.lessons !==
-            this.props.lessons ){
+        if ( this.state.lessonsLoaded && prevProps.lessons !==
+            this.props.lessons ) {
             this.setLessons();
         }
         
-        if( !this.state.lessonsLoaded &&
-            Object.values( this.props.lessons ).length > 0 ){
+        if ( !this.state.lessonsLoaded &&
+            Object.values( this.props.lessons ).length > 0 ) {
             this.setLessons();
         }
-        if( !this.state.subscribedToStudents && this.props.uid ){
+        if ( !this.state.subscribedToStudents && this.props.uid ) {
             this.subscribeToAutoFillData();
         }
         
-        if( this.props.students && Object.values( this.props.students ).length >
-            0 && !this.state.loaded ){
+        if ( this.props.students &&
+            Object.values( this.props.students ).length >
+            0 && !this.state.loaded ) {
             this.setStudents( this.props.students );
         }
     }
     
     setLessons = () => {
-        let lessons = [];
+        let lessons: ILesson[] = [];
         Object.values( this.props.lessons ).forEach( sprint => {
             Object.values( sprint ).forEach( lesson => {
                 lessons.push( lesson );
             } );
         } );
-        
         this.setState( { lessons, lessonsLoaded: true } );
     };
     
     setStudents = students => {
-        Object.values( students ).forEach( student => {
+        // @ts-ignore
+        Object.values( students ).forEach( (student: IStudent) => {
             student.isPresent = false;
         } );
         this.setState( {
@@ -118,80 +142,91 @@ class DailyStandup extends Component{
     };
     
     onChange = e => {
+        // @ts-ignore
         this.setState( { [ e.target.name ]: e.target.value } );
     };
     
     onChangeSelect = ( value, name ) => {
         
+        // @ts-ignore
         this.setState( { [ name ]: value } );
     };
     
     getReportLink = () => {
         
-        if( this.props.user ){
+        if ( this.props.user ) {
             let url = `https://airtable.com/shripCmauVlvxNrAT?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })&prefill_Sections=${ this.props.user.cohort }`;
             
-            if( this.state.module !== "" ){
+            if ( this.state.module !== "" ) {
                 url += `&prefill_Module=${ encodeURI( this.state.module ) }`;
             }
             
-            if( this.state.students ){
+            if ( this.state.students ) {
                 
                 let afterFirst = false;
                 let absentString = "&prefill_Students+(Absent)=";
-                Object.values( this.state.students ).forEach( student => {
-                    if( !student.isPresent ){
-                        if( afterFirst ){
+                // @ts-ignore
+                Object.values( this.state.students ).forEach( (student: IStudent) => {
+                    if ( !student.isPresent ) {
+                        if ( afterFirst ) {
                             absentString += ",";
                         }
-                        absentString += `${ student.firstName.trim() }+${ student.lastName.trim() }`;
-                        if( !afterFirst ){
+                        absentString +=
+                            `${ student.firstName.trim() }+${ student.lastName.trim() }`;
+                        if ( !afterFirst ) {
                             afterFirst = true;
                         }
                     }
                 } );
                 
-                if( absentString !== "&prefill_Absent+Students=" ){
+                if ( absentString !== "&prefill_Absent+Students=" ) {
                     url += absentString;
                 }
             }
             
-            if( this.state.wentWell !== "" ){
-                url += `&prefill_What+went+well=${ encodeURI( this.state.wentWell ) }`;
+            if ( this.state.wentWell !== "" ) {
+                url += `&prefill_What+went+well=${ encodeURI(
+                    this.state.wentWell ) }`;
             }
             
-            if( this.state.concerns !== "" ){
-                url += `&prefill_Concerns=${ encodeURI( this.state.concerns ) }`;
+            if ( this.state.concerns !== "" ) {
+                url +=
+                    `&prefill_Concerns=${ encodeURI( this.state.concerns ) }`;
             }
             
-            if( this.state.instructor !== "" ){
-                url += `&prefill_Instructor=${ encodeURI( this.state.instructor ) }`;
+            if ( this.state.instructor !== "" ) {
+                url += `&prefill_Instructor=${ encodeURI(
+                    this.state.instructor ) }`;
             }
             
-            if( this.state.instructionRating ){
-                url += `&prefill_Instruction+Rating=${ this.state.instructionRating }`;
+            if ( this.state.instructionRating ) {
+                url +=
+                    `&prefill_Instruction+Rating=${ this.state.instructionRating }`;
             }
             
-            if( this.state.instructorFeedback !== "" ){
-                url += `&prefill_Instruction+Feedback=${ encodeURI( this.state.instructorFeedback, ) }`;
+            if ( this.state.instructorFeedback !== "" ) {
+                url += `&prefill_Instruction+Feedback=${ encodeURI(
+                    this.state.instructorFeedback, ) }`;
             }
             
-            if( this.state.flexTa !== null ){
+            if ( this.state.flexTa !== null ) {
                 let flexTaName = this.props.flexTas[ this.state.flexTa ].firstName +
                     "+" + this.props.flexTas[ this.state.flexTa ].lastName;
                 let flexTaCohort = this.props.flexTas[ this.state.flexTa ].cohort;
-                url += `&prefill_Who+was+the+Flex+TA?=${ encodeURI( flexTaName ) }+(${ flexTaCohort })`;
+                url += `&prefill_Who+was+the+Flex+TA?=${ encodeURI(
+                    flexTaName ) }+(${ flexTaCohort })`;
             }
             
-            if( this.state.flexTaRating ){
+            if ( this.state.flexTaRating ) {
                 url += `&prefill_Flex+TA+Rating=${ this.state.flexTaRating }`;
             }
             
-            if( this.state.flexTaFeedback !== "" ){
-                url += `&prefill_Flex+TA+Feedback=${ encodeURI( this.state.flexTaFeedback, ) }`;
+            if ( this.state.flexTaFeedback !== "" ) {
+                url += `&prefill_Flex+TA+Feedback=${ encodeURI(
+                    this.state.flexTaFeedback, ) }`;
             }
             
-            if( this.state.other !== "" ){
+            if ( this.state.other !== "" ) {
                 url += `&prefill_Other=${ encodeURI( this.state.other ) }`;
             }
             
@@ -199,7 +234,7 @@ class DailyStandup extends Component{
         }
     };
     
-    render(){
+    render() {
         
         const { Option } = Select;
         const { TextArea } = Input;
@@ -216,15 +251,20 @@ class DailyStandup extends Component{
                         </Link>
                         <h1>Daily Standup</h1>
                     </div>
+                    {/*
+                    //@ts-ignore */}
                     <Table
                         dataIndex={ "id" }
                         dataSource={ this.state.students &&
                         Object.values( this.state.students )
-                            .sort( ( a, b ) => a.firstName - b.firstName ) }
+                            .sort( ( a, b) => {
+                                //@ts-ignore
+                                return a.firstName - b.firstName
+                            } ) }
                         style={ { marginTop: "30px" } }
                         bordered
                         rowKey={ "id" }
-                        loading={ this.props.isLoading }
+                        loading={ false}
                         pagination={ false }>
                         <Table.Column
                             title="First Name"
@@ -238,7 +278,7 @@ class DailyStandup extends Component{
                         />
                         <Table.Column title="Attendance"
                                       key="attendance"
-                                      render={ ( text, record ) => {
+                                      render={ ( text: string, record: IStudent ) => {
                             
                                           return ( <Button.Group
                                               size={ "large" }>
@@ -253,7 +293,7 @@ class DailyStandup extends Component{
                                               <Button
                                                   onClick={ () => this.onChangeAttendance(
                                                       record.id ) }
-                                                  type={ "normal" }
+                                                  type={ "default" }
                                                   style={ !record.isPresent ?
                                                       { backgroundColor: "#fffb8f" } :
                                                       {} }>
@@ -275,8 +315,9 @@ class DailyStandup extends Component{
                                 } }
                                 value={ this.state.instructor }
                                 filterOption={ ( input,
-                                    option ) => option.props.children.toLowerCase()
-                                    .indexOf( input.toLowerCase() ) >= 0 }
+                                                 option ) => typeof option.props.children ===
+                                "string" ? option.props.children.toLowerCase()
+                                    .indexOf( input.toLowerCase() ) >= 0 : ''}
                             >
                                 { this.props.instructors &&
                                 Object.values( this.props.instructors )
@@ -301,8 +342,9 @@ class DailyStandup extends Component{
                                 } }
                                 value={ this.state.module }
                                 filterOption={ ( input,
-                                    option ) => option.props.children.toLowerCase()
-                                    .indexOf( input.toLowerCase() ) >= 0 }
+                                                 option ) => typeof option.props.children ===
+                                "string" ? option.props.children.toLowerCase()
+                                    .indexOf( input.toLowerCase() ) >= 0 : ''}
                             >
                                 { this.state.lessons &&
                                 this.state.lessons.sort( ( a, b ) => a.order -
@@ -374,8 +416,9 @@ class DailyStandup extends Component{
                                 } }
                                 value={ this.state.flexTa }
                                 filterOption={ ( input,
-                                    option ) => option.props.children.toLowerCase()
-                                    .indexOf( input.toLowerCase() ) >= 0 }
+                                                 option ) => typeof option.props.children ===
+                                "string" ? option.props.children.toLowerCase()
+                                    .indexOf( input.toLowerCase() ) >= 0 : ''}
                             >{ this.props.flexTas &&
                             Object.values( this.props.flexTas ).map( ta => {
                                 
@@ -454,6 +497,22 @@ const mpts = state => ( {
     flexTas: state.autoFill.tas,
     uid: state.auth.uid,
 } );
+
+interface IProps {
+    students: { [ id: string ]: IStudent }
+    user: IUser;
+    lessons: { [ id: string ]: ILesson };
+    instructors: { [ id: string ]: IInstructor };
+    flexTas: { [ id: string ]: ITa };
+    uid: string;
+    subscribeToStudents: Function;
+    subscribeToInstructors: Function;
+    subscribe: Function;
+    unsubscribe: Function;
+    subscribeToTas: Function;
+    subscribeToCourses: Function;
+    subscribeToSprints: Function;
+}
 
 export default connect( mpts, {
     subscribeToStudents,

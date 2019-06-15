@@ -34,7 +34,6 @@ export const authReducer = ( state: IAuthReducer = initialState,
                 isLoading: false,
                 uid: action.payload.uid,
                 displayName: action.payload.displayName,
-                user: action.payload,
             };
         case SIGNIN_INIT:
             return { ...state, isLoading: true };

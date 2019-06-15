@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import { Col, Skeleton, Input, Rate, AutoComplete, Form } from "antd";
 
+interface IProps {
+    type: string;
+    title: string;
+    desc?: string;
+    required?: boolean;
+    isLoading?: boolean;
+    value: any;
+    data?: [];
+    onChange: ( value: any ) => any;
+    name: string;
+}
 
 const MakeInput = ( {
                         type, title, desc, required, isLoading, value, data, onChange, name
-                    } ) => {
+                    }: IProps ) => {
     let [ valStatus, setStatus ] = useState( "" );
     const validate = type => {
         if ( required ) {
@@ -32,6 +43,8 @@ const MakeInput = ( {
                 <span style={ { color: "#f5222d" } }>*</span> } { title }
             </h3>
             <p>{ desc }</p>
+            {/*
+            //@ts-ignore */ }
             <Rate
                 count={ 3 }
                 allowClear={ false }
@@ -108,9 +121,10 @@ const MakeInput = ( {
                     onChange={ onChange }
                     onBlur={ () => validate( "text" ) }
                     filterOption={ ( inputValue,
-                                     option ) => option.props.children
+                                     option ) => typeof option.props.children ===
+                    "string" ? option.props.children
                         .toUpperCase()
-                        .indexOf( inputValue.toUpperCase() ) !== -1 }
+                        .indexOf( inputValue.toUpperCase() ) !== -1 : ''}
                 />
             </Form.Item>
         </Col> );

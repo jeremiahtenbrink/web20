@@ -34,7 +34,6 @@ const initialState: IAutoFillReducer = {
     addingCourse: false,
     deletingCourse: false,
     tas: {},
-    sprints: {},
     instructors: {},
     courses: {},
     pms: {},
@@ -167,7 +166,7 @@ export const autoFillReducer = ( state: IAutoFillReducer = initialState,
                 ...state, gettingCourses: true
             };
         case GET_COURSES_SUCCESS:
-            // debugger;
+            //
             return {
                 ...state, gettingCourses: false, courses: action.payload
             };

@@ -1,5 +1,4 @@
 import firebase, { store } from "../firebase/firebase";
-
 import { push } from "connected-react-router";
 
 export const GOOGLE_PROVIDER = "GOOGLE_PROVIDER";
