@@ -7,7 +7,7 @@ import { Layout } from "antd";
 import Login from "./views/Login";
 import ManageStudents from "./views/ManageStudents";
 import Dashboard from "./views/Dashboard";
-import Attendance from "./views/Attendance.jsx";
+import Attendance from "./views/Attendance.tsx";
 import DailyStandup from "./views/DailyStandup.tsx";
 import Student from "./views/Student.tsx";
 import SprintForm from "./views/SprintForm.tsx";

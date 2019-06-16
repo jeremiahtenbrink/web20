@@ -191,8 +191,8 @@ interface IProps {
     isLoading: boolean;
     newUser: boolean;
     uid: string;
-    signIn: Function;
-    createUser: Function;
+    signIn: typeof signIn;
+    createUser: typeof createUser;
     history: history;
 }
 

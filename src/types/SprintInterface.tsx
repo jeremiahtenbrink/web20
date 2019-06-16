@@ -7,4 +7,5 @@ export interface ISprint {
     week: number,
     course: string,
     lessons: ILesson[]
+    completed?: boolean;
 }

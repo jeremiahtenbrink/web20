@@ -1,5 +1,5 @@
 export interface ITa {
-    id: string,
+    id?: string,
     firstName: string,
     lastName: string,
     cohort: string

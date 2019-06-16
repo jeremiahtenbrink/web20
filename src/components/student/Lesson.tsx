@@ -1,9 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Checkbox, Col } from "antd";
 import { connect } from "react-redux";
+import { IStudentLesson } from "../../types/StudentLessonsInterface";
+import { ILesson } from "../../types/LessonInterface";
 
-const Lesson = props => {
+interface Iprops {
+    studentLessons: {[id: string]: IStudentLesson}
+    lesson: ILesson;
+    completedLesson: Function;
+}
+
+const Lesson = (props: Iprops) => {
     let checked = false;
     if( props.studentLessons[ props.lesson.id ] &&
         props.studentLessons[ props.lesson.id ].completed ){

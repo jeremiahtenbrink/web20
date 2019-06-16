@@ -141,6 +141,7 @@ class Student extends Component<IProps, IState> {
         };
         this.props.editStudent( student );
         this.setState( { modalOpen: false } );
+        
     };
     
     changeSelect = ( value, name ) => {
@@ -379,9 +380,9 @@ interface IProps {
     lessonsLoaded: boolean,
     pms: IProjectManagers,
     courses: ICourses,
-    editStudent: Function;
-    getStudentLessons: Function;
-    completeStudentLesson: Function;
+    editStudent: typeof editStudent;
+    getStudentLessons: typeof getStudentLessons;
+    completeStudentLesson: typeof completeStudentLesson;
     changeSelectedStudent: Function;
     subscribeToPms: Function;
     subscribe: Function;

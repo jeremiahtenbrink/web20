@@ -5,8 +5,17 @@ import { getLessons, completeStudentLesson } from "../../actions";
 import { connect } from "react-redux";
 import "./sprint.scss";
 import Lesson from "./Lesson";
+import { ISprint } from "../../types/SprintInterface";
+import { ILesson } from "../../types/LessonInterface";
+import { IStudent } from "../../types/StudentInterface";
+import { IStudentLesson } from "../../types/StudentLessonsInterface";
 
-class Sprint extends Component{
+interface IState {
+    sprint: ISprint;
+    open: boolean;
+}
+
+class Sprint extends Component<IProps, IState>{
     constructor( props ){
         super( props );
         this.state = {
@@ -21,7 +30,7 @@ class Sprint extends Component{
         } ) );
     };
     
-    completeLesson = ( lesson = this.state.sprint ) => {
+    completeLesson = ( lesson: ISprint | IStudentLesson = this.state.sprint ) => {
         
         lesson.completed = true;
         if( this.props.selectedStudentLessons &&
@@ -70,13 +79,19 @@ class Sprint extends Component{
         </> );
     }
 }
-
-Sprint.propTypes = {};
-
 const mstp = state => ( {
     lessons: state.sprints.lessons,
     selectedStudent: state.students.selectedStudent,
     selectedStudentLessons: state.students.selectedStudentLessons,
 } );
+
+interface IProps {
+    lessons: {[id: string]: ILesson};
+    selectedStudent: IStudent;
+    selectedStudentLessons: {[id: string]: ISprint | IStudentLesson};
+    sprint: ISprint;
+    getLessons: typeof getLessons;
+    completeStudentLesson: typeof completeStudentLesson;
+}
 
 export default connect( mstp, { getLessons, completeStudentLesson } )( Sprint );

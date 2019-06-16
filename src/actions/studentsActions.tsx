@@ -2,6 +2,8 @@ import { store } from "../firebase/firebase";
 import { action } from "./action";
 import { IStudent } from "../types/StudentInterface";
 import { ILesson } from "../types/LessonInterface";
+import { ISprint } from "../types/SprintInterface";
+import { IStudentLesson } from "../types/StudentLessonsInterface";
 
 export const FETCH_STUDENTS_INIT = "FETCH_STUDENTS_INIT";
 export const FETCH_STUDENTS_SUCCESS = "FETCH_STUDENTS_SUCCESS";
@@ -154,7 +156,8 @@ export const COMPLETE_LESSON_INIT = "COMPLETE_LESSON_INIT";
 export const COMPLETE_LESSON_SUCCESS = "COMPLETE_LESSON_SUCCESS";
 export const COMPLETE_LESSON_FAILED = "COMPLETE_LESSON_FAILED";
 
-export const completeStudentLesson = ( student: IStudent, lesson: ILesson ) =>
+export const completeStudentLesson = ( student: IStudent,
+                                       lesson: IStudentLesson | ISprint ) =>
     dispatch => {
         
         dispatch( { type: COMPLETE_LESSON_INIT } );

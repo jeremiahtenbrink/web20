@@ -9,6 +9,4 @@ const Attendance = props => {
   );
 };
 
-Attendance.propTypes = {};
-
 export default Attendance;

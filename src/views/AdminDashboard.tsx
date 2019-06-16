@@ -8,8 +8,13 @@ import {
     subscribeToCourses, subscribeToPms, subscribeToTas
 } from "../actions";
 import { connect } from "react-redux";
+import { history } from "../configStore";
 
-class AdminDashboard extends Component{
+interface IState {
+    page: string, modalOpen: boolean, id: null | number,
+}
+
+class AdminDashboard extends Component<IProps, IState>{
     state = {
         page: "instructors", modalOpen: false, id: null,
     };
@@ -57,6 +62,17 @@ class AdminDashboard extends Component{
 }
 
 const mstp = state => ( {} );
+
+interface IProps {
+    copySprints: typeof copySprints;
+    subscribeToInstructors: typeof subscribeToInstructors;
+    subscribe: typeof subscribe;
+    unsubscribe: typeof  unsubscribe;
+    subscribeToCourses: typeof  subscribeToCourses;
+    subscribeToPms: typeof subscribeToPms;
+    subscribeToTas: typeof subscribeToTas;
+    history: typeof history;
+}
 
 export default connect( mstp, {
     copySprints,

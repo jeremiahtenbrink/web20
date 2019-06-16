@@ -7,8 +7,17 @@ import {
 import {
     deleteTa, updateTa, addTa, subscribe, unsubscribe, subscribeToTas,
 } from "../../actions";
+import { ITa } from "../../types/TASInterface";
 
-class Tas extends Component{
+interface IState {
+    modalOpen: boolean,
+    cohort: string,
+    firstName: string,
+    lastName: string,
+    selectedId: null | string,
+}
+
+class Tas extends Component<IProps, IState> {
     
     state = {
         modalOpen: false,
@@ -18,11 +27,11 @@ class Tas extends Component{
         selectedId: null,
     };
     
-    componentDidMount(){
+    componentDidMount() {
         this.props.subscribe( "Tas", this.props.subscribeToTas() );
     }
     
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.unsubscribe( "Tas" );
     }
     
@@ -48,6 +57,7 @@ class Tas extends Component{
     };
     
     onChange = e => {
+        //@ts-ignore
         this.setState( { [ e.target.name ]: e.target.value } );
     };
     
@@ -68,14 +78,19 @@ class Tas extends Component{
         } );
     };
     
-    render(){
+    render() {
         return ( <>
             <Button type={ "primary" }
                     onClick={ () => this.setState( { modalOpen: true } ) }>Create
                 TA</Button>
             <Table
                 dataSource={ Object.values( this.props.tas )
-                    .sort( ( a, b ) => a.firstName - b.firstName ) }
+                    .sort( ( a: ITa, b: ITa ) =>  {
+                        if (a.firstName > b.firstName){
+                            return 1;
+                        }
+                        return -1;
+                }) }
                 style={ { marginTop: "30px" } }
                 bordered
                 pagination={ false }
@@ -94,7 +109,7 @@ class Tas extends Component{
                     dataIndex="cohort"
                 />
                 <Table.Column title="Actions" dataIndex="actions"
-                              key="actions" render={ ( text, record ) => {
+                              key="actions" render={ ( text: string, record: ITa ) => {
                     return ( <div className={ "instructors__actions" }>
                         <div className={ "instructors__actions--icon" }
                              onClick={ () => this.setState( {
@@ -126,7 +141,8 @@ class Tas extends Component{
                     </div> );
                 } }/>
             </Table>
-            
+            {/*
+            //@ts-ignore */}
             <Modal
                 title={ this.state.selectedId ? `Update TA` : "Add TA" }
                 visible={ this.state.modalOpen }
@@ -135,9 +151,9 @@ class Tas extends Component{
                 onCancel={ () => this.setState( {
                     modalOpen: false,
                     selectedId: null,
-                    name: "",
-                    order: null,
-                    isProject: true,
+                    firstName: "",
+                    lastName: "",
+                    cohort: '',
                 } ) } align={ "center" }>
                 <Row type="flex" gutter={ 24 }>
                     <Col xs={ 24 } md={ 12 }>
@@ -194,6 +210,16 @@ class Tas extends Component{
 const mstp = state => ( {
     tas: state.autoFill.tas,
 } );
+
+interface IProps {
+    tas: { [ id: string ]: ITa };
+    deleteTa: typeof deleteTa;
+    updateTa: typeof updateTa;
+    addTa: typeof addTa;
+    subscribe: typeof subscribe;
+    unsubscribe: typeof unsubscribe;
+    subscribeToTas: typeof subscribeToTas;
+}
 
 export default connect( mstp, {
     deleteTa, updateTa, addTa, subscribe, unsubscribe, subscribeToTas,
