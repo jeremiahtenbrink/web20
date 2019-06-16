@@ -5,8 +5,17 @@ import { Link } from "react-router-dom";
 import {
     subscribe, unsubscribe, subscribeToStudents
 } from "../../actions/index";
+import { IStudent } from "../../types/StudentInterface";
+import { IUser } from "../../types/UserInterface";
 
-class AttendanceReport extends Component{
+interface IState {
+    students: {[id: string]: IStudent},
+    loaded: boolean,
+    notes: string,
+    subscribedToStudents: boolean,
+}
+
+class AttendanceReport extends Component<IProps, IState>{
     state = {
         students: this.props.students,
         loaded: false,
@@ -17,7 +26,7 @@ class AttendanceReport extends Component{
     componentDidMount(){
         
         if( this.props.uid ){
-            this.props.subscribe( this.props.subscribeToStudents( this.props.uid ) );
+            this.props.subscribe( 'Students', this.props.subscribeToStudents( this.props.uid ) );
             this.setState( { subscribedToStudents: true } );
         }
         if( this.props.students && Object.values( this.props.students ).length >
@@ -39,7 +48,7 @@ class AttendanceReport extends Component{
     componentDidUpdate( prevProps, prevState, snapshot ){
         
         if( this.props.uid && !this.state.subscribedToStudents ){
-            this.props.subscribe( this.props.subscribeToStudents( this.props.uid ) );
+            this.props.subscribe('Students', this.props.subscribeToStudents( this.props.uid ) );
             this.setState( { subscribedToStudents: true } );
         }
         
@@ -127,7 +136,6 @@ class AttendanceReport extends Component{
                             style={ { marginTop: "30px" } }
                             bordered
                             rowKey={ "id" }
-                            loading={ this.props.isLoading }
                             pagination={ false }>
                             <Table.Column
                                 title="First Name"
@@ -141,7 +149,7 @@ class AttendanceReport extends Component{
                             />
                             <Table.Column title="Attendance"
                                           key="attendance"
-                                          render={ ( text, record ) => {
+                                          render={ ( text: string, record: IStudent ) => {
                                 
                                               return ( <Button.Group
                                                   size={ "large" }>
@@ -156,7 +164,7 @@ class AttendanceReport extends Component{
                                                   <Button
                                                       onClick={ () => this.onChange(
                                                           record.id ) }
-                                                      type={ "normal" }
+                                                      type={ "default" }
                                                       style={ !record.isPresent ?
                                                           { backgroundColor: "#fffb8f" } :
                                                           {} }>
@@ -191,6 +199,15 @@ const mpts = state => ( {
     uid: state.auth.uid,
     user: state.auth.user,
 } );
+
+interface IProps {
+    students: {[id: string]: IStudent};
+    uid: string;
+    user: IUser;
+    subscribe: typeof subscribe;
+    unsubscribe: typeof unsubscribe;
+    subscribeToStudents: typeof subscribeToStudents;
+}
 
 export default connect( mpts,
     { subscribe, unsubscribe, subscribeToStudents }

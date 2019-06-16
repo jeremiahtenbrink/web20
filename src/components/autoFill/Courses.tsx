@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Select, Form, Button, Popconfirm, message } from "antd";
 import InputComponent from "../InputComponent";
 import ModalComponent from "../Modal";
@@ -7,8 +6,15 @@ import {
     addCourse, delCourses, subscribe, subscribeToCourses, unsubscribe
 } from "../../actions/index";
 import { connect } from "react-redux";
+import { ICourse } from "../../types/CourseInterface";
 
-class Courses extends React.Component{
+interface IState {
+    courseName: string;
+    id: string;
+    modalOpen: boolean;
+}
+
+class Courses extends React.Component<IProps, IState>{
     state = {
         courseName: "", id: "", modalOpen: false,
     };
@@ -35,6 +41,7 @@ class Courses extends React.Component{
     };
     
     onChange = ( name, value ) => {
+        // @ts-ignore
         this.setState( { [ name ]: value } );
     };
     
@@ -71,8 +78,9 @@ class Courses extends React.Component{
                         } }
                         value={ this.props.selectedCourse }
                         filterOption={ ( input,
-                            option ) => option.this.props.children.toLowerCase()
-                            .indexOf( input.toLowerCase() ) >= 0 }
+                            option ) => typeof option.props.children ===
+                        "string" ? option.props.children.toLowerCase()
+                            .indexOf( input.toLowerCase() ) >= 0 : ''}
                     >
                         { this.props.courses &&
                         Object.values( this.props.courses ).map( course => {
@@ -103,24 +111,32 @@ class Courses extends React.Component{
                 <InputComponent name={ "Course Name" }
                                 onChange={ this.onChange }
                                 value={ this.state.courseName }
+                                required={true}
                 />
                 <InputComponent name={ "ID" } onChange={ this.onChange }
                                 value={ this.state.id }
+                                required={true}
                 />
             </ModalComponent>
         </div> );
     }
 }
 
-Courses.propTypes = {
-    selectedCourse: PropTypes.string.isRequired,
-    changeCourseSelect: PropTypes.func.isRequired,
-    removeSelectedCourse: PropTypes.func.isRequired,
-    
-};
 const mstp = state => ( {
     courses: state.autoFill.courses,
 } );
+
+interface IProps {
+    courses: {[id: string]: ICourse};
+    selectedCourse: string,
+    addCourse: typeof addCourse;
+    delCourses: typeof delCourses;
+    subscribeToCourses: typeof subscribeToCourses;
+    subscribe: typeof  subscribe;
+    unsubscribe: typeof unsubscribe;
+    removeSelectedCourse: Function;
+    changeCourseSelect: Function;
+}
 
 export default connect( mstp,
     { addCourse, delCourses, subscribeToCourses, subscribe, unsubscribe }
