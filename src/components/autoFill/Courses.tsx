@@ -14,16 +14,16 @@ interface IState {
     modalOpen: boolean;
 }
 
-class Courses extends React.Component<IProps, IState>{
+class Courses extends React.Component<IProps, IState> {
     state = {
         courseName: "", id: "", modalOpen: false,
     };
     
-    componentDidMount(){
+    componentDidMount() {
         this.props.subscribe( "Courses", this.props.subscribeToCourses() );
     }
     
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.unsubscribe( "Courses" );
     }
     
@@ -58,7 +58,7 @@ class Courses extends React.Component<IProps, IState>{
         message.error( "Course Not removed" );
     };
     
-    render(){
+    render() {
         const Option = Select.Option;
         return ( <div>
             <Button onClick={ () => this.setState( { modalOpen: true } ) }>Add
@@ -78,9 +78,9 @@ class Courses extends React.Component<IProps, IState>{
                         } }
                         value={ this.props.selectedCourse }
                         filterOption={ ( input,
-                            option ) => typeof option.props.children ===
+                                         option ) => typeof option.props.children ===
                         "string" ? option.props.children.toLowerCase()
-                            .indexOf( input.toLowerCase() ) >= 0 : ''}
+                            .indexOf( input.toLowerCase() ) >= 0 : '' }
                     >
                         { this.props.courses &&
                         Object.values( this.props.courses ).map( course => {
@@ -90,17 +90,7 @@ class Courses extends React.Component<IProps, IState>{
                         } ) }
                     </Select>
                 </Form.Item>
-                <Popconfirm
-                    title={ `Are you sure you want to delete the ${ this.props.selectedCourse } course?
-                Deleting this course will also remove every sprint and lesson for this course.` }
-                    onConfirm={ this.confirm }
-                    onCancel={ this.cancel }
-                    okText="Yes"
-                    cancelText="No"
-                >
-                    <Button type={ "danger" } className={ "mg-left-md" }>Remove
-                        Course</Button>
-                </Popconfirm>
+            
             </div>
             
             <ModalComponent title={ "Add Course" } okText={ "Submit" }
@@ -111,11 +101,11 @@ class Courses extends React.Component<IProps, IState>{
                 <InputComponent name={ "Course Name" }
                                 onChange={ this.onChange }
                                 value={ this.state.courseName }
-                                required={true}
+                                required={ true }
                 />
                 <InputComponent name={ "ID" } onChange={ this.onChange }
                                 value={ this.state.id }
-                                required={true}
+                                required={ true }
                 />
             </ModalComponent>
         </div> );
@@ -127,12 +117,12 @@ const mstp = state => ( {
 } );
 
 interface IProps {
-    courses: {[id: string]: ICourse};
+    courses: { [ id: string ]: ICourse };
     selectedCourse: string,
     addCourse: typeof addCourse;
     delCourses: typeof delCourses;
     subscribeToCourses: typeof subscribeToCourses;
-    subscribe: typeof  subscribe;
+    subscribe: typeof subscribe;
     unsubscribe: typeof unsubscribe;
     removeSelectedCourse: Function;
     changeCourseSelect: Function;
