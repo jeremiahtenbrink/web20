@@ -11,11 +11,11 @@ import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import Sprint from "../components/student/Sprint";
 import { IStudent } from "../types/StudentInterface";
-import { IStudentLessons } from "../types/StudentLessonsInterface";
 import { ISprints } from "../types/SprintsInterface";
 import { ILessons } from "../types/LessonsInterface";
 import { IProjectManagers } from "../types/ProjectManagersInterface";
 import { ICourses } from "../types/CoursesInterface";
+import { IStudentLesson } from "../types/StudentLessonsInterface";
 
 
 interface IState {
@@ -372,7 +372,7 @@ interface IProps {
     students: { [ id: string ]: IStudent };
     uid: string;
     selectedStudent: null | IStudent;
-    selectedStudentLessons: IStudentLessons,
+    selectedStudentLessons: {[id: string]: IStudentLesson},
     sprints: ISprints,
     fetchingStudentLessons: boolean,
     lessons: ILessons,
@@ -383,13 +383,13 @@ interface IProps {
     editStudent: typeof editStudent;
     getStudentLessons: typeof getStudentLessons;
     completeStudentLesson: typeof completeStudentLesson;
-    changeSelectedStudent: Function;
-    subscribeToPms: Function;
-    subscribe: Function;
-    unsubscribe: Function;
-    subscribeToStudents: Function;
-    subscribeToSprints: Function;
-    subscribeToCourses: Function;
+    changeSelectedStudent: typeof changeSelectedStudent;
+    subscribeToPms: typeof subscribeToPms;
+    subscribe: typeof subscribe;
+    unsubscribe: typeof unsubscribe;
+    subscribeToStudents: typeof subscribeToStudents;
+    subscribeToSprints: typeof subscribeToSprints;
+    subscribeToCourses: typeof subscribeToCourses;
     match: match;
 }
 

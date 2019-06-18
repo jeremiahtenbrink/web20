@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Card, Icon, Popover, Button } from "antd";
 import Lessons from "../components/autoFill/Lessons";
 import Instructors from "../components/autoFill/Instructors";
-import Tas from "../components/autoFill/Tas.jsx";
+import Tas from "../components/autoFill/Tas";
 import {
     copySprints, unsubscribe, subscribe, subscribeToInstructors,
     subscribeToCourses, subscribeToPms, subscribeToTas
@@ -11,10 +11,12 @@ import { connect } from "react-redux";
 import { history } from "../configStore";
 
 interface IState {
-    page: string, modalOpen: boolean, id: null | number,
+    page: string,
+    modalOpen: boolean,
+    id: null | number,
 }
 
-class AdminDashboard extends Component<IProps, IState>{
+class AdminDashboard extends Component<IProps, IState> {
     state = {
         page: "instructors", modalOpen: false, id: null,
     };
@@ -25,7 +27,7 @@ class AdminDashboard extends Component<IProps, IState>{
     componentWillUnmount() {
     }
     
-    render(){
+    render() {
         return ( <div style={ { maxWidth: "800px", margin: "20px auto" } }>
             
             <Card actions={ [
@@ -36,11 +38,13 @@ class AdminDashboard extends Component<IProps, IState>{
                 </Popover>, <Popover content={ <p>Instructors</p> }>
                     <Icon type="user"
                           style={ { fontSize: "24px" } }
-                          onClick={ () => this.setState( { page: "instructors" } ) }/>
+                          onClick={ () => this.setState(
+                              { page: "instructors" } ) }/>
                 </Popover>, <Popover content={ <p>Lessons</p> }>
                     <Icon type="profile"
                           style={ { fontSize: "24px" } }
-                          onClick={ () => this.setState( { page: "lessons" } ) }/>
+                          onClick={ () => this.setState(
+                              { page: "lessons" } ) }/>
                 </Popover>, <Popover content={ <p>Flex TA's</p> }>
                     <Icon type="project"
                           style={ { fontSize: "24px" } }
@@ -67,8 +71,8 @@ interface IProps {
     copySprints: typeof copySprints;
     subscribeToInstructors: typeof subscribeToInstructors;
     subscribe: typeof subscribe;
-    unsubscribe: typeof  unsubscribe;
-    subscribeToCourses: typeof  subscribeToCourses;
+    unsubscribe: typeof unsubscribe;
+    subscribeToCourses: typeof subscribeToCourses;
     subscribeToPms: typeof subscribeToPms;
     subscribeToTas: typeof subscribeToTas;
     history: typeof history;

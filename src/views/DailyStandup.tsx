@@ -512,13 +512,13 @@ interface IProps {
     instructors: { [ id: string ]: IInstructor };
     flexTas: { [ id: string ]: ITa };
     uid: string;
-    subscribeToStudents: Function;
-    subscribeToInstructors: Function;
-    subscribe: Function;
-    unsubscribe: Function;
-    subscribeToTas: Function;
-    subscribeToCourses: Function;
-    subscribeToSprints: Function;
+    subscribeToStudents: typeof  subscribeToStudents;
+    subscribeToInstructors: typeof subscribeToInstructors;
+    subscribe: typeof subscribe;
+    unsubscribe: typeof unsubscribe;
+    subscribeToTas: typeof subscribeToTas;
+    subscribeToCourses: typeof subscribeToCourses;
+    subscribeToSprints: typeof subscribeToSprints;
 }
 
 export default connect( mpts, {

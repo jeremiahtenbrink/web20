@@ -16,20 +16,21 @@ import { ICourse } from "../types/CourseInterface";
 
 interface IState {
     modalOpen: boolean,
-    modalId: boolean,
+    modalId: null | string,
     student: {
         firstName: string;
         lastName: string;
         github: string;
         course: string;
+        pm: string;
     }
     subscribedToStudents: boolean,
 }
 
 class ManageStudents extends React.Component<IProps, IState> {
     state = {
-        modalOpen: false, modalId: false, student: {
-            firstName: "", lastName: "", github: "", course: ''
+        modalOpen: false, modalId: null, student: {
+            firstName: "", lastName: "", github: "", course: '', pm: ''
         }, subscribedToStudents: false,
     };
     
@@ -59,31 +60,28 @@ class ManageStudents extends React.Component<IProps, IState> {
     addHandler = e => {
         
         e.preventDefault();
-        this.props.addStudent( {
-            student: this.state.student, id: this.props.uid,
-        } );
+        let student: IStudent = this.state.student;
+        this.props.addStudent( student);
         this.setState( {
-            modalOpen: false, modalId: false, student: {
-                firstName: "", lastName: "", github: "", course: ''
+            modalOpen: false, modalId: '', student: {
+                firstName: "", lastName: "", github: "", course: '', pm: ''
             },
         } );
     };
     
-    updateStudent = ( { id, firstName, lastName, github, course } ) => {
+    updateStudent = ( { id, firstName, lastName, github, course, pm } ) => {
         this.setState( {
             modalOpen: true, modalId: id, student: {
-                firstName, lastName, github, course
+                firstName, lastName, github, course, pm
             },
         } );
     };
     
     updateStudentSubmit = () => {
-        this.props.editStudent( {
-            ...this.state.student, id: this.state.modalId
-        }, this.props.uid, );
+        this.props.editStudent( {...this.state.student, id: this.state.modalId});
         this.setState( {
-            modalOpen: false, modalId: false, student: {
-                firstName: "", lastName: "", github: "", course: ''
+            modalOpen: false, modalId: null, student: {
+                firstName: "", lastName: "", github: "", course: '', pm: ''
             },
         } );
     };
@@ -150,9 +148,7 @@ class ManageStudents extends React.Component<IProps, IState> {
                   <Divider type="vertical"/>
                   <Popconfirm
                       title="Are you sure delete this user?"
-                      onConfirm={ () => this.props.delStudent( student.id,
-                          this.props.uid
-                      ) }
+                      onConfirm={ () => this.props.delStudent( student.id) }
                       okText="Yes"
                       okButtonProps={ { type: "danger" } }
                       cancelText="No">
@@ -170,7 +166,13 @@ class ManageStudents extends React.Component<IProps, IState> {
                 onOk={ this.state.modalId ? this.updateStudentSubmit :
                     this.addHandler }
                 onCancel={ () => this.setState( {
-                    modalOpen: false, modalId: false
+                    modalOpen: false, modalId: null, student: {
+                        firstName: "",
+                    lastName: "",
+                    github: "",
+                    course: "",
+                    pm: "",
+                    }
                 } ) }>
                 <Row type="flex" gutter={ 24 }>
                     <Col xs={ 24 } md={ 12 }>
@@ -251,12 +253,12 @@ interface IProps {
     students: { [ id: string ]: IStudent };
     isAdding: boolean;
     courses: {[id: string]: ICourse};
-    addStudent: Function;
-    editStudent: Function;
-    subscribeToStudents: Function;
-    delStudent: Function;
-    subscribe: Function;
-    unsubscribe: Function;
+    addStudent: typeof addStudent;
+    editStudent: typeof editStudent;
+    subscribeToStudents: typeof subscribeToStudents;
+    delStudent: typeof delStudent;
+    subscribe: typeof subscribe;
+    unsubscribe: typeof unsubscribe;
 }
 
 export default connect( mapStateToProps,

@@ -1,9 +1,9 @@
 export interface IStudent {
-    id: string;
+    id?: string;
     github: string;
     firstName: string;
     lastName: string;
-    link: string;
+    link?: string;
     pm: string;
     course: string;
     isPresent?: boolean;

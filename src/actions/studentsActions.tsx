@@ -1,7 +1,6 @@
 import { store } from "../firebase/firebase";
 import { action } from "./action";
 import { IStudent } from "../types/StudentInterface";
-import { ILesson } from "../types/LessonInterface";
 import { ISprint } from "../types/SprintInterface";
 import { IStudentLesson } from "../types/StudentLessonsInterface";
 
@@ -38,18 +37,17 @@ export const ADD_STUDENT_INIT = "ADD_STUDENT_INIT";
 export const ADD_STUDENT_SUCCESS = "ADD_STUDENT_SUCCESS";
 export const ADD_STUDENT_FAILED = "ADD_STUDENT_FAILED";
 
-export const addStudent = ( props: { student: IStudent, id: string } ) =>
+export const addStudent = ( student: IStudent ) =>
     dispatch => {
         
         dispatch( { type: ADD_STUDENT_INIT } );
-        props.student.pm = props.id;
         store
             .collection( "students" )
-            .add( props.student )
+            .add( student )
             .then( res => {
                 dispatch( {
                     type: ADD_STUDENT_SUCCESS,
-                    payload: { id: res.id, ...props.student },
+                    payload: { id: res.id, ...student },
                 } );
             } );
     };
