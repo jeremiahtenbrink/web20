@@ -163,12 +163,16 @@ class SprintForm extends Component<IProps, IState> {
             <Col span={ 24 }>
                 
                 <div className={ "sprint__top-content" }>
-                    <Link to="/">
-                        <Button className="my-3">Back</Button>
-                    </Link>
                     <h1 className={ "mb-5 mt-5 text-center" }>
                         Sprint Challenge Report
                     </h1>
+                    <Link to="/">
+                        <Button type="primary">
+                            <Icon type="left"/>
+                            Go Back
+                        </Button>
+                    </Link>
+                
                 </div>
                 <Form>
                     <Form.Item label={ "Sprint Challenge" }>
@@ -488,7 +492,7 @@ class SprintForm extends Component<IProps, IState> {
                 <div className="d-flex justify-content-center">
                     <a className="btn btn-success mb-5 mt-4"
                        target="_blank"
-                       rel={"noopener noreferrer"}
+                       rel={ "noopener noreferrer" }
                        href={ this.getSubmissionUrl() }
                     >
                         <Button>

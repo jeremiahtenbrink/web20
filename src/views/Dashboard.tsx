@@ -28,6 +28,7 @@ class Dashboard extends React.Component<IProps, IState> {
         modalOpen: false,
     };
     
+    
     onSubmit = e => {
         const user = {
             firstName: this.state.firstName,

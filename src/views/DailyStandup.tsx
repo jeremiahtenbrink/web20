@@ -126,7 +126,7 @@ class DailyStandup extends Component<IProps, IState> {
     setStudents = students => {
         // @ts-ignore
         Object.values( students ).forEach( ( student: IStudent ) => {
-            student.isPresent = false;
+            student.isPresent = true;
         } );
         this.setState( {
             students, loaded: true,
@@ -248,13 +248,13 @@ class DailyStandup extends Component<IProps, IState> {
             <Card>
                 <Col span={ 24 }>
                     <div className={ "dailyStandUp__topContent" }>
+                        <h1>Daily Standup</h1>
                         <Link to="/">
                             <Button type="primary">
                                 <Icon type="left"/>
                                 Go Back
                             </Button>
                         </Link>
-                        <h1>Daily Standup</h1>
                     </div>
                     {/*
                     //@ts-ignore */ }

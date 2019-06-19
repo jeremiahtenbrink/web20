@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Card, Row, Col, Button, Table, Form, Input } from "antd";
+import { Card, Row, Col, Button, Table, Form, Input, Icon } from "antd";
 import { Link } from "react-router-dom";
 import {
     subscribe, unsubscribe, subscribeToStudents
@@ -36,7 +36,7 @@ class AttendanceReport extends Component<IProps, IState> {
             0 && !this.state.loaded ) {
             let keys = Object.keys( this.props.students );
             for ( let i = 0; i < keys.length; i++ ) {
-                this.props.students[ keys[ i ] ].isPresent = false;
+                this.props.students[ keys[ i ] ].isPresent = true;
             }
             this.setState( {
                 students: this.props.students, loaded: true,
@@ -136,7 +136,10 @@ class AttendanceReport extends Component<IProps, IState> {
                     <Col span={ 24 }>
                         <h1>Attendance Report</h1>
                         <Link to={ "/" }>
-                            <Button>Back</Button>
+                            <Button type="primary">
+                                <Icon type="left"/>
+                                Go Back
+                            </Button>
                         </Link>
                         <Table
                             dataSource={ Object.values( this.state.students ) }
@@ -193,6 +196,8 @@ class AttendanceReport extends Component<IProps, IState> {
                         <Button className="btn btn-success mt-3"
                                 target="_blank"
                                 type={ "primary" }
+                                size={ 'large' }
+                                icon={ "download" }
                                 href={ this.getAttendanceLink() }>
                             Submit Attendance
                         </Button>
