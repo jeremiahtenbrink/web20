@@ -9,13 +9,13 @@ import { IStudent } from "../../types/StudentInterface";
 import { IUser } from "../../types/UserInterface";
 
 interface IState {
-    students: {[id: string]: IStudent},
+    students: { [ id: string ]: IStudent },
     loaded: boolean,
     notes: string,
     subscribedToStudents: boolean,
 }
 
-class AttendanceReport extends Component<IProps, IState>{
+class AttendanceReport extends Component<IProps, IState> {
     state = {
         students: this.props.students,
         loaded: false,
@@ -23,16 +23,18 @@ class AttendanceReport extends Component<IProps, IState>{
         subscribedToStudents: false,
     };
     
-    componentDidMount(){
+    componentDidMount() {
         
-        if( this.props.uid ){
-            this.props.subscribe( 'Students', this.props.subscribeToStudents( this.props.uid ) );
+        if ( this.props.uid ) {
+            this.props.subscribe( 'Students',
+                this.props.subscribeToStudents( this.props.uid ) );
             this.setState( { subscribedToStudents: true } );
         }
-        if( this.props.students && Object.values( this.props.students ).length >
-            0 && !this.state.loaded ){
+        if ( this.props.students &&
+            Object.values( this.props.students ).length >
+            0 && !this.state.loaded ) {
             let keys = Object.keys( this.props.students );
-            for( let i = 0; i < keys.length; i++ ){
+            for ( let i = 0; i < keys.length; i++ ) {
                 this.props.students[ keys[ i ] ].isPresent = false;
             }
             this.setState( {
@@ -41,22 +43,24 @@ class AttendanceReport extends Component<IProps, IState>{
         }
     }
     
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.unsubscribe( "Students" );
     }
     
-    componentDidUpdate( prevProps, prevState, snapshot ){
+    componentDidUpdate( prevProps, prevState, snapshot ) {
         
-        if( this.props.uid && !this.state.subscribedToStudents ){
-            this.props.subscribe('Students', this.props.subscribeToStudents( this.props.uid ) );
+        if ( this.props.uid && !this.state.subscribedToStudents ) {
+            this.props.subscribe( 'Students',
+                this.props.subscribeToStudents( this.props.uid ) );
             this.setState( { subscribedToStudents: true } );
         }
         
-        if( this.props.students && Object.values( this.props.students ).length >
-            0 && !this.state.loaded ){
+        if ( this.props.students &&
+            Object.values( this.props.students ).length >
+            0 && !this.state.loaded ) {
             let keys = Object.keys( this.props.students );
             
-            for( let i = 0; i < keys.length; i++ ){
+            for ( let i = 0; i < keys.length; i++ ) {
                 this.props.students[ keys[ i ] ].isPresent = false;
             }
             this.setState( {
@@ -78,41 +82,43 @@ class AttendanceReport extends Component<IProps, IState>{
     };
     
     getAttendanceLink = () => {
-        if( this.props.user ){
-            let url = `https://airtable.com/shrEawWXvMldYbm5Q?prefill_Project+Manager=${ this.props.user.firstName.trim() }+${ this.props.user.lastName.trim() }+(${ this.props.user.cohort })&prefill_Section=WEB20&prefill_Present+Students=`;
-            if( this.state.students ){
+        if ( this.props.user ) {
+            let url = `https://airtable.com/shrEawWXvMldYbm5Q?prefill_Project+Manager=${ this.props.user.firstName.trim() }+${ this.props.user.lastName.trim() }+(${ this.props.user.cohort })&prefill_Section=${ this.props.user.cohort }&prefill_Present+Students=`;
+            if ( this.state.students ) {
                 let keys = Object.keys( this.state.students );
                 let notPresentString = "&prefill_Absent+Students=";
-                if( keys.length > 0 ){
+                if ( keys.length > 0 ) {
                     let afterFirstIsPresent = false;
                     let afterFirstNotPresent = false;
-                    for( let i = 0; i < keys.length; i++ ){
-                        if( this.state.students[ keys[ i ] ].isPresent ){
-                            if( afterFirstIsPresent ){
+                    for ( let i = 0; i < keys.length; i++ ) {
+                        if ( this.state.students[ keys[ i ] ].isPresent ) {
+                            if ( afterFirstIsPresent ) {
                                 url += ",";
                             }
-                            url += `${ this.state.students[ keys[ i ] ].firstName.trim() }+${ this.state.students[ keys[ i ] ].lastName.trim() }`;
-                            if( !afterFirstIsPresent ){
+                            url +=
+                                `${ this.state.students[ keys[ i ] ].firstName.trim() }+${ this.state.students[ keys[ i ] ].lastName.trim() }`;
+                            if ( !afterFirstIsPresent ) {
                                 afterFirstIsPresent = true;
                             }
-                        }else{
-                            if( afterFirstNotPresent ){
+                        } else {
+                            if ( afterFirstNotPresent ) {
                                 notPresentString += ",";
                             }
-                            notPresentString += `${ this.state.students[ keys[ i ] ].firstName.trim() }+${ this.state.students[ keys[ i ] ].lastName.trim() }`;
-                            if( !afterFirstNotPresent ){
+                            notPresentString +=
+                                `${ this.state.students[ keys[ i ] ].firstName.trim() }+${ this.state.students[ keys[ i ] ].lastName.trim() }`;
+                            if ( !afterFirstNotPresent ) {
                                 afterFirstNotPresent = true;
                             }
                         }
                     }
                     
-                    if( notPresentString !== "&prefill_Absent+Students=" ){
+                    if ( notPresentString !== "&prefill_Absent+Students=" ) {
                         url += notPresentString;
                     }
                 }
             }
             
-            if( this.state.notes !== "" ){
+            if ( this.state.notes !== "" ) {
                 let notes = encodeURI( this.state.notes );
                 url += `&prefill_Notes=${ notes }`;
             }
@@ -121,7 +127,7 @@ class AttendanceReport extends Component<IProps, IState>{
         }
     };
     
-    render(){
+    render() {
         
         return ( <div style={ { maxWidth: "800px", margin: "20px auto" } }>
             <Card>
@@ -149,7 +155,8 @@ class AttendanceReport extends Component<IProps, IState>{
                             />
                             <Table.Column title="Attendance"
                                           key="attendance"
-                                          render={ ( text: string, record: IStudent ) => {
+                                          render={ ( text: string,
+                                                     record: IStudent ) => {
                                 
                                               return ( <Button.Group
                                                   size={ "large" }>
@@ -201,7 +208,7 @@ const mpts = state => ( {
 } );
 
 interface IProps {
-    students: {[id: string]: IStudent};
+    students: { [ id: string ]: IStudent };
     uid: string;
     user: IUser;
     subscribe: typeof subscribe;
