@@ -44,7 +44,7 @@ class Login extends React.Component<IProps, IState> {
             uid: this.props.uid,
             firstName: this.state.inputs.firstName,
             lastName: this.state.inputs.lastName,
-            webNumber: "WEB" + this.state.inputs.webNumber,
+            webNumber: this.state.inputs.webNumber,
         } );
     };
     
@@ -113,25 +113,12 @@ class Login extends React.Component<IProps, IState> {
                                         Number
                                     </h3>
                                     <Input.Group compact>
-                                        <Select defaultValue="WEB"
-                                                style={ { width: "35%" } }>
-                                            <Select.Option
-                                                value="WEB">WEB</Select.Option>
-                                            <Select.Option value="UX"
-                                                           disabled>
-                                                UX
-                                            </Select.Option>
-                                            <Select.Option value="DATA"
-                                                           disabled>
-                                                DATA
-                                            </Select.Option>
-                                        </Select>
                                         <Input
                                             style={ { width: "65%" } }
                                             value={ this.state.inputs.webNumber }
                                             onChange={ this.updateHandler }
                                             name="webNumber"
-                                            placeholder="##"
+                                            placeholder="Section"
                                             required
                                         />
                                     </Input.Group>
