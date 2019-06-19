@@ -1,5 +1,7 @@
 import firebase, { store } from "../firebase/firebase";
 import { push } from "connected-react-router";
+import { IUser } from "../types/UserInterface";
+import { action } from "./action";
 
 export const GOOGLE_PROVIDER = "GOOGLE_PROVIDER";
 export const GITHUB_PROVIDER = "GITHUB_PROVIDER";
@@ -60,7 +62,6 @@ export const signIn = ( authType: string ) => dispatch => {
                                 token: result.credential.accessToken,
                             } );
                             
-                            dispatch( push( "/" ) );
                         }
                     }
                 )
@@ -73,7 +74,8 @@ export const signIn = ( authType: string ) => dispatch => {
                 .auth()
                 .signInWithPopup( githubProvider )
                 .then( function ( result ) {
-                    if ( result.additionalUserInfo.isNewUser ) {
+                    if ( result.additionalUserInfo ) {
+                        
                         dispatch( {
                             type: SIGNIN_NEW_USER,
                             payload: result.user.uid,
@@ -81,13 +83,15 @@ export const signIn = ( authType: string ) => dispatch => {
                             token: result.credential.accessToken,
                         } );
                     } else {
+                        
+                        
                         dispatch( {
                             type: SIGNIN_SUCCESS,
                             payload: result.user.uid,
                             // @ts-ignore
                             token: result.credential.accessToken,
                         } );
-                        dispatch( push( "/" ) );
+                        
                     }
                 } )
                 .catch( function ( error ) {
@@ -120,18 +124,14 @@ export const CREATE_USER_INIT = "CREATE_USER_INIT";
 export const CREATE_USER_SUCCESS = "CREATE_USER_SUCCESS";
 export const CREATE_USER_FAILED = "CREATE_USER_FAILED";
 
-export const createUser = user => dispatch => {
+export const createUser = ( user: IUser ) => dispatch => {
     dispatch( { type: CREATE_USER_INIT } );
     store
         .collection( `users` )
-        .doc( user.uid )
-        .set( {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            cohort: user.webNumber,
-        } )
+        .doc( user.id )
+        .set( user )
         .then( () => {
-            dispatch( { type: CREATE_USER_SUCCESS } );
+            dispatch( action( CREATE_USER_SUCCESS, user ) );
             dispatch( push( "/manage-students" ) );
         } );
 };
@@ -147,8 +147,15 @@ export const getUser = id => dispatch => {
         .doc( id )
         .get()
         .then( res => {
-            let data = res.data();
-            dispatch( { type: GET_USER_SUCCESS, payload: res.data() } );
+            
+            if ( res.exists ) {
+                let data = res.data();
+                dispatch( { type: GET_USER_SUCCESS, payload: data } );
+                dispatch( push( '/' ) );
+            } else {
+                dispatch( push( '/start' ) );
+            }
+            
         } )
         .catch( err => {
             dispatch( { type: GET_USER_FAILED, payload: err } );
@@ -160,6 +167,7 @@ export const EDIT_USER_SUCCESS = "EDIT_USER_SUCCESS";
 export const EDIT_USER_FAIL = "EDIT_USER_FAIL";
 
 export const editUser = user => dispatch => {
+    debugger;
     dispatch( { type: EDIT_USER_INIT } );
     store
         .collection( `users` )

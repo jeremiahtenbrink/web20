@@ -64,7 +64,7 @@ const MakeInput = ( {
             <Form.Item
                 validateStatus={ valStatus === "error" ? "error" :
                     valStatus === "success" ? "success" : "" }
-                help={ valStatus === "error" ? "Invalid Link" : "" }
+                help={ valStatus === "error" ? "Invalid input" : "" }
                 hasFeedback
             >
                 <Input
@@ -124,7 +124,7 @@ const MakeInput = ( {
                                      option ) => typeof option.props.children ===
                     "string" ? option.props.children
                         .toUpperCase()
-                        .indexOf( inputValue.toUpperCase() ) !== -1 : ''}
+                        .indexOf( inputValue.toUpperCase() ) !== -1 : '' }
                 />
             </Form.Item>
         </Col> );

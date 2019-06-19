@@ -2,17 +2,18 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-    Card, Icon, Skeleton, Avatar, Table, Col, Popover
+    Card, Icon, Skeleton, Avatar, Table, Col, Popover, Row, Modal, Form
 } from "antd";
 import axios from "axios";
 import {
-    subscribeToStudents, logout, subscribe, unsubscribe
-} from "../actions";
+    subscribeToStudents, logout, subscribe, unsubscribe, editUser
+} from "../actions/index";
 import LambdaLogo from "../assets/logo.png";
 import { IStudent } from "../types/StudentInterface";
 import { IUser } from "../types/UserInterface";
 import { ISubscriptions } from "../types/SubscriptionsInterface";
 import { history } from 'history';
+import MakeInput from '../components/MakeInput';
 
 interface IState {
     joke: string;
@@ -21,7 +22,40 @@ interface IState {
 class Dashboard extends React.Component<IProps, IState> {
     state = {
         joke: "",
+        firstName: '',
+        lastName: '',
+        cohort: '',
+        modalOpen: false,
     };
+    
+    onSubmit = e => {
+        const user = {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            cohort: this.state.cohort,
+            id: this.props.uid,
+            isAdmin: false,
+        };
+        
+        this.props.editUser( user );
+    };
+    
+    componentDidUpdate( prevProps: Readonly<IProps>,
+                        prevState: Readonly<IState>, snapshot?: any ): void {
+        
+        if ( ( !this.props.user || this.props.user.firstName === "" ||
+            this.props.user.lastName === '' || this.props.user.cohort ===
+            '' ) && !this.state.modalOpen ) {
+            this.setState( state => ( { ...state, modalOpen: true } ) );
+        }
+        
+        if ( this.state.modalOpen && this.props.user && this.state.firstName !==
+            '' && this.state.lastName !== '' && this.state.cohort !== '' ) {
+            this.setState( state => ( {
+                ...state, firstName: '', lastName: '', cohort: ''
+            } ) )
+        }
+    }
     
     componentDidMount() {
         
@@ -50,6 +84,12 @@ class Dashboard extends React.Component<IProps, IState> {
                 .forEach( unsubscribe => unsubscribe() );
         }
         this.props.logout();
+    };
+    
+    onChange = e => {
+        e.persist();
+        this.setState(
+            state => ( { ...state, [ e.target.name ]: e.target.value } ) )
     };
     
     render() {
@@ -165,6 +205,47 @@ class Dashboard extends React.Component<IProps, IState> {
                 
                 </Table>
             </div>
+            <Modal
+                title={ "Required User Information" }
+                visible={ this.state.modalOpen }
+                okText={ 'Submit' }
+                onOk={ this.onSubmit }
+                onCancel={ () => this.setState(
+                    state => ( { ...state, modalOpen: false } ) ) }>
+                <Row type="flex" gutter={ 24 }>
+                    <Col xs={ 24 } md={ 12 }>
+                        <MakeInput onChange={ e => this.onChange( e ) }
+                                   required={ true }
+                                   value={ this.state.firstName }
+                                   name={ "firstName" }
+                                   isLoading={ false }
+                                   type={ "input" }
+                                   title={ "First Name" }
+                        />
+                    </Col>
+                    
+                    <Col xs={ 24 } md={ 12 }>
+                        <MakeInput onChange={ e => this.onChange( e ) }
+                                   required={ true }
+                                   value={ this.state.lastName }
+                                   name={ "lastName" }
+                                   isLoading={ false }
+                                   type={ "input" }
+                                   title={ "Last Name" }
+                        />
+                    </Col>
+                    <Col xs={ 24 }>
+                        <MakeInput onChange={ e => this.onChange( e ) }
+                                   required={ true }
+                                   value={ this.state.cohort }
+                                   name={ "cohort" }
+                                   isLoading={ false }
+                                   type={ "input" }
+                                   title={ "Cohort" }
+                        />
+                    </Col>
+                </Row>
+            </Modal>
         </div> );
     }
 }
@@ -185,14 +266,15 @@ interface IProps {
     isLoading: boolean;
     displayName: string;
     subscriptions: ISubscriptions;
-    subscribeToStudents: Function;
+    subscribeToStudents: typeof subscribeToStudents;
     logout: () => void;
-    subscribe: Function;
-    unsubscribe: Function;
+    subscribe: typeof subscribe;
+    unsubscribe: typeof unsubscribe;
     history: history;
+    editUser: typeof editUser;
 }
 
 export default connect( mapStateToProps,
-    { subscribeToStudents, logout, subscribe, unsubscribe },
+    { subscribeToStudents, logout, subscribe, unsubscribe, editUser },
 )(
     Dashboard );

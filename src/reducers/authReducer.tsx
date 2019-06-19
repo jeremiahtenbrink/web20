@@ -22,6 +22,7 @@ const initialState: IAuthReducer = {
 
 export const authReducer = ( state: IAuthReducer = initialState,
                              action: IAction ): IAuthReducer => {
+    debugger;
     switch ( action.type ) {
         case AUTH_INIT:
             return { ...state, isLoading: true };
@@ -54,7 +55,9 @@ export const authReducer = ( state: IAuthReducer = initialState,
         case CREATE_USER_INIT:
             return { ...state, isLoading: true, error: "" };
         case CREATE_USER_SUCCESS:
-            return { ...state, isLoading: false, error: "" };
+            return {
+                ...state, isLoading: false, error: "", user: action.payload
+            };
         case LOGOUT_INIT:
             return { ...state, isLoading: true, error: "" };
         case LOGOUT_SUCCESSFUL:
@@ -82,6 +85,7 @@ export const authReducer = ( state: IAuthReducer = initialState,
             return {
                 ...state,
                 editingUser: false,
+                user: action.payload,
             };
         case EDIT_USER_FAIL:
             return { ...state, editingUser: false, error: action.payload };

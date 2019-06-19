@@ -11,40 +11,41 @@ import { history } from "history";
 interface IState {
     isLoading: boolean;
     inputs: {
-        firstName: string; lastName: string; webNumber: string;
+        firstName: string; lastName: string; cohort: string;
     },
 }
 
 class Login extends React.Component<IProps, IState> {
     state = {
         isLoading: false, inputs: {
-            firstName: "", lastName: "", webNumber: "",
+            firstName: "", lastName: "", cohort: "",
         },
     };
     
     componentDidMount() {
         
         firebase.auth().onAuthStateChanged( user => {
-            if ( user ) {
-                this.props.history.push( "/" );
-            }
+        
         } );
     }
     
     updateHandler = e => {
-        this.setState( {
+        e.persist();
+        this.setState( state => ( {
+            ...state,
             inputs: {
                 ...this.state.inputs, [ e.target.name ]: e.target.value,
             },
-        } );
+        } ) );
     };
     
     submitHandler = () => {
         this.props.createUser( {
-            uid: this.props.uid,
+            id: this.props.uid,
             firstName: this.state.inputs.firstName,
             lastName: this.state.inputs.lastName,
-            webNumber: this.state.inputs.webNumber,
+            cohort: this.state.inputs.cohort,
+            isAdmin: false,
         } );
     };
     
@@ -109,15 +110,16 @@ class Login extends React.Component<IProps, IState> {
                                 <Col xs={ 24 }>
                                     <h3>
                                                 <span
-                                                    style={ { color: "#f5222d" } }>*</span> Web
-                                        Number
+                                                    style={ { color: "#f5222d" } }>*</span> Cohort
+                                        ---> Example: WEB20 iOS6 CS3 <span
+                                        className={ "note" }>Must match airtable exactly.</span>
                                     </h3>
                                     <Input.Group compact>
                                         <Input
                                             style={ { width: "65%" } }
-                                            value={ this.state.inputs.webNumber }
+                                            value={ this.state.inputs.cohort }
                                             onChange={ this.updateHandler }
-                                            name="webNumber"
+                                            name="cohort"
                                             placeholder="Section"
                                             required
                                         />
