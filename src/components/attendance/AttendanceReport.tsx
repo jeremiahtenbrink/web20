@@ -7,6 +7,7 @@ import {
 } from "../../actions/index";
 import { IStudent } from "../../types/StudentInterface";
 import { IUser } from "../../types/UserInterface";
+import MakeInput from '../MakeInput';
 
 interface IState {
     students: { [ id: string ]: IStudent },
@@ -181,19 +182,20 @@ class AttendanceReport extends Component<IProps, IState> {
                                           } }/>
                         </Table>
                         <Form>
-                            <Input
-                                type="text"
-                                placeholder="Notes"
-                                name="notes"
-                                onChange={ this.notesChange }
+                            <MakeInput title={ "Notes" }
+                                       onChange={ this.notesChange }
+                                       name={ "notes" } type={ "textarea" }
+                                       required={ false }
+                                       value={ this.state.notes }
+                                       isLoading={ false }
                             />
                         </Form>
-                        <a
-                            className="btn btn-success mt-3"
-                            target="_blank"
-                            href={ this.getAttendanceLink() }>
+                        <Button className="btn btn-success mt-3"
+                                target="_blank"
+                                type={ "primary" }
+                                href={ this.getAttendanceLink() }>
                             Submit Attendance
-                        </a>
+                        </Button>
                     </Col>
                 </Row>
             </Card>
