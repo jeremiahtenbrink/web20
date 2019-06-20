@@ -15,8 +15,8 @@ interface IState {
     open: boolean;
 }
 
-class Sprint extends Component<IProps, IState>{
-    constructor( props ){
+class Sprint extends Component<IProps, IState> {
+    constructor( props ) {
         super( props );
         this.state = {
             sprint: this.props.sprint, open: false,
@@ -33,20 +33,25 @@ class Sprint extends Component<IProps, IState>{
     completeLesson = ( lesson: ISprint | IStudentLesson = this.state.sprint ) => {
         
         lesson.completed = true;
-        if( this.props.selectedStudentLessons &&
+        if ( this.props.selectedStudentLessons &&
             this.props.selectedStudentLessons[ lesson.id ] &&
-            this.props.selectedStudentLessons[ lesson.id ].completed ){
+            this.props.selectedStudentLessons[ lesson.id ].completed ) {
             lesson = this.props.selectedStudentLessons[ lesson.id ];
             lesson.completed = !lesson.completed;
         }
         this.props.completeStudentLesson( this.props.selectedStudent, lesson );
     };
     
-    render(){
-        
+    render() {
+        let className = "student__sprint inline center-vert mg-top-sm";
+        if ( this.props.selectedStudentLessons &&
+            this.props.selectedStudentLessons[ this.state.sprint.id ] &&
+            this.props.selectedStudentLessons[ this.state.sprint.id ].completed ) {
+            className += " background-light-green";
+        }
         return ( <>
             <div
-                className={ "student__sprint inline center-vert mg-top-sm" }
+                className={ className }
                 key={ this.state.sprint.id }>
                 { this.state.open ? <Icon type={ "caret-down" }
                                           onClick={ this.swapOpen }/> :
@@ -72,6 +77,7 @@ class Sprint extends Component<IProps, IState>{
             </Row> }
             { this.state.open && this.props.lessons[ this.state.sprint.id ] &&
             Object.values( this.props.lessons[ this.state.sprint.id ] )
+                .sort( ( a, b ) => a.order - b.order )
                 .map( lesson => {
                     return <Lesson lesson={ lesson } key={ lesson.id }
                                    completedLesson={ this.completeLesson }/>;
@@ -79,6 +85,7 @@ class Sprint extends Component<IProps, IState>{
         </> );
     }
 }
+
 const mstp = state => ( {
     lessons: state.sprints.lessons,
     selectedStudent: state.students.selectedStudent,
@@ -86,9 +93,9 @@ const mstp = state => ( {
 } );
 
 interface IProps {
-    lessons: {[id: string]: ILesson};
+    lessons: { [ id: string ]: ILesson };
     selectedStudent: IStudent;
-    selectedStudentLessons: {[id: string]: ISprint | IStudentLesson};
+    selectedStudentLessons: { [ id: string ]: ISprint | IStudentLesson };
     sprint: ISprint;
     getLessons: typeof getLessons;
     completeStudentLesson: typeof completeStudentLesson;

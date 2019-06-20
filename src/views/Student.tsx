@@ -217,6 +217,19 @@ class Student extends Component<IProps, IState> {
                         <div style={ { backgroundColor: "white" } }>
                             { Object.values( this.props.sprints )
                                 .sort( ( a, b ) => a.week - b.week )
+                                .sort( ( a, b ) => {
+                                    if ( this.props.selectedStudentLessons &&
+                                        this.props.selectedStudentLessons[ a.id ] &&
+                                        this.props.selectedStudentLessons[ a.id ].completed ) {
+                                        return 1;
+                                    } else if ( this.props.selectedStudentLessons &&
+                                        this.props.selectedStudentLessons[ b.id ] &&
+                                        this.props.selectedStudentLessons[ b.id ].completed ) {
+                                        return -1;
+                                    } else {
+                                        return 0;
+                                    }
+                                } )
                                 .map( sprint => {
                                     return <Sprint key={ sprint.id }
                                                    sprint={ sprint }/>;

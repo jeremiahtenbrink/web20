@@ -127,6 +127,16 @@
   &-red {
     color: #db414b;
   }
+
+  &-light-green {
+    color: lightgreen;
+  }
+}
+
+.background {
+  &-light-green {
+    background-color: #bdf3bd !important;
+  }
 }
 
 .font {
