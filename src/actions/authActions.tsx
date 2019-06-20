@@ -132,7 +132,7 @@ export const createUser = ( user: IUser ) => dispatch => {
         .set( user )
         .then( () => {
             dispatch( action( CREATE_USER_SUCCESS, user ) );
-            dispatch( push( "/manage-students" ) );
+            dispatch( push( "/" ) );
         } );
 };
 

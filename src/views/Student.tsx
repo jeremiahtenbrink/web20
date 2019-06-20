@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { match } from 'react-router';
-import { Form, Input, Button, Row, Modal, Select } from "antd";
+import { Form, Input, Button, Row, Modal, Select, Card } from "antd";
 import {
     editStudent, getStudentLessons, completeStudentLesson, changeSelectedSprint,
     changeSelectedStudent, subscribe, unsubscribe, subscribeToPms,
@@ -160,52 +160,54 @@ class Student extends Component<IProps, IState> {
                     /// ------------------------------------------------------
                     
                     ( <>
-                        <div className={ "inline" }>
-                            <Link to="/">
-                                <Button type={ "primary" } size={ "large" }>
-                                    Back
+                        <Card>
+                            <div className={ "inline" }>
+                                <Link to="/">
+                                    <Button type={ "primary" } size={ "large" }>
+                                        Back
+                                    </Button>
+                                </Link>
+                                
+                                {   /// ------------------------------------------------------
+                                    // EditUser Button.----------------------------
+                                    // ------------------------------------------------------
+                                }
+                                
+                                <Button
+                                    size={ "large" }
+                                    className={ "mg-left-sm" }
+                                    onClick={ () => this.setState(
+                                        { modalOpen: true } ) }>
+                                    Edit User
                                 </Button>
-                            </Link>
-                            
-                            {   /// ------------------------------------------------------
-                                // EditUser Button.----------------------------
-                                // ------------------------------------------------------
-                            }
-                            
-                            <Button
-                                size={ "large" }
-                                className={ "mg-left-sm" }
-                                onClick={ () => this.setState(
-                                    { modalOpen: true } ) }>
-                                Edit User
-                            </Button>
-                            <h1 className={ "mg-left-lg" }>
-                                { this.props.selectedStudent.firstName }{ " " }
-                                { this.props.selectedStudent.lastName }
-                            </h1>
-                        </div>
-                        <h3>PM: <span
-                            className={ "mg-left-sm" }>{ this.state.pm &&
-                        this.props.pms[ this.state.pm ] &&
-                        `${ this.props.pms[ this.state.pm ].firstName } ${ this.props.pms[ this.state.pm ].lastName }` }</span>
-                        </h3>
-                        <div className={ "mg-top-lg" }>
-                            <h3>
-                                Github Handle:{ " " }
-                                { this.props.selectedStudent.github ?
-                                    this.props.selectedStudent.github : "" }
+                                <h1 className={ "mg-left-lg" }>
+                                    { this.props.selectedStudent.firstName }{ " " }
+                                    { this.props.selectedStudent.lastName }
+                                </h1>
+                            </div>
+                            <h3 className={ "mg-top-lg" }>PM: <span
+                                className={ "mg-left-sm" }>{ this.state.pm &&
+                            this.props.pms[ this.state.pm ] &&
+                            `${ this.props.pms[ this.state.pm ].firstName } ${ this.props.pms[ this.state.pm ].lastName }` }</span>
                             </h3>
-                        </div>
+                            <div className={ "mg-top-lg" }>
+                                <h3>
+                                    Github Handle:{ " " }
+                                    { this.props.selectedStudent.github ?
+                                        this.props.selectedStudent.github : "" }
+                                </h3>
+                            </div>
+                            <div className={ "mg-top-lg" }>
+                                <h3>
+                                    Link:{ " " }
+                                    <span className={ "mg-left-lg" }>
+                                    { this.props.selectedStudent.id ?
+                                        this.props.selectedStudent.id : "" }
+                                    </span>
+                                </h3>
+                            </div>
+                        </Card>
                         
-                        <div className={ "mg-top-lg" }>
-                            <h3>
-                                Link:{ " " }
-                                <span className={ "mg-left-lg" }>
-                  { this.props.selectedStudent.id ?
-                      this.props.selectedStudent.id : "" }
-                </span>
-                            </h3>
-                        </div>
                         
                         {   /// ------------------------------------------------------
                             // Lessons --------------------------------------
@@ -372,7 +374,7 @@ interface IProps {
     students: { [ id: string ]: IStudent };
     uid: string;
     selectedStudent: null | IStudent;
-    selectedStudentLessons: {[id: string]: IStudentLesson},
+    selectedStudentLessons: { [ id: string ]: IStudentLesson },
     sprints: ISprints,
     fetchingStudentLessons: boolean,
     lessons: ILessons,

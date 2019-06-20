@@ -5,7 +5,6 @@ import firebase from "./firebase/firebase";
 import { connect } from "react-redux";
 import { Layout } from "antd";
 import Login from "./views/Login";
-import ManageStudents from "./views/ManageStudents";
 import Dashboard from "./views/Dashboard";
 import Attendance from "./views/Attendance.tsx";
 import DailyStandup from "./views/DailyStandup.tsx";
@@ -33,11 +32,6 @@ class App extends React.Component{
                 <Switch>
                     <Route exact path="/start"
                            render={ props => <Login { ...props } /> }/>
-                    <Route
-                        exact
-                        path="/manage-students"
-                        render={ props => <ManageStudents { ...props } /> }
-                    />
                     <Route
                         exactgit
                         path="/attendance"

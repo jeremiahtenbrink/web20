@@ -2,11 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-    Card, Icon, Skeleton, Avatar, Table, Col, Popover, Row, Modal, Form
+    Card, Icon, Skeleton, Avatar, Table, Col, Popover, Row, Modal, Form,
+    Popconfirm
 } from "antd";
 import axios from "axios";
 import {
-    subscribeToStudents, logout, subscribe, unsubscribe, editUser
+    subscribeToStudents, logout, subscribe, unsubscribe, editUser, delStudent
 } from "../actions/index";
 import LambdaLogo from "../assets/logo.png";
 import { IStudent } from "../types/StudentInterface";
@@ -14,9 +15,15 @@ import { IUser } from "../types/UserInterface";
 import { ISubscriptions } from "../types/SubscriptionsInterface";
 import { history } from 'history';
 import MakeInput from '../components/MakeInput';
+import EditStudentModal from "../components/student/EditStudentModal";
 
 interface IState {
     joke: string;
+    firstName: string,
+    lastName: string,
+    cohort: string,
+    modalOpen: boolean,
+    student: null | IStudent;
 }
 
 class Dashboard extends React.Component<IProps, IState> {
@@ -26,6 +33,7 @@ class Dashboard extends React.Component<IProps, IState> {
         lastName: '',
         cohort: '',
         modalOpen: false,
+        student: null
     };
     
     
@@ -42,7 +50,7 @@ class Dashboard extends React.Component<IProps, IState> {
     };
     
     componentDidUpdate( prevProps: Readonly<IProps>,
-                        prevState: Readonly<IState>, snapshot?: any ): void {
+                        prevState: Readonly<IState> ): void {
         
         if ( ( !this.props.user || this.props.user.firstName === "" ||
             this.props.user.lastName === '' || this.props.user.cohort ===
@@ -94,14 +102,22 @@ class Dashboard extends React.Component<IProps, IState> {
     };
     
     render() {
+        const newStudent = {
+            id: null,
+            firstName: '',
+            lastName: '',
+            course: '',
+            pm: this.props.uid,
+            github: '',
+        };
         
         const actions = [
             <Popover content={ <p>Reload Joke</p> }>
                 <Icon type="reload" onClick={ this.getJoke }/>
-            </Popover>, <Popover content={ <p>Manage Students</p> }>
+            </Popover>, <Popover content={ <p>Create New Student</p> }>
                 <Icon type="usergroup-add"
-                      onClick={ () => this.props.history.push(
-                          "/manage-students" ) }/>
+                      onClick={ () => this.setState(
+                          { student: newStudent } ) }/>
             </Popover>, <Popover content={ <p>Logout</p> }>
                 <Icon type="logout" onClick={ this.props.logout }/>
             </Popover>,
@@ -194,18 +210,54 @@ class Dashboard extends React.Component<IProps, IState> {
                         title="Action"
                         key="action"
                         render={ student => (
-                            <Link to={ `/student/${ student.id }` }>
-                                <div className={ "inline pointer center" }>
-                                    <Icon type={ "user" }/>
-                                    <h3 className={ "mg-left-md" }>
-                                        Student Dashboard
-                                    </h3>
-                                </div>
-                            </Link> ) }
+                            <div className={ "inline center-vert" }>
+                                <Link to={ `/student/${ student.id }` }>
+                                    <div className={ "inline pointer center" }>
+                                        <Popover content={ "User Dashboard" }>
+                                            <Icon type={ "user" }
+                                                  style={ { fontSize: "20px" } }
+                                            />
+                                        </Popover>
+                                    </div>
+                                </Link>
+                                <span className={ "color-blue" }>
+                                    <Popover content={ <p>Edit Student</p> }>
+                                        <Icon type={ "form" }
+                                              className={ "mg-left-md" }
+                                              style={ { fontSize: "20px" } }
+                                              onClick={ () => this.setState(
+                                                  { student: student } ) }/>
+                                    </Popover>
+                                    
+                                </span>
+                                <span className={ "color-red" }>
+                                    <Popconfirm title={ "Delete Student" }
+                                                cancelText={ "Cancel" }
+                                                okText={ "Delete" }
+                                                onConfirm={ () => this.props.delStudent(
+                                                    student.id ) }
+
+                                    >
+                                    <Popover content={ <p>Delete Student</p> }>
+                                        <Icon type={ "delete" }
+                                              className={ "mg-left-md" }
+                                              style={ { fontSize: "20px" } }
+                                        />
+                                    </Popover>
+                                    </Popconfirm>
+                                    
+                                </span>
+                            
+                            </div>
+                        ) }
                     />
                 
                 </Table>
             </div>
+            { this.state.student &&
+            <EditStudentModal student={ this.state.student }
+                              closeModal={ () => this.setState(
+                                  { student: null } ) }/> }
             <Modal
                 title={ "Required User Information" }
                 visible={ this.state.modalOpen }
@@ -273,9 +325,13 @@ interface IProps {
     unsubscribe: typeof unsubscribe;
     history: history;
     editUser: typeof editUser;
+    delStudent: typeof delStudent;
 }
 
 export default connect( mapStateToProps,
-    { subscribeToStudents, logout, subscribe, unsubscribe, editUser },
+    {
+        subscribeToStudents, logout, subscribe, unsubscribe, editUser,
+        delStudent
+    },
 )(
     Dashboard );
