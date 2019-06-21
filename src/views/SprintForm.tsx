@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-    Row, Col, Form, Input, Button, Select, Radio, Icon, Checkbox
+    Row, Col, Form, Input, Button, Select, Radio, Icon, Checkbox, Card
 } from "antd";
 import {
     subscribeToStudents, subscribe, unsubscribe, subscribeToSprints
@@ -181,117 +181,128 @@ class SprintForm extends Component<IProps, IState> {
         const Option = Select.Option;
         const RadioGroup = Radio.Group;
         const TextArea = Input.TextArea;
-        return ( <Row style={ {
-            maxWidth: "800px", margin: " 20px auto", marginBottom: "6rem"
-        } }>
-            <Col span={ 24 }>
+        return (
+            
+            <Row style={ {
+                maxWidth: "800px", margin: " 20px auto", marginBottom: "6rem"
+            } }>
                 
-                <div className={ "sprint__top-content" }>
-                    <h1 className={ "mb-5 mt-5 text-center" }>
-                        Sprint Challenge Report
-                    </h1>
-                    <Link to="/">
-                        <Button type="primary">
-                            <Icon type="left"/>
-                            Go Back
-                        </Button>
-                    </Link>
-                
-                </div>
-                <Form>
-                    <Form.Item label={ "Sprint Challenge" }>
-                        <Select
-                            showSearch
-                            style={ { width: 200 } }
-                            placeholder="Sprint"
-                            optionFilterProp="children"
-                            onChange={ ( e ) => {
-                                this.onChangeSelect( e, "sprintChallenge" );
-                            } }
-                            value={ this.state.sprintChallenge }
-                            filterOption={ ( input,
-                                             option ) => typeof option.props.children ===
-                            "string" ? option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 : '' }
-                        >
-                            { this.props.sprints &&
-                            Object.values( this.props.sprints )
-                                .sort( ( a, b ) => a.week - b.week )
-                                .map( sprint => {
-                                    
-                                    return <Option key={ sprint.id }
-                                                   value={ sprint.name }>{ `${ sprint.name }` }</Option>;
-                                } ) }
-                            <Option
-                                value={ "Sprint" }>Sprint</Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item label={ "Student" }>
-                        <Select
-                            showSearch
-                            style={ { width: 200 } }
-                            placeholder="Student"
-                            optionFilterProp="children"
-                            onChange={ ( e ) => {
-                                
-                                this.onChangeSelect( e, "student" );
-                            } }
-                            value={ this.state.student }
-                            filterOption={ ( input,
-                                             option ) => typeof option.props.children ===
-                            "string" ? option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 : '' }
-                        >
-                            { this.props.students &&
-                            Object.values( this.props.students )
-                                .map( ( student ) => {
-                                    
-                                    return <Option key={ student.id }
-                                                   value={ `${ student.firstName.trim() }+${ student.lastName.trim() }` }>{ `${ student.firstName } ${ student.lastName }` }</Option>;
-                                } ) }
-                            <Option
-                                value={ "Student" }>Sprint</Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item label={ "3 words to describe the student." }>
-                        <Input type={ "text" }
-                               value={ this.state.threeWords }
-                               onChange={ this.onChange }
-                               name={ "threeWords" }
-                        />
-                    </Form.Item>
-                    <Form.Item label={ "Sprint Challenge Rating" }>
-                        <RadioGroup name={ "sprintChallengeRating" }
-                                    onChange={ this.onChange }
-                                    value={ this.state.sprintChallengeRating }>
-                            <Radio value={ 0 }>N/A</Radio>
-                            <Radio value={ 1 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                            <Radio value={ 2 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                            <Radio value={ 3 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                        </RadioGroup>
-                    </Form.Item>
-                    <Form.Item>
-                        <Checkbox onChange={ this.onChange }
-                                  checked={ this.state.reAttempt }>
-                            Re Attempt
-                        </Checkbox>
-                    </Form.Item>
-                    <Form.Item label={ "What did the student do well." }>
+                <Card>
+                    <Col span={ 24 }>
+                        
+                        <div className={ "sprint__top-content" }>
+                            <h1 className={ "mb-5 mt-5 text-center" }>
+                                Sprint Challenge Report
+                            </h1>
+                            <Link to="/">
+                                <Button type="primary">
+                                    <Icon type="left"/>
+                                    Go Back
+                                </Button>
+                            </Link>
+                        
+                        </div>
+                        <Form>
+                            <Form.Item label={ "Sprint Challenge" }>
+                                <Select
+                                    showSearch
+                                    style={ { width: 200 } }
+                                    placeholder="Sprint"
+                                    optionFilterProp="children"
+                                    onChange={ ( e ) => {
+                                        this.onChangeSelect( e,
+                                            "sprintChallenge" );
+                                    } }
+                                    value={ this.state.sprintChallenge }
+                                    filterOption={ ( input,
+                                                     option ) => typeof option.props.children ===
+                                    "string" ?
+                                        option.props.children.toLowerCase()
+                                            .indexOf( input.toLowerCase() ) >=
+                                        0 : '' }
+                                >
+                                    { this.props.sprints &&
+                                    Object.values( this.props.sprints )
+                                        .sort( ( a, b ) => a.week - b.week )
+                                        .map( sprint => {
+                                            
+                                            return <Option key={ sprint.id }
+                                                           value={ sprint.name }>{ `${ sprint.name }` }</Option>;
+                                        } ) }
+                                    <Option
+                                        value={ "Sprint" }>Sprint</Option>
+                                </Select>
+                            </Form.Item>
+                            <Form.Item label={ "Student" }>
+                                <Select
+                                    showSearch
+                                    style={ { width: 200 } }
+                                    placeholder="Student"
+                                    optionFilterProp="children"
+                                    onChange={ ( e ) => {
+                                        
+                                        this.onChangeSelect( e, "student" );
+                                    } }
+                                    value={ this.state.student }
+                                    filterOption={ ( input,
+                                                     option ) => typeof option.props.children ===
+                                    "string" ?
+                                        option.props.children.toLowerCase()
+                                            .indexOf( input.toLowerCase() ) >=
+                                        0 : '' }
+                                >
+                                    { this.props.students &&
+                                    Object.values( this.props.students )
+                                        .map( ( student ) => {
+                                            
+                                            return <Option key={ student.id }
+                                                           value={ `${ student.firstName.trim() }+${ student.lastName.trim() }` }>{ `${ student.firstName } ${ student.lastName }` }</Option>;
+                                        } ) }
+                                    <Option
+                                        value={ "Student" }>Sprint</Option>
+                                </Select>
+                            </Form.Item>
+                            <Form.Item
+                                label={ "3 words to describe the student." }>
+                                <Input type={ "text" }
+                                       value={ this.state.threeWords }
+                                       onChange={ this.onChange }
+                                       name={ "threeWords" }
+                                />
+                            </Form.Item>
+                            <Form.Item label={ "Sprint Challenge Rating" }>
+                                <RadioGroup name={ "sprintChallengeRating" }
+                                            onChange={ this.onChange }
+                                            value={ this.state.sprintChallengeRating }>
+                                    <Radio value={ 0 }>N/A</Radio>
+                                    <Radio value={ 1 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                    <Radio value={ 2 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                    <Radio value={ 3 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                </RadioGroup>
+                            </Form.Item>
+                            <Form.Item>
+                                <Checkbox onChange={ this.onChange }
+                                          checked={ this.state.reAttempt }>
+                                    Re Attempt
+                                </Checkbox>
+                            </Form.Item>
+                            <Form.Item
+                                label={ "What did the student do well." }>
                     <TextArea
                         rows={ 4 }
                         placeholder={ "Did well..." }
@@ -299,9 +310,9 @@ class SprintForm extends Component<IProps, IState> {
                         onChange={ this.onChange }
                         name={ "great" }
                     />
-                    </Form.Item>
-                    <Form.Item
-                        label={ "What can the student improve upon." }>
+                            </Form.Item>
+                            <Form.Item
+                                label={ "What can the student improve upon." }>
                     <TextArea
                         rows={ 4 }
                         placeholder={ "Improve..." }
@@ -309,9 +320,9 @@ class SprintForm extends Component<IProps, IState> {
                         onChange={ this.onChange }
                         name={ "improvements" }
                     />
-                    </Form.Item>
-                    <Form.Item
-                        label={ "Any questions you have for the student." }>
+                            </Form.Item>
+                            <Form.Item
+                                label={ "Any questions you have for the student." }>
                     <TextArea
                         placeholder={ "Questions..." }
                         value={ this.state.questions }
@@ -319,8 +330,8 @@ class SprintForm extends Component<IProps, IState> {
                         name={ "questions" }
                         rows={ 4 }
                     />
-                    </Form.Item>
-                    <Form.Item label={ "Any notes." }>
+                            </Form.Item>
+                            <Form.Item label={ "Any notes." }>
                     <TextArea
                         placeholder={ "..." }
                         value={ this.state.notes }
@@ -328,131 +339,132 @@ class SprintForm extends Component<IProps, IState> {
                         name={ "notes" }
                         rows={ 4 }
                     />
-                    </Form.Item>
-                    
-                    <Form.Item label={ "Sprint Rating" }>
-                        <RadioGroup name={ "sprintRating" }
-                                    onChange={ this.onChange }
-                                    value={ this.state.sprintRating }>
-                            <Radio value={ 1 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                            <Radio value={ 2 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                            <Radio value={ 3 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                        </RadioGroup>
-                    </Form.Item>
-                    
-                    <Form.Item label={ "General Rating" }>
-                        <RadioGroup name={ "generalRating" }
-                                    onChange={ this.onChange }
-                                    value={ this.state.generalRating }>
-                            <Radio value={ 1 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                            <Radio value={ 2 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                            <Radio value={ 3 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                        </RadioGroup>
-                    </Form.Item>
-                    <Form.Item label={ "Completed 1 on 1" }>
-                        <Checkbox
-                            checked={ this.state.completedOneOnOne }
-                            onChange={ () => this.setState(
-                                state => ( { completedOneOnOne: !state.completedOneOnOne } ) ) }
-                        />
-                    </Form.Item>
-                    
-                    <Form.Item label={ "Post Review Rating" }>
-                        <RadioGroup name={ "postReviewSprintRating" }
-                                    onChange={ this.onChange }
-                                    value={ this.state.postReviewSprintRating }>
-                            <Radio value={ 0 }> N/A </Radio>
-                            <Radio value={ 1 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                            <Radio value={ 2 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                            <Radio value={ 3 }>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                                <Icon type="star" theme={ "twoTone" }
-                                      twoToneColor={ "#135200" }/>
-                            </Radio>
-                        </RadioGroup>
-                    </Form.Item>
-                    <Form.Item label={ "Students Technical Ability" }>
-                        <RadioGroup name={ "technicalAbility" }
-                                    onChange={ this.onChange }
-                                    value={ this.state.technicalAbility }>
-                            { this.state.numberArray.map( number => {
-                                return <Radio
-                                    value={ number }>{ number }</Radio>
-                            } ) }
-                        </RadioGroup>
-                    </Form.Item>
-                    <Form.Item label={ "Collaboration Ability" }>
-                        <RadioGroup name={ "collaborationAbility" }
-                                    onChange={ this.onChange }
-                                    value={ this.state.collaborationAbility }>
-                            { this.state.numberArray.map( number => {
-                                return <Radio
-                                    value={ number }>{ number }</Radio>
-                            } ) }
-                        </RadioGroup>
-                    </Form.Item>
-                    <Form.Item label={ "Students Drive" }>
-                        <RadioGroup name={ "drive" }
-                                    onChange={ this.onChange }
-                                    value={ this.state.drive }>
-                            { this.state.numberArray.map( number => {
-                                return <Radio
-                                    value={ number }>{ number }</Radio>
-                            } ) }
-                        </RadioGroup>
-                    </Form.Item>
-                    <Form.Item label={ "Students Teachability" }>
-                        <RadioGroup name={ "teachability" }
-                                    onChange={ this.onChange }
-                                    value={ this.state.teachability }>
-                            { this.state.numberArray.map( number => {
-                                return <Radio
-                                    value={ number }>{ number }</Radio>
-                            } ) }
-                        </RadioGroup>
-                    </Form.Item>
-                    <Form.Item label={ "Anything else we should know about." }>
+                            </Form.Item>
+                            
+                            <Form.Item label={ "Sprint Rating" }>
+                                <RadioGroup name={ "sprintRating" }
+                                            onChange={ this.onChange }
+                                            value={ this.state.sprintRating }>
+                                    <Radio value={ 1 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                    <Radio value={ 2 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                    <Radio value={ 3 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                </RadioGroup>
+                            </Form.Item>
+                            
+                            <Form.Item label={ "General Rating" }>
+                                <RadioGroup name={ "generalRating" }
+                                            onChange={ this.onChange }
+                                            value={ this.state.generalRating }>
+                                    <Radio value={ 1 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                    <Radio value={ 2 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                    <Radio value={ 3 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                </RadioGroup>
+                            </Form.Item>
+                            <Form.Item label={ "Completed 1 on 1" }>
+                                <Checkbox
+                                    checked={ this.state.completedOneOnOne }
+                                    onChange={ () => this.setState(
+                                        state => ( { completedOneOnOne: !state.completedOneOnOne } ) ) }
+                                />
+                            </Form.Item>
+                            
+                            <Form.Item label={ "Post Review Rating" }>
+                                <RadioGroup name={ "postReviewSprintRating" }
+                                            onChange={ this.onChange }
+                                            value={ this.state.postReviewSprintRating }>
+                                    <Radio value={ 0 }> N/A </Radio>
+                                    <Radio value={ 1 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                    <Radio value={ 2 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                    <Radio value={ 3 }>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                        <Icon type="star" theme={ "twoTone" }
+                                              twoToneColor={ "#135200" }/>
+                                    </Radio>
+                                </RadioGroup>
+                            </Form.Item>
+                            <Form.Item label={ "Students Technical Ability" }>
+                                <RadioGroup name={ "technicalAbility" }
+                                            onChange={ this.onChange }
+                                            value={ this.state.technicalAbility }>
+                                    { this.state.numberArray.map( number => {
+                                        return <Radio
+                                            value={ number }>{ number }</Radio>
+                                    } ) }
+                                </RadioGroup>
+                            </Form.Item>
+                            <Form.Item label={ "Collaboration Ability" }>
+                                <RadioGroup name={ "collaborationAbility" }
+                                            onChange={ this.onChange }
+                                            value={ this.state.collaborationAbility }>
+                                    { this.state.numberArray.map( number => {
+                                        return <Radio
+                                            value={ number }>{ number }</Radio>
+                                    } ) }
+                                </RadioGroup>
+                            </Form.Item>
+                            <Form.Item label={ "Students Drive" }>
+                                <RadioGroup name={ "drive" }
+                                            onChange={ this.onChange }
+                                            value={ this.state.drive }>
+                                    { this.state.numberArray.map( number => {
+                                        return <Radio
+                                            value={ number }>{ number }</Radio>
+                                    } ) }
+                                </RadioGroup>
+                            </Form.Item>
+                            <Form.Item label={ "Students Teachability" }>
+                                <RadioGroup name={ "teachability" }
+                                            onChange={ this.onChange }
+                                            value={ this.state.teachability }>
+                                    { this.state.numberArray.map( number => {
+                                        return <Radio
+                                            value={ number }>{ number }</Radio>
+                                    } ) }
+                                </RadioGroup>
+                            </Form.Item>
+                            <Form.Item
+                                label={ "Anything else we should know about." }>
                     <TextArea
                         rows={ 4 }
                         placeholder={ "..." }
@@ -460,23 +472,24 @@ class SprintForm extends Component<IProps, IState> {
                         onChange={ this.onChange }
                         name={ "other" }
                     />
-                    </Form.Item>
-                </Form>
-                <div className="d-flex justify-content-center">
-                    <a className="btn btn-success mb-5 mt-4"
-                       target="_blank"
-                       rel={ "noopener noreferrer" }
-                       href={ this.getSubmissionUrl() }
-                    >
-                        <Button type={ "primary" } size={ "large" }>
-                            <Icon type={ "download" }/>
-                            Submit Sprint Retrospect
-                        </Button>
-                    </a>
-                </div>
-            
-            </Col>
-        </Row> );
+                            </Form.Item>
+                        </Form>
+                        <div className="d-flex justify-content-center">
+                            <a className="btn btn-success mb-5 mt-4"
+                               target="_blank"
+                               rel={ "noopener noreferrer" }
+                               href={ this.getSubmissionUrl() }
+                            >
+                                <Button type={ "primary" } size={ "large" }>
+                                    <Icon type={ "download" }/>
+                                    Submit Sprint Retrospect
+                                </Button>
+                            </a>
+                        </div>
+                    
+                    </Col>
+                </Card>
+            </Row> );
     }
 }
 
@@ -505,4 +518,4 @@ interface IProps {
 export default connect( mstp, {
     subscribeToStudents, subscribe, unsubscribe,
     subscribeToSprints
-})( SprintForm );
+} )( SprintForm );
