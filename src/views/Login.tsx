@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import LoginImage from "../assets/login.svg";
 import "../assets/Login.scss";
 import { history } from "history";
+import { IUser } from "../types/UserInterface";
 
 interface IState {
     isLoading: boolean;
@@ -27,6 +28,13 @@ class Login extends React.Component<IProps, IState> {
         firebase.auth().onAuthStateChanged( user => {
         
         } );
+    }
+    
+    componentDidUpdate( prevProps: Readonly<IProps>,
+                        prevState: Readonly<IState>, snapshot?: any ): void {
+        if ( this.props.user ) {
+            this.props.history.push( '/' );
+        }
     }
     
     updateHandler = e => {
@@ -174,6 +182,7 @@ class Login extends React.Component<IProps, IState> {
 
 const mapStateToProps = ( { auth } ) => ( {
     isLoading: auth.isLoading, newUser: auth.newUser, uid: auth.uid,
+    user: auth.user,
 } );
 
 interface IProps {
@@ -183,6 +192,7 @@ interface IProps {
     signIn: typeof signIn;
     createUser: typeof createUser;
     history: history;
+    user: IUser;
 }
 
 export default connect( mapStateToProps, { signIn, createUser }, )( Login );

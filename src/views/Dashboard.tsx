@@ -7,7 +7,8 @@ import {
 } from "antd";
 import axios from "axios";
 import {
-    subscribeToStudents, logout, subscribe, unsubscribe, editUser, delStudent
+    subscribeToStudents, logout, subscribe, unsubscribe, editUser, delStudent,
+    checkAuth
 } from "../actions/index";
 import LambdaLogo from "../assets/logo.png";
 import { IStudent } from "../types/StudentInterface";
@@ -24,6 +25,7 @@ interface IState {
     cohort: string,
     modalOpen: boolean,
     student: null | IStudent;
+    subscribed: boolean;
 }
 
 class Dashboard extends React.Component<IProps, IState> {
@@ -33,7 +35,8 @@ class Dashboard extends React.Component<IProps, IState> {
         lastName: '',
         cohort: '',
         modalOpen: false,
-        student: null
+        student: null,
+        subscribed: false,
     };
     
     
@@ -51,10 +54,8 @@ class Dashboard extends React.Component<IProps, IState> {
     
     componentDidUpdate( prevProps: Readonly<IProps>,
                         prevState: Readonly<IState> ): void {
-        
-        if ( ( !this.props.user || this.props.user.firstName === "" ||
-            this.props.user.lastName === '' || this.props.user.cohort ===
-            '' ) && !this.state.modalOpen ) {
+        debugger;
+        if ( this.props.getUserFailed ) {
             this.setState( state => ( { ...state, modalOpen: true } ) );
         }
         
@@ -64,16 +65,18 @@ class Dashboard extends React.Component<IProps, IState> {
                 ...state, firstName: '', lastName: '', cohort: ''
             } ) )
         }
+        
+        if ( !this.state.subscribed && this.props.uid ) {
+            this.setState( { subscribed: true } );
+            this.props.subscribe( "Students",
+                this.props.subscribeToStudents( this.props.uid ) );
+        }
     }
     
     componentDidMount() {
         
-        if ( !this.props.uid ) {
-            return this.props.history.push( "/start" );
-        }
         this.getJoke();
-        this.props.subscribe( "Students",
-            this.props.subscribeToStudents( this.props.uid ) );
+        
     }
     
     componentWillUnmount() {
@@ -310,6 +313,7 @@ const mapStateToProps = ( { students, auth, subscriptions } ) => ( {
     isLoading: students.isLoading,
     displayName: auth.displayName,
     subscriptions: subscriptions.subscriptions,
+    getUserFailed: auth.getUserFailed,
 } );
 
 interface IProps {
@@ -326,12 +330,14 @@ interface IProps {
     history: history;
     editUser: typeof editUser;
     delStudent: typeof delStudent;
+    checkAuth: typeof checkAuth;
+    getUserFailed: boolean;
 }
 
 export default connect( mapStateToProps,
     {
         subscribeToStudents, logout, subscribe, unsubscribe, editUser,
-        delStudent
+        delStudent, checkAuth
     },
 )(
     Dashboard );

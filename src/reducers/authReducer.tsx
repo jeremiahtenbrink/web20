@@ -11,13 +11,14 @@ import { IAction } from "../types/ActionInterface";
 const initialState: IAuthReducer = {
     isLoading: false,
     gettingUser: false,
+    getUserFailed: false,
     editingUser: false,
     uid: null,
     displayName: null,
     newUser: false,
     token: "",
     error: "",
-    user: {}
+    user: null,
 };
 
 export const authReducer = ( state: IAuthReducer = initialState,
@@ -55,7 +56,8 @@ export const authReducer = ( state: IAuthReducer = initialState,
             return { ...state, isLoading: true, error: "" };
         case CREATE_USER_SUCCESS:
             return {
-                ...state, isLoading: false, error: "", user: action.payload
+                ...state, isLoading: false, error: "", user: action.payload,
+                getUserFailed: false
             };
         case LOGOUT_INIT:
             return { ...state, isLoading: true, error: "" };
@@ -73,10 +75,14 @@ export const authReducer = ( state: IAuthReducer = initialState,
         case GET_USER_INIT:
             return { ...state, gettingUser: true, error: "" };
         case GET_USER_FAILED:
-            return { ...state, gettingUser: false, error: action.payload };
+            return {
+                ...state, gettingUser: false, error: action.payload,
+                getUserFailed: true
+            };
         case GET_USER_SUCCESS:
             return {
-                ...state, gettingUser: false, error: "", user: action.payload
+                ...state, gettingUser: false, error: "", user: action.payload,
+                getUserFailed: false,
             };
         case EDIT_USER_INIT:
             return { ...state, editingUser: true };

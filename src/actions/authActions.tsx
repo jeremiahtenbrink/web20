@@ -14,20 +14,27 @@ export const AUTH_INIT = "AUTH_INIT";
 export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAILED = "AUTH_FAILED";
 
-export const checkAuth = () => dispatch => {
+export const checkAuth = ( num = 0 ) => dispatch => {
     
     dispatch( { type: AUTH_INIT } );
+    
+    const auth = firebase.auth();
     const { currentUser } = firebase.auth();
     
     if ( currentUser ) {
+        debugger;
+        num = 0;
         getUser( currentUser.uid )( dispatch );
         dispatch( {
             type: AUTH_SUCCESS, payload: currentUser,
         } );
-    } else {
-        dispatch( { type: AUTH_FAILED } );
-        dispatch( push( "/start" ) );
     }
+    
+};
+
+export const signInFailed = () => dispatch => {
+    dispatch( action( AUTH_FAILED ) );
+    dispatch( push( '/start' ) )
 };
 
 export const SIGNIN_INIT = "SIGNIN_INIT";
@@ -151,8 +158,8 @@ export const getUser = id => dispatch => {
             if ( res.exists ) {
                 let data = res.data();
                 dispatch( { type: GET_USER_SUCCESS, payload: data } );
-                dispatch( push( '/' ) );
             } else {
+                debugger;
                 dispatch( push( '/start' ) );
             }
             

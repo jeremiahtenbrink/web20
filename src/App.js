@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import { checkAuth } from "./actions";
+import { checkAuth, signInFailed } from "./actions";
 import firebase from "./firebase/firebase";
 import { connect } from "react-redux";
 import { Layout } from "antd";
@@ -16,9 +16,16 @@ import "./App.scss";
 class App extends React.Component{
     
     componentDidMount(){
-        
+        debugger;
         this.unregisterAuthObserver = firebase.auth()
-            .onAuthStateChanged( () => this.props.checkAuth() );
+            .onAuthStateChanged( ( user ) => {
+                if( user ){
+                    this.props.checkAuth();
+                }else{
+                    this.props.signInFailed();
+                }
+                
+            } );
     }
     
     componentWillUnmount(){
@@ -75,4 +82,4 @@ class App extends React.Component{
 
 const mapStateToProps = () => ( {} );
 
-export default connect( mapStateToProps, { checkAuth } )( App );
+export default connect( mapStateToProps, { checkAuth, signInFailed } )( App );
