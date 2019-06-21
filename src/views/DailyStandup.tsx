@@ -16,7 +16,7 @@ import { ILesson } from "../types/LessonInterface";
 import { IInstructor } from "../types/InstructorInterface";
 
 interface IState {
-    students: { [ id: string ]: IStudent };
+    students: { [ id: string ]: IStudent } | {};
     subscribedToStudents: boolean;
     loaded: boolean,
     module: string,
@@ -67,6 +67,7 @@ class DailyStandup extends Component<IProps, IState> {
     }
     
     subscribeToAutoFillData = () => {
+        
         this.props.subscribe( "Students",
             this.props.subscribeToStudents( this.props.uid )
         );
@@ -168,16 +169,16 @@ class DailyStandup extends Component<IProps, IState> {
                 let absentString = "&prefill_Students+(Absent)=";
                 
                 
-                Object.values( this.state.students ).forEach(( student ) => {
-                    {/*
-                //@ts-ignore */}
+                Object.values( this.state.students )
+                //@ts-ignore
+                    .forEach( ( student: IStudent ) => {
                         if ( !student.isPresent ) {
                             if ( afterFirst ) {
                                 absentString += ",";
                             }
-                            {/*
-                            //@ts-ignore */}
-                            absentString +=`${ student.firstName.trim() }+${ student.lastName.trim() }`;
+                            // @ts-ignore
+                            absentString +=
+                                `${ student.firstName.trim() }+${ student.lastName.trim() }`;
                             if ( !afterFirst ) {
                                 afterFirst = true;
                             }
@@ -512,7 +513,7 @@ interface IProps {
     instructors: { [ id: string ]: IInstructor };
     flexTas: { [ id: string ]: ITa };
     uid: string;
-    subscribeToStudents: typeof  subscribeToStudents;
+    subscribeToStudents: typeof subscribeToStudents;
     subscribeToInstructors: typeof subscribeToInstructors;
     subscribe: typeof subscribe;
     unsubscribe: typeof unsubscribe;

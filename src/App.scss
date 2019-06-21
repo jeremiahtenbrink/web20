@@ -37,6 +37,10 @@
 
 }
 
+.space-around {
+  justify-content: space-around;
+}
+
 .center-vert {
   align-items: center;
 }
@@ -44,7 +48,6 @@
 .baseline {
   align-items: baseline;
 }
-
 
 .mg {
 
@@ -87,6 +90,20 @@
 
     &-lg {
       margin-top: 2rem;
+    }
+  }
+
+  &-bottom {
+    &-sm {
+      margin-bottom: .5rem;
+    }
+
+    &-md {
+      margin-bottom: 1rem;
+    }
+
+    &-lg {
+      margin-bottom: 2rem;
     }
   }
 }

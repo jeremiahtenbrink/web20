@@ -11,6 +11,7 @@ export const FETCH_STUDENTS_FAILED = "FETCH_STUDENTS_FAILED";
 export const subscribeToStudents = id => dispatch => {
     
     dispatch( action( FETCH_STUDENTS_INIT ) );
+    
     if ( id ) {
         return store
             .collection( "students" )

@@ -55,6 +55,7 @@ class Student extends Component<IProps, IState> {
     
     componentDidMount() {
         if ( this.props.uid ) {
+            
             this.props.subscribe( "Students",
                 this.props.subscribeToStudents( this.props.uid )
             );
@@ -79,6 +80,7 @@ class Student extends Component<IProps, IState> {
     
     componentDidUpdate( prevProps, prevState, snapshot ) {
         if ( this.props.uid && !this.state.subscribedToStudents ) {
+            
             this.props.subscribe( "Students",
                 this.props.subscribeToStudents( this.props.uid )
             );

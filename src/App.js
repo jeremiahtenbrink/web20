@@ -16,7 +16,7 @@ import "./App.scss";
 class App extends React.Component{
     
     componentDidMount(){
-        debugger;
+        
         this.unregisterAuthObserver = firebase.auth()
             .onAuthStateChanged( ( user ) => {
                 if( user ){

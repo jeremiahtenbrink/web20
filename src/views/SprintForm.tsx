@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import {
     Row, Col, Form, Input, Button, Select, Radio, Icon, Checkbox
 } from "antd";
+import {
+    subscribeToStudents, subscribe, unsubscribe, subscribeToSprints
+} from '../actions/index'
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import "./sprint.scss";
@@ -29,6 +32,7 @@ interface IState {
     teachability: number;
     other: string;
     numberArray: number[];
+    subscribed: boolean;
 }
 
 class SprintForm extends Component<IProps, IState> {
@@ -52,8 +56,26 @@ class SprintForm extends Component<IProps, IState> {
         drive: 5,
         teachability: 5,
         other: "",
-        numberArray: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+        numberArray: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
+        subscribed: false,
     };
+    
+    componentDidUpdate( prevProps: Readonly<IProps>,
+                        prevState: Readonly<IState>, snapshot?: any ): void {
+        
+        if ( !this.state.subscribed && this.props.uid ) {
+            
+            this.setState( { subscribed: true } );
+            this.props.subscribe( "students",
+                this.props.subscribeToStudents( this.props.uid ) );
+            this.props.subscribe( "sprints", this.props.subscribeToSprints() );
+        }
+    }
+    
+    componentWillUnmount(): void {
+        this.props.unsubscribe( 'students' );
+        this.props.unsubscribe( 'sprints' );
+    }
     
     onChange = e => {
         // @ts-ignore
@@ -159,7 +181,9 @@ class SprintForm extends Component<IProps, IState> {
         const Option = Select.Option;
         const RadioGroup = Radio.Group;
         const TextArea = Input.TextArea;
-        return ( <Row style={ { maxWidth: "800px", margin: "20px auto" } }>
+        return ( <Row style={ {
+            maxWidth: "800px", margin: " 20px auto", marginBottom: "6rem"
+        } }>
             <Col span={ 24 }>
                 
                 <div className={ "sprint__top-content" }>
@@ -389,95 +413,44 @@ class SprintForm extends Component<IProps, IState> {
                         </RadioGroup>
                     </Form.Item>
                     <Form.Item label={ "Students Technical Ability" }>
-                        <Select
-                            showSearch
-                            style={ { width: 200 } }
-                            placeholder="Teachability"
-                            optionFilterProp="children"
-                            onChange={ ( e ) => {
-                                this.onChangeSelect( e, "technicalAbility" );
-                            } }
-                            value={ this.state.technicalAbility }
-                            filterOption={ ( input,
-                                             option ) => typeof option.props.children ===
-                            "string" ? option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 : '' }
-                        >
+                        <RadioGroup name={ "technicalAbility" }
+                                    onChange={ this.onChange }
+                                    value={ this.state.technicalAbility }>
                             { this.state.numberArray.map( number => {
-                                
-                                return <Option key={ number }
-                                               value={ number }>{ number }</Option>;
+                                return <Radio
+                                    value={ number }>{ number }</Radio>
                             } ) }
-                        </Select>
+                        </RadioGroup>
                     </Form.Item>
                     <Form.Item label={ "Collaboration Ability" }>
-                        <Select
-                            showSearch
-                            style={ { width: 200 } }
-                            placeholder="Collaboration Ability"
-                            optionFilterProp="children"
-                            onChange={ ( e ) => {
-                                this.onChangeSelect( e,
-                                    "collaborationAbility"
-                                );
-                            } }
-                            value={ this.state.collaborationAbility }
-                            filterOption={ ( input,
-                                             option ) => typeof option.props.children ===
-                            "string" ? option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 : '' }
-                        >
+                        <RadioGroup name={ "collaborationAbility" }
+                                    onChange={ this.onChange }
+                                    value={ this.state.collaborationAbility }>
                             { this.state.numberArray.map( number => {
-                                
-                                return <Option key={ number }
-                                               value={ number }>{ number }</Option>;
+                                return <Radio
+                                    value={ number }>{ number }</Radio>
                             } ) }
-                        </Select>
+                        </RadioGroup>
                     </Form.Item>
                     <Form.Item label={ "Students Drive" }>
-                        <Select
-                            showSearch
-                            style={ { width: 200 } }
-                            placeholder="Student Drive"
-                            optionFilterProp="children"
-                            onChange={ ( e ) => {
-                                this.onChangeSelect( e, "drive" );
-                            } }
-                            value={ this.state.drive }
-                            filterOption={ ( input,
-                                             option ) => typeof option.props.children ===
-                            "string" ? option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 : '' }
-                        >
-                            
+                        <RadioGroup name={ "drive" }
+                                    onChange={ this.onChange }
+                                    value={ this.state.drive }>
                             { this.state.numberArray.map( number => {
-                                
-                                return <Option key={ number }
-                                               value={ number }>{ number }</Option>;
+                                return <Radio
+                                    value={ number }>{ number }</Radio>
                             } ) }
-                        </Select>
+                        </RadioGroup>
                     </Form.Item>
                     <Form.Item label={ "Students Teachability" }>
-                        <Select
-                            showSearch
-                            style={ { width: 200 } }
-                            placeholder="Student Teachability"
-                            optionFilterProp="children"
-                            onChange={ ( e ) => {
-                                this.onChangeSelect( e, "teachability" );
-                            } }
-                            value={ this.state.teachability }
-                            filterOption={ ( input,
-                                             option ) => typeof option.props.children ===
-                            "string" ? option.props.children.toLowerCase()
-                                .indexOf( input.toLowerCase() ) >= 0 : '' }
-                        >
+                        <RadioGroup name={ "teachability" }
+                                    onChange={ this.onChange }
+                                    value={ this.state.teachability }>
                             { this.state.numberArray.map( number => {
-                                
-                                return <Option key={ number }
-                                               value={ number }>{ number }</Option>;
+                                return <Radio
+                                    value={ number }>{ number }</Radio>
                             } ) }
-                        </Select>
+                        </RadioGroup>
                     </Form.Item>
                     <Form.Item label={ "Anything else we should know about." }>
                     <TextArea
@@ -495,7 +468,7 @@ class SprintForm extends Component<IProps, IState> {
                        rel={ "noopener noreferrer" }
                        href={ this.getSubmissionUrl() }
                     >
-                        <Button>
+                        <Button type={ "primary" } size={ "large" }>
                             <Icon type={ "download" }/>
                             Submit Sprint Retrospect
                         </Button>
@@ -513,6 +486,7 @@ const mstp = state => {
         students: state.students.students,
         user: state.auth.user,
         sprints: state.sprints.sprints,
+        uid: state.auth.uid,
     };
 };
 
@@ -520,6 +494,15 @@ interface IProps {
     students: { [ id: string ]: IStudent };
     user: IUser;
     sprints: ISprints;
+    subscribeToStudents: typeof subscribeToStudents;
+    subscribeToSprints: typeof subscribeToSprints;
+    unsubscribe: typeof unsubscribe;
+    subscribe: typeof subscribe;
+    uid: string;
+    
 }
 
-export default connect( mstp )( SprintForm );
+export default connect( mstp, {
+    subscribeToStudents, subscribe, unsubscribe,
+    subscribeToSprints
+})( SprintForm );

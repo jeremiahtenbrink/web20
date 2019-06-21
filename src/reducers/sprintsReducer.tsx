@@ -47,7 +47,7 @@ export const sprintsReducer = ( state = initialState,
                 sprints: { ...state.sprints, ...action.payload }
             };
         case GET_SPRINT_FAIL:
-            debugger;
+            
             let keys = Object.keys( state.sprints );
             for ( let i = 0; i < keys.length; i++ ) {
                 let sprint = state.sprints[ keys[ i ] ];

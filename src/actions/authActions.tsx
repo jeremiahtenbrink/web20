@@ -22,7 +22,7 @@ export const checkAuth = ( num = 0 ) => dispatch => {
     const { currentUser } = firebase.auth();
     
     if ( currentUser ) {
-        debugger;
+        
         num = 0;
         getUser( currentUser.uid )( dispatch );
         dispatch( {
@@ -159,7 +159,7 @@ export const getUser = id => dispatch => {
                 let data = res.data();
                 dispatch( { type: GET_USER_SUCCESS, payload: data } );
             } else {
-                debugger;
+                
                 dispatch( push( '/start' ) );
             }
             

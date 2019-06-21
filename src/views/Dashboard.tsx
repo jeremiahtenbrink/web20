@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
     Card, Icon, Skeleton, Avatar, Table, Col, Popover, Row, Modal, Form,
-    Popconfirm
+    Popconfirm, Button
 } from "antd";
 import axios from "axios";
 import {
@@ -54,7 +54,7 @@ class Dashboard extends React.Component<IProps, IState> {
     
     componentDidUpdate( prevProps: Readonly<IProps>,
                         prevState: Readonly<IState> ): void {
-        debugger;
+        
         if ( this.props.getUserFailed ) {
             this.setState( state => ( { ...state, modalOpen: true } ) );
         }
@@ -67,6 +67,7 @@ class Dashboard extends React.Component<IProps, IState> {
         }
         
         if ( !this.state.subscribed && this.props.uid ) {
+            
             this.setState( { subscribed: true } );
             this.props.subscribe( "Students",
                 this.props.subscribeToStudents( this.props.uid ) );
@@ -149,7 +150,7 @@ class Dashboard extends React.Component<IProps, IState> {
                     {/*
                     //@ts-ignore */ }
                     <Col span={ 8 } align={ "center" }
-                         className={ "color-grey hover-blue" }
+                         className={ "color-grey hover-blue pointer" }
                          onClick={ () => this.props.history.push(
                              "/attendance" ) }
                     >
@@ -163,7 +164,7 @@ class Dashboard extends React.Component<IProps, IState> {
                     {/*
                     //@ts-ignore */ }
                     <Col span={ 8 } align={ "center" }
-                         className={ "color-grey hover-blue" }
+                         className={ "color-grey hover-blue pointer" }
                          onClick={ () => this.props.history.push( "/standup" ) }
                     >
                         <Icon type="profile"
@@ -175,11 +176,10 @@ class Dashboard extends React.Component<IProps, IState> {
                     {/*
                     //@ts-ignore */ }
                     <Col span={ 8 } align={ "center" }
-                         className={ "color-grey hover-blue" }
+                         className={ "color-grey hover-blue pointer" }
                          onClick={ () => this.props.history.push( "/sprint" ) }
                     >
                         <Icon type="project"
-                        
                               className={ "font-32" }
                         />
                     </Col>
@@ -213,15 +213,15 @@ class Dashboard extends React.Component<IProps, IState> {
                         title="Action"
                         key="action"
                         render={ student => (
-                            <div className={ "inline center-vert" }>
+                            <div className={ "inline center-vert" +
+                            " space-around" }>
                                 <Link to={ `/student/${ student.id }` }>
-                                    <div className={ "inline pointer center" }>
-                                        <Popover content={ "User Dashboard" }>
-                                            <Icon type={ "user" }
-                                                  style={ { fontSize: "20px" } }
-                                            />
-                                        </Popover>
-                                    </div>
+                                    <Popover
+                                        content={ "User Dashboard" }>
+                                        <Icon type={ "user" }
+                                              style={ { fontSize: "20px" } }
+                                        />
+                                    </Popover>
                                 </Link>
                                 <span className={ "color-blue" }>
                                     <Popover content={ <p>Edit Student</p> }>

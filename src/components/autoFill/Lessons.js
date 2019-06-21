@@ -180,7 +180,7 @@ class Lessons extends Component{
                 .sort( ( a, b ) => a.week - b.week )
                 .filter( sprint => sprint.course === this.state.selectedCourse )
                 .map( sprint => {
-                    debugger;
+                    
                     return (
                         
                         <div key={ sprint.id }>
