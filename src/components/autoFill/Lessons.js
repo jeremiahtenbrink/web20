@@ -5,7 +5,7 @@ import ModalComponent from "../Modal";
 import InputComponent from "../InputComponent";
 import {
     addSprint, updateSprint, changeSelectedSprint, subscribeToSprints,
-    subscribe, unsubscribe
+    subscribe, unsubscribe, deleteSprint
 } from "../../actions/index";
 import Sprint from "./Sprint";
 import Courses from "./Courses";
@@ -164,7 +164,6 @@ class Lessons extends Component{
     };
     
     render(){
-        
         return ( <>
             
             <Courses changeCourseSelect={ this.onChange }
@@ -181,7 +180,7 @@ class Lessons extends Component{
                 .sort( ( a, b ) => a.week - b.week )
                 .filter( sprint => sprint.course === this.state.selectedCourse )
                 .map( sprint => {
-                    
+                    debugger;
                     return (
                         
                         <div key={ sprint.id }>
@@ -193,6 +192,17 @@ class Lessons extends Component{
                                         onClick={ () => this.setSprintModal(
                                             sprint ) }>
                                         <Icon type={ "edit" }
+                                              style={ { fontSize: "20px" } }/>
+                                    </Button>
+                                </Popover>
+                                <Popover placement={ "leftBottom" }
+                                         content={
+                                             <p>{ `Delete ${ sprint.name }` }</p> }>
+                                    <Button
+                                        type={ "danger" }
+                                        onClick={ () => this.props.deleteSprint(
+                                            sprint ) }>
+                                        <Icon type={ "delete" }
                                               style={ { fontSize: "20px" } }/>
                                     </Button>
                                 </Popover>
@@ -219,7 +229,6 @@ class Lessons extends Component{
 }
 
 const mstp = state => {
-    
     return {
         sprints: state.sprints.sprints,
         selectedSprint: state.sprints.selectedSprint,
@@ -233,5 +242,6 @@ export default connect( mstp, {
     updateSprint,
     subscribeToSprints,
     subscribe,
-    unsubscribe
+    unsubscribe,
+    deleteSprint
 } )( Lessons );

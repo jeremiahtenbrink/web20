@@ -167,7 +167,6 @@ export const EDIT_USER_SUCCESS = "EDIT_USER_SUCCESS";
 export const EDIT_USER_FAIL = "EDIT_USER_FAIL";
 
 export const editUser = user => dispatch => {
-    debugger;
     dispatch( { type: EDIT_USER_INIT } );
     store
         .collection( `users` )

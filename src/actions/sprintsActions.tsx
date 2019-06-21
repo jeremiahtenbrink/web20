@@ -83,10 +83,11 @@ export const GET_SPRINT_FAIL = "GET_SPRINT_FAIL";
 export const subscribeToSprints = () => dispatch => {
     dispatch( { type: GET_SPRINT_INIT } );
     dispatch( { type: GET_COURSES_INIT } );
-    return store.collection( "autoFill" )
+    store.collection( "autoFill" )
         .doc( "web" )
         .collection( "courses" )
         .onSnapshot( snapshot => {
+            
             let courses = {};
             if ( !snapshot.empty ) {
                 snapshot.docs.forEach( course => {
@@ -95,16 +96,16 @@ export const subscribeToSprints = () => dispatch => {
                     // @ts-ignore
                     courses[ courseData.id ] = courseData;
                     
-                    store.collection( "autoFill" )
+                    return store.collection( "autoFill" )
                         .doc( "web" )
                         .collection( "courses" )
                         .doc( course.id )
                         .collection( "sprints" )
-                        .get()
-                        .then( sprintsFDB => {
-                            if ( !sprintsFDB.empty ) {
+                        .onSnapshot( snapshot => {
+                            if ( !snapshot.empty ) {
                                 let sprintsFromDb = {};
-                                sprintsFDB.docs.forEach( sprint => {
+                                snapshot.docs.forEach( sprint => {
+                                    
                                     let sprintData = sprint.data();
                                     sprintData.id = sprint.id;
                                     sprintData.course = courseData.id;
@@ -115,8 +116,18 @@ export const subscribeToSprints = () => dispatch => {
                                     type: GET_SPRINT_SUCCESS,
                                     payload: sprintsFromDb
                                 } );
+                            } else {
+                                dispatch( action( GET_SPRINT_FAIL,
+                                    {
+                                        id: course.id, message: "Empty Sprints"
+                                    } )
+                                )
                             }
-                        } );
+                            
+                        }, err => dispatch(
+                            action( GET_SPRINT_FAIL,
+                                { id: course.id, message: err.message } ) ) );
+                    
                 } );
             }
             

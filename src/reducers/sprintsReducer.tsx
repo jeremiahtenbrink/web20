@@ -39,7 +39,7 @@ export const sprintsReducer = ( state = initialState,
         //SPRINTS GET ---------------------------------------------------
         
         case GET_SPRINT_INIT:
-            return { ...state, gettingSprints: true };
+            return { ...state, gettingSprints: true, sprints: {} };
         case GET_SPRINT_SUCCESS:
             return {
                 ...state,
@@ -47,7 +47,18 @@ export const sprintsReducer = ( state = initialState,
                 sprints: { ...state.sprints, ...action.payload }
             };
         case GET_SPRINT_FAIL:
-            return { ...state, gettingSprints: false, error: action.payload };
+            debugger;
+            let keys = Object.keys( state.sprints );
+            for ( let i = 0; i < keys.length; i++ ) {
+                let sprint = state.sprints[ keys[ i ] ];
+                if ( sprint.course === action.payload.id ) {
+                    delete state.sprints[ keys[ i ] ];
+                }
+            }
+            return {
+                ...state, gettingSprints: false, error: action.payload.message,
+                sprints: { ...state.sprints }
+            };
         
         //SPRINTS ADD -----------------------------------------------
         

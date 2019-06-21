@@ -22,7 +22,6 @@ const initialState: IAuthReducer = {
 
 export const authReducer = ( state: IAuthReducer = initialState,
                              action: IAction ): IAuthReducer => {
-    debugger;
     switch ( action.type ) {
         case AUTH_INIT:
             return { ...state, isLoading: true };

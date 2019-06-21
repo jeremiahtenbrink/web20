@@ -118,6 +118,7 @@ class Sprint extends Component{
                         <Icon onClick={ () => this.openModalEdit( lesson ) }
                               type="edit"/>
                     </Popover>
+                    
                     <Popconfirm
                         title={ `Are you sure delete the ${ lesson.name } lesson?
                 Deleting this lesson will remove it from the db.\n Adding a course with the same name will not move the completed course on the students profile. May I suggest you edit this lesson instead.` }
