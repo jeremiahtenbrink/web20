@@ -41,6 +41,10 @@
   justify-content: space-around;
 }
 
+.space-between {
+  justify-content: space-between;
+}
+
 .center-vert {
   align-items: center;
 }
@@ -112,16 +116,6 @@
   cursor: pointer;
 }
 
-.text {
-  &-green {
-    color: green;
-  }
-
-  &-red {
-    color: red;
-  }
-}
-
 .align {
   &-right {
     justify-content: flex-end;
@@ -130,23 +124,31 @@
 
 .color {
   &-light-grey {
-    color: lightgrey;
+    color: lightgrey !important;;
   }
 
   &-grey {
-    color: grey;
+    color: grey !important;;
   }
 
   &-blue {
-    color: #096dd9;
+    color: #096dd9 !important;
   }
 
   &-red {
-    color: #db414b;
+    color: #db414b !important;
   }
 
   &-light-green {
-    color: lightgreen;
+    color: lightgreen !important;;
+  }
+
+  &-green {
+    color: green !important;;
+  }
+
+  &-red {
+    color: red !important;;
   }
 }
 

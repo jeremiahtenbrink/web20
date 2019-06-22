@@ -29,6 +29,7 @@ const initialState: ISprintsReducer = {
 
 export const sprintsReducer = ( state = initialState,
                                 action ): ISprintsReducer => {
+    
     switch ( action.type ) {
         
         //SPRINTS CHANGE SELECTED SPRINT -------------------------------------
@@ -41,6 +42,8 @@ export const sprintsReducer = ( state = initialState,
         case GET_SPRINT_INIT:
             return { ...state, gettingSprints: true, sprints: {} };
         case GET_SPRINT_SUCCESS:
+            console.log( "sprints reducer adding sprints from success",
+                action.payload );
             return {
                 ...state,
                 gettingSprints: false,

@@ -157,6 +157,21 @@ export const getUser = id => dispatch => {
             
             if ( res.exists ) {
                 let data = res.data();
+                data.id = res.id;
+                if ( !data.course ) {
+                    if ( data.cohort.toLowerCase().includes( 'web' ) ) {
+                        data.course = "FSW";
+                    } else if ( data.cohort.toLowerCase().includes( "ios" ) ) {
+                        data.course = "iOS";
+                    } else if ( data.cohort.toLowerCase().includes( "cs" ) ) {
+                        data.course = "CS";
+                    } else {
+                        data.course = "Unknown";
+                    }
+                    
+                    store.collection(`users`).doc( id ).set(data);
+                    
+                }
                 dispatch( { type: GET_USER_SUCCESS, payload: data } );
             } else {
                 

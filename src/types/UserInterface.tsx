@@ -4,5 +4,6 @@ export interface IUser {
     isAdmin: undefined | boolean;
     lastName: string;
     firstName: string;
+    course: string;
 }
 

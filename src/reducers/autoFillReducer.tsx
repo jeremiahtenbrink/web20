@@ -166,11 +166,13 @@ export const autoFillReducer = ( state: IAutoFillReducer = initialState,
                 ...state, gettingCourses: true
             };
         case GET_COURSES_SUCCESS:
-            //
+            console.log( "setting courses into reducer", action.payload );
+            
             return {
                 ...state, gettingCourses: false, courses: action.payload
             };
         case GET_COURSES_FAIL:
+            console.log( "setting get course fail in reducer" );
             return {
                 ...state,
                 gettingCourses: false,

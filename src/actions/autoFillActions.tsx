@@ -201,7 +201,7 @@ export const GET_COURSES_SUCCESS = " GET_COURSES_SUCCESS";
 export const GET_COURSES_FAIL = " GET_COURSES_FAIL";
 
 export const subscribeToCourses = () => ( dispatch ): Function => {
-    //
+    console.log( "Subscribing to courses" );
     dispatch( { type: GET_COURSES_INIT } );
     return store.collection( "autoFill" )
         .doc( "web" )

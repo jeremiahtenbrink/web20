@@ -91,6 +91,7 @@ export const subscribeToSprints = () => dispatch => {
             let courses = {};
             if ( !snapshot.empty ) {
                 snapshot.docs.forEach( course => {
+                    
                     let courseData = course.data();
                     courseData.id = course.id;
                     // @ts-ignore

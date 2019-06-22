@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
     Card, Icon, Skeleton, Avatar, Table, Col, Popover, Row, Modal, Form,
-    Popconfirm, Button
+    Popconfirm, Button, Select
 } from "antd";
 import axios from "axios";
 import {
     subscribeToStudents, logout, subscribe, unsubscribe, editUser, delStudent,
-    checkAuth
+    checkAuth, subscribeToCourses
 } from "../actions/index";
 import LambdaLogo from "../assets/logo.png";
 import { IStudent } from "../types/StudentInterface";
@@ -17,15 +17,17 @@ import { ISubscriptions } from "../types/SubscriptionsInterface";
 import { history } from 'history';
 import MakeInput from '../components/MakeInput';
 import EditStudentModal from "../components/student/EditStudentModal";
+import { ICourse } from "../types/CourseInterface";
 
 interface IState {
-    joke: string;
-    firstName: string,
-    lastName: string,
-    cohort: string,
-    modalOpen: boolean,
-    student: null | IStudent;
-    subscribed: boolean;
+    joke?: string;
+    firstName?: string,
+    lastName?: string,
+    cohort?: string,
+    modalOpen?: boolean,
+    student?: null | IStudent;
+    subscribed?: boolean;
+    course?: string;
 }
 
 class Dashboard extends React.Component<IProps, IState> {
@@ -34,6 +36,7 @@ class Dashboard extends React.Component<IProps, IState> {
         firstName: '',
         lastName: '',
         cohort: '',
+        course: '',
         modalOpen: false,
         student: null,
         subscribed: false,
@@ -41,12 +44,14 @@ class Dashboard extends React.Component<IProps, IState> {
     
     
     onSubmit = e => {
+        e.preventDefault();
         const user = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             cohort: this.state.cohort,
             id: this.props.uid,
             isAdmin: false,
+            course: this.state.course,
         };
         
         this.props.editUser( user );
@@ -56,14 +61,8 @@ class Dashboard extends React.Component<IProps, IState> {
                         prevState: Readonly<IState> ): void {
         
         if ( this.props.getUserFailed ) {
+            console.log( "Get user Failed" );
             this.setState( state => ( { ...state, modalOpen: true } ) );
-        }
-        
-        if ( this.state.modalOpen && this.props.user && this.state.firstName !==
-            '' && this.state.lastName !== '' && this.state.cohort !== '' ) {
-            this.setState( state => ( {
-                ...state, firstName: '', lastName: '', cohort: ''
-            } ) )
         }
         
         if ( !this.state.subscribed && this.props.uid ) {
@@ -71,6 +70,7 @@ class Dashboard extends React.Component<IProps, IState> {
             this.setState( { subscribed: true } );
             this.props.subscribe( "Students",
                 this.props.subscribeToStudents( this.props.uid ) );
+            this.props.subscribe( "courses", this.props.subscribeToCourses() )
         }
     }
     
@@ -83,6 +83,7 @@ class Dashboard extends React.Component<IProps, IState> {
     componentWillUnmount() {
         
         this.props.unsubscribe( "Students" );
+        this.props.unsubscribe( "courses" );
     }
     
     getJoke = () => {
@@ -100,9 +101,22 @@ class Dashboard extends React.Component<IProps, IState> {
     };
     
     onChange = e => {
-        e.persist();
-        this.setState(
-            state => ( { ...state, [ e.target.name ]: e.target.value } ) )
+        this.setState( { [ e.target.name ]: e.target.value } )
+    };
+    
+    onChangeSelect = ( value, name ) => {
+        this.setState( { [ name ]: value } );
+    };
+    
+    setUserInfo = () => {
+        console.log( "Setting user info" );
+        this.setState( {
+            modalOpen: true,
+            firstName: this.props.user.firstName,
+            lastName: this.props.user.lastName,
+            cohort: this.props.user.cohort,
+            course: this.props.user.course,
+        } );
     };
     
     render() {
@@ -133,15 +147,27 @@ class Dashboard extends React.Component<IProps, IState> {
                 type="setting"/></Popover> );
         }
         
+        const { Option } = Select;
+        console.log( "rendering in dashboard", this.props, this.state );
         return ( <div style={ { maxWidth: "800px", margin: "20px auto" } }>
             <Card
                 actions={ actions }>
                 <Skeleton loading={ this.props.isLoading } avatar active>
-                    <Card.Meta
-                        avatar={ <Avatar src={ LambdaLogo }/> }
-                        title={ `Welcome ${ this.props.displayName }` }
-                        description={ `${ this.state.joke }` }
-                    />
+                    
+                    <div className={ "inline space-between" }>
+                        <Card.Meta
+                            avatar={ <Avatar src={ LambdaLogo }/> }
+                            title={ `Welcome ${ this.props.displayName }` }
+                            description={ `${ this.state.joke }` }
+                            className={ "mg-right-md" }
+                        />
+                        <Button
+                            icon={ "edit" }
+                            className={ "color-blue" }
+                            onClick={ this.setUserInfo }>Edit Project
+                            Manager</Button>
+                    </div>
+                
                 </Skeleton>
             </Card>
             
@@ -265,7 +291,7 @@ class Dashboard extends React.Component<IProps, IState> {
                 title={ "Required User Information" }
                 visible={ this.state.modalOpen }
                 okText={ 'Submit' }
-                onOk={ this.onSubmit }
+                onOk={ ( e ) => this.onSubmit( e ) }
                 onCancel={ () => this.setState(
                     state => ( { ...state, modalOpen: false } ) ) }>
                 <Row type="flex" gutter={ 24 }>
@@ -300,24 +326,54 @@ class Dashboard extends React.Component<IProps, IState> {
                                    title={ "Cohort" }
                         />
                     </Col>
+                    <Col xs={ 24 }>
+                        <Form.Item label={ "Course" }>
+                            <Select
+                                showSearch
+                                style={ { width: 200 } }
+                                placeholder="Instructor"
+                                optionFilterProp="children"
+                                onChange={ ( value ) => {
+                                    this.onChangeSelect( value, "course" );
+                                } }
+                                value={ this.state.course }
+                                filterOption={ ( input,
+                                                 option ) => typeof option.props.children ===
+                                "string" ? option.props.children.toLowerCase()
+                                    .indexOf( input.toLowerCase() ) >= 0 : '' }
+                            >
+                                { this.props.courses &&
+                                Object.values( this.props.courses )
+                                    .map( ( course: ICourse ) => {
+                                        return <Option key={ course.id }
+                                                       value={ course.id }>{ `${ course.courseName }` }</Option>;
+                                    } ) }
+                            </Select>
+                        </Form.Item>
+                    </Col>
                 </Row>
             </Modal>
         </div> );
     }
 }
 
-const mapStateToProps = ( { students, auth, subscriptions } ) => ( {
-    students: students.students,
-    uid: auth.uid,
-    user: auth.user,
-    isLoading: students.isLoading,
-    displayName: auth.displayName,
-    subscriptions: subscriptions.subscriptions,
-    getUserFailed: auth.getUserFailed,
-} );
+const mapStateToProps = ( state ) => {
+    console.log( "Mapping state to props in dashboard", state );
+    return {
+        students: state.students.students,
+        uid: state.auth.uid,
+        user: state.auth.user,
+        isLoading: state.students.isLoading,
+        displayName: state.auth.displayName,
+        subscriptions: state.subscriptions.subscriptions,
+        getUserFailed: state.auth.getUserFailed,
+        courses: state.autoFill.courses,
+    }
+};
 
 interface IProps {
     students: { [ id: string ]: IStudent };
+    courses: { [ id: string ]: ICourse };
     uid: string;
     user: IUser;
     isLoading: boolean;
@@ -332,12 +388,13 @@ interface IProps {
     delStudent: typeof delStudent;
     checkAuth: typeof checkAuth;
     getUserFailed: boolean;
+    subscribeToCourses: typeof subscribeToCourses;
 }
 
 export default connect( mapStateToProps,
     {
         subscribeToStudents, logout, subscribe, unsubscribe, editUser,
-        delStudent, checkAuth
+        delStudent, checkAuth, subscribeToCourses
     },
 )(
     Dashboard );

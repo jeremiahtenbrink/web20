@@ -9,8 +9,8 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import "./sprint.scss";
 import { IStudent } from "../types/StudentInterface";
-import { ISprints } from "../types/SprintsInterface";
 import { IUser } from "../types/UserInterface";
+import { ISprint } from "../types/SprintInterface";
 
 interface IState {
     sprintChallenge: string;
@@ -60,11 +60,18 @@ class SprintForm extends Component<IProps, IState> {
         subscribed: false,
     };
     
+    componentDidMount() {
+        console.log( "Sprint form mounted" );
+        if ( this.props.uid ) {
+            this.setState( { subscribed: false } );
+        }
+    }
+    
     componentDidUpdate( prevProps: Readonly<IProps>,
                         prevState: Readonly<IState>, snapshot?: any ): void {
-        
+        console.log( "component did update", this.props, this.state );
         if ( !this.state.subscribed && this.props.uid ) {
-            
+            console.log( "component did update setting subscriptions" );
             this.setState( { subscribed: true } );
             this.props.subscribe( "students",
                 this.props.subscribeToStudents( this.props.uid ) );
@@ -181,6 +188,8 @@ class SprintForm extends Component<IProps, IState> {
         const Option = Select.Option;
         const RadioGroup = Radio.Group;
         const TextArea = Input.TextArea;
+        console.log( "rendering insideo of sprint form", this.props,
+            this.state );
         return (
             
             <Row style={ {
@@ -258,8 +267,6 @@ class SprintForm extends Component<IProps, IState> {
                                             return <Option key={ student.id }
                                                            value={ `${ student.firstName.trim() }+${ student.lastName.trim() }` }>{ `${ student.firstName } ${ student.lastName }` }</Option>;
                                         } ) }
-                                    <Option
-                                        value={ "Student" }>Sprint</Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item
@@ -428,8 +435,8 @@ class SprintForm extends Component<IProps, IState> {
                                             onChange={ this.onChange }
                                             value={ this.state.technicalAbility }>
                                     { this.state.numberArray.map( number => {
-                                        return <Radio
-                                            value={ number }>{ number }</Radio>
+                                        return <Radio key={ number }
+                                                      value={ number }>{ number }</Radio>
                                     } ) }
                                 </RadioGroup>
                             </Form.Item>
@@ -438,8 +445,8 @@ class SprintForm extends Component<IProps, IState> {
                                             onChange={ this.onChange }
                                             value={ this.state.collaborationAbility }>
                                     { this.state.numberArray.map( number => {
-                                        return <Radio
-                                            value={ number }>{ number }</Radio>
+                                        return <Radio key={ number }
+                                                      value={ number }>{ number }</Radio>
                                     } ) }
                                 </RadioGroup>
                             </Form.Item>
@@ -448,8 +455,8 @@ class SprintForm extends Component<IProps, IState> {
                                             onChange={ this.onChange }
                                             value={ this.state.drive }>
                                     { this.state.numberArray.map( number => {
-                                        return <Radio
-                                            value={ number }>{ number }</Radio>
+                                        return <Radio key={ number }
+                                                      value={ number }>{ number }</Radio>
                                     } ) }
                                 </RadioGroup>
                             </Form.Item>
@@ -458,8 +465,8 @@ class SprintForm extends Component<IProps, IState> {
                                             onChange={ this.onChange }
                                             value={ this.state.teachability }>
                                     { this.state.numberArray.map( number => {
-                                        return <Radio
-                                            value={ number }>{ number }</Radio>
+                                        return <Radio key={ number }
+                                                      value={ number }>{ number }</Radio>
                                     } ) }
                                 </RadioGroup>
                             </Form.Item>
@@ -506,7 +513,7 @@ const mstp = state => {
 interface IProps {
     students: { [ id: string ]: IStudent };
     user: IUser;
-    sprints: ISprints;
+    sprints: { [ id: string ]: ISprint };
     subscribeToStudents: typeof subscribeToStudents;
     subscribeToSprints: typeof subscribeToSprints;
     unsubscribe: typeof unsubscribe;
