@@ -6,12 +6,15 @@ import {
     COLLECT_STUDENT_LESSONS_FAILED, COLLECT_STUDENT_LESSONS_INIT,
     COLLECT_STUDENT_LESSONS_SUCCESS, COMPLETE_LESSON_INIT,
     COMPLETE_LESSON_SUCCESS, COMPLETE_LESSON_FAILED, CHANGE_SELECTED_STUDENT,
-} from "../actions";
+    FETCH_ALL_STUDENTS_FAILED, FETCH_ALL_STUDENTS_INIT,
+    FETCH_ALL_STUDENTS_SUCCESS
+} from "../actions/index";
 import { IStudentReducer } from "../types/StudentsReducerInterface";
 import { IAction } from "../types/ActionInterface";
 
 const initialState: IStudentReducer = {
     students: {},
+    allStudents: {},
     unsubscribeStudents: null,
     fetchingStudents: true,
     isAdding: false,
@@ -24,6 +27,7 @@ const initialState: IStudentReducer = {
     selectedStudent: null,
     selectedStudentLessons: null,
     updatingLessons: false,
+    
 };
 
 export const studentsReducer = ( state: IStudentReducer = initialState,
@@ -61,6 +65,20 @@ export const studentsReducer = ( state: IStudentReducer = initialState,
             };
         case FETCH_STUDENTS_FAILED:
             return { ...state, fetchingStudents: false, error: action.payload };
+        
+        
+        //ALL STUDENT FETCH----------------------------------------------------
+        
+        case FETCH_ALL_STUDENTS_INIT:
+            return { ...state, fetchingStudents: true };
+        case FETCH_ALL_STUDENTS_SUCCESS:
+            
+            return {
+                ...state, fetchingStudents: false, allStudents: action.payload
+            };
+        case FETCH_ALL_STUDENTS_FAILED:
+            return { ...state, fetchingStudents: false, error: action.payload };
+        
         
         
         //STUDENT DELETE ----------------------------------------------------

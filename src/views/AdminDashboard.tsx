@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import { Card, Icon, Popover, Button } from "antd";
-import Lessons from "../components/autoFill/Lessons";
-import Instructors from "../components/autoFill/Instructors";
-import Tas from "../components/autoFill/Tas";
+import Lessons from "../components/adminDashboard/Lessons";
+import Instructors from "../components/adminDashboard/Instructors";
+import Tas from "../components/adminDashboard/Tas";
 import {
     copySprints, unsubscribe, subscribe, subscribeToInstructors,
     subscribeToCourses, subscribeToPms, subscribeToTas
 } from "../actions";
 import { connect } from "react-redux";
 import { history } from "../configStore";
+import Students from '../components/adminDashboard/Students';
 
 interface IState {
     page: string,
@@ -49,17 +50,21 @@ class AdminDashboard extends Component<IProps, IState> {
                     <Icon type="project"
                           style={ { fontSize: "24px" } }
                           onClick={ () => this.setState( { page: "tas" } ) }/>
-                </Popover>,
+                </Popover>, <Popover content={ <p>Students</p> }>
+                    <Icon type="team"
+                          style={ { fontSize: "24px" } }
+                          onClick={ () => this.setState(
+                              { page: "students" } ) }/>
+                </Popover>
             ] }>
                 
                 <h1>Admin Dashboard: { this.state.page.toUpperCase() }</h1>
             
             </Card>
-            {/*<Button*/ }
-            {/*onClick={ () => this.props.copySprints() }>Copy Sprints</Button>*/ }
             { this.state.page === "instructors" && <Card><Instructors/></Card> }
             { this.state.page === "lessons" && <Card><Lessons/></Card> }
             { this.state.page === "tas" && <Card><Tas/></Card> }
+            { this.state.page === "students" && <Card><Students/></Card> }
         
         </div> );
     }

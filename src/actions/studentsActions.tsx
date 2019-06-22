@@ -34,6 +34,30 @@ export const subscribeToStudents = id => dispatch => {
     }
 };
 
+export const FETCH_ALL_STUDENTS_INIT = "FETCH_ALL_STUDENTS_INIT";
+export const FETCH_ALL_STUDENTS_SUCCESS = "FETCH_ALL_STUDENTS_SUCCESS";
+export const FETCH_ALL_STUDENTS_FAILED = "FETCH_ALL_STUDENTS_FAILED";
+
+export const subscribeToAllStudents = () => dispatch => {
+    
+    dispatch( action( FETCH_ALL_STUDENTS_INIT ) );
+    
+    return store
+        .collection( "students" )
+        .onSnapshot( snapshot => {
+            const students = {};
+            snapshot.forEach( student => {
+                let data = student.data();
+                data.id = student.id;
+                students[ data.id ] = data;
+            } );
+            dispatch( action( FETCH_ALL_STUDENTS_SUCCESS, students ) );
+        }, err => {
+            console.log( err );
+        } );
+    
+};
+
 export const ADD_STUDENT_INIT = "ADD_STUDENT_INIT";
 export const ADD_STUDENT_SUCCESS = "ADD_STUDENT_SUCCESS";
 export const ADD_STUDENT_FAILED = "ADD_STUDENT_FAILED";
