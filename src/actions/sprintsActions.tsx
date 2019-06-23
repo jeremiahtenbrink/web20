@@ -233,13 +233,14 @@ export const editLesson = ( sprint: ISprint, lesson: ILesson ) => dispatch => {
         .doc( lesson.id )
         .set( lesson )
         .then( res => {
-            console.log( res );
+            log.info( "Success", null, 'Edit Lesson' );
             dispatch( {
                 type: EDIT_LESSON_SUCCESS, payload: lesson,
             } );
         } )
         .catch( err => {
             dispatch( { type: EDIT_LESSON_FAIL, payload: err } );
+            log.error( "Failed", null, 'Edit Lesson' );
         } );
 };
 
@@ -263,7 +264,7 @@ export const deleteLesson = ( sprint: ISprint, lesson: ILesson ) =>
             .doc( lesson.id )
             .delete()
             .then( res => {
-                console.log( res );
+                log.info( 'Success', null, "Delete Lesson" );
                 dispatch( action( DEL_LESSON_SUCCESS, lesson ) );
             } )
             .catch( err => {

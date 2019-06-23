@@ -4,6 +4,9 @@ import { subscribe, unsubscribe } from "./subscribe";
 import { IInstructor } from "../types/InstructorInterface";
 import { ITa } from "../types/TASInterface";
 import { ICourse } from "../types/CourseInterface";
+import Logger from '../utils/logger';
+
+const log = Logger("Auto Fill Actions");
 
 export const UPDATE_INSTRUCTORS_INIT = "UPDATE_INSTRUCTORS_INIT";
 export const UPDATE_INSTRUCTORS_SUCCESS = "UPDATE_INSTRUCTORS_SUCCESS";
@@ -17,7 +20,7 @@ export const updateInstructor = ( instructor: IInstructor ) => dispatch => {
         .collection( "instructors" ).doc( instructor.id )
         .update( instructor )
         .then( res => {
-            console.log( res );
+            log.info("Success", null, 'Update Instructor');
             dispatch( action( UPDATE_INSTRUCTORS_SUCCESS ) );
         } )
         .catch( err => {
@@ -37,7 +40,7 @@ export const deleteInstructor = ( instructor: IInstructor ) => dispatch => {
         .collection( "instructors" ).doc( instructor.id )
         .delete()
         .then( res => {
-            console.log( res );
+            log.info("Success", null, "Delete Instructor" );
             dispatch( action( DELETE_INSTRUCTORS_SUCCESS ) );
             
         } ).catch( err => {
@@ -69,7 +72,7 @@ export const subscribeToInstructors = () => ( dispatch ): Function => {
             } );
             
         }, err => {
-            console.log( err );
+            log.error( "Failed", err, "Subscribe To Instructors" );
             dispatch( { type: GET_INSTRUCTORS_FAIL, payload: err } );
         } );
 };
@@ -85,7 +88,7 @@ export const addInstructor = ( instructor: IInstructor ) => dispatch => {
         .collection( "instructors" )
         .add( instructor )
         .then( res => {
-            console.log( res );
+            log.info( "Success", null, "Add Instructor" );
             dispatch( ADD_INSTRUCTORS_SUCCESS );
         } )
         .catch( err => {
@@ -201,21 +204,24 @@ export const GET_COURSES_SUCCESS = " GET_COURSES_SUCCESS";
 export const GET_COURSES_FAIL = " GET_COURSES_FAIL";
 
 export const subscribeToCourses = () => ( dispatch ): Function => {
-    console.log( "Subscribing to courses" );
+    
     dispatch( { type: GET_COURSES_INIT } );
     return store.collection( "autoFill" )
         .doc( "web" )
         .collection( "courses" )
         .onSnapshot( snapshot => {
+            
             let courses = {};
             snapshot.docs.forEach( course => {
                 let courseData = course.data();
                 courseData.id = course.id;
                 courses[ courseData.id ] = courseData;
             } );
+            log.info("Success", courses, "Subscribe To Courses");
             dispatch( action( GET_COURSES_SUCCESS, courses ) );
         }, err => {
             dispatch( action( GET_COURSES_FAIL, err ) );
+            log.error("Failed", err, "Subscribe To Courses");
         } );
     
 };

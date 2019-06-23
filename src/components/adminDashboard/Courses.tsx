@@ -9,6 +9,8 @@ import { connect } from "react-redux";
 import { ICourse } from "../../types/CourseInterface";
 import Logger from '../../utils/logger';
 
+const log = Logger( "Admin Dashboard Courses" );
+
 interface IState {
     courseName: string;
     id: string;
@@ -55,7 +57,7 @@ class Courses extends React.Component<IProps, IState> {
     };
     
     cancel = ( e ) => {
-        Logger( 'event handler', e, 'info', 'Courses', 'Cancel' );
+        log.info( 'event handler', e, 'Cancel' );
         message.error( "Course Not removed" );
     };
     

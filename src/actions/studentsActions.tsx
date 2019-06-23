@@ -3,6 +3,9 @@ import { action } from "./action";
 import { IStudent } from "../types/StudentInterface";
 import { ISprint } from "../types/SprintInterface";
 import { IStudentLesson } from "../types/StudentLessonsInterface";
+import Logger from '../utils/logger';
+
+const log = Logger("Student Actions");
 
 export const FETCH_STUDENTS_INIT = "FETCH_STUDENTS_INIT";
 export const FETCH_STUDENTS_SUCCESS = "FETCH_STUDENTS_SUCCESS";
@@ -25,11 +28,12 @@ export const subscribeToStudents = id => dispatch => {
                 } );
                 dispatch( action( FETCH_STUDENTS_SUCCESS, students ) );
             }, err => {
-                console.log( err );
+                log.error( 'Failed', err, "Subscribe To Students" );
             } );
         
     } else {
-        console.log( "Need user id to fetch students." );
+        log.warn( "Need user id to fetch students.", null, "Subscribe To" +
+            " Students" );
         dispatch( action( FETCH_STUDENTS_FAILED ) );
     }
 };
@@ -53,7 +57,7 @@ export const subscribeToAllStudents = () => dispatch => {
             } );
             dispatch( action( FETCH_ALL_STUDENTS_SUCCESS, students ) );
         }, err => {
-            console.log( err );
+            log.error( "Failed", err, "Subscribe To All Students" );
         } );
     
 };
@@ -164,7 +168,7 @@ export const getStudentLessons = ( student: IStudent, userId: string ) =>
                     .doc( student.id )
                     .set( student )
                     .then( res => {
-                        console.log( res );
+                        log.info("Created student because it didn't exist", null, "Get Student Lessons" );
                     } );
             }
         } )
@@ -190,7 +194,7 @@ export const completeStudentLesson = ( student: IStudent,
             .doc( lesson.id )
             .set( lesson )
             .then( ( res ) => {
-                
+    
                 dispatch( action( COMPLETE_LESSON_SUCCESS, lesson ) );
             } )
             .catch( err => {
@@ -204,62 +208,4 @@ export const changeSelectedStudent = studentId => dispatch => {
     dispatch( { type: CHANGE_SELECTED_STUDENT, payload: studentId } );
 };
 
-export const copySprints = () => dispatch => {
-    
-    store.collection( "autoFill" )
-        .doc( "web" )
-        .collection( "sprints" )
-        .get()
-        .then( ( res ) => {
-            
-            //create the sprint in the course
-            res.docs.forEach( sprintFDB => {
-                let sprint = sprintFDB.data();
-                sprint.id = sprintFDB.id;
-                store.collection( "autoFill" )
-                    .doc( "web" )
-                    .collection( "courses" )
-                    .doc( "FSW" )
-                    .collection( "sprints" )
-                    .doc( sprint.id )
-                    .set( sprint )
-                    .then( res => {
-                        console.log(
-                            `Created ${ sprint.name } in fsw courses.` );
-                    } )
-                    .catch( err => {
-                        console.log( err );
-                    } );
-                
-                store.collection( "autoFill" )
-                    .doc( "web" )
-                    .collection( "sprints" )
-                    .doc( sprint.id )
-                    .collection( "lessons" ).get().then( res => {
-                    res.docs.forEach( lesson => {
-                        const data = lesson.data();
-                        store.collection( "autoFill" )
-                            .doc( "web" )
-                            .collection( "courses" )
-                            .doc( "FSW" )
-                            .collection( "sprints" )
-                            .doc( sprint.id )
-                            .collection( "lessons" )
-                            .doc( data.id )
-                            .set( data )
-                            .then( res => {
-                                console.log(
-                                    `Created ${ data.name } in ${ sprint.id }` );
-                            } ).catch( err => {
-                            console.log( err );
-                        } );
-                    } );
-                } );
-            } );
-            
-        } )
-        .catch( err => {
-            console.log( err );
-        } );
-};
 
