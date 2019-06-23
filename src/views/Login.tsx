@@ -1,25 +1,28 @@
 import React from "react";
 import firebase from "../firebase/firebase";
 import { GOOGLE_PROVIDER, GITHUB_PROVIDER } from "../actions";
-import { signIn, createUser } from "../actions";
+import {
+    signIn, createUser, subscribeToCourses, subscribe, unsubscribe
+} from "../actions/index";
 import { Row, Col, Button, Form, Input, Select } from "antd";
 import { connect } from "react-redux";
 import LoginImage from "../assets/login.svg";
 import "../assets/Login.scss";
 import { history } from "history";
 import { IUser } from "../types/UserInterface";
+import { ICourse } from "../types/CourseInterface";
 
 interface IState {
     isLoading: boolean;
     inputs: {
-        firstName: string; lastName: string; cohort: string;
+        firstName: string; lastName: string; cohort: string; course: string
     },
 }
 
 class Login extends React.Component<IProps, IState> {
     state = {
         isLoading: false, inputs: {
-            firstName: "", lastName: "", cohort: "",
+            firstName: "", lastName: "", cohort: "", course: ''
         },
     };
     
@@ -28,6 +31,11 @@ class Login extends React.Component<IProps, IState> {
         firebase.auth().onAuthStateChanged( user => {
         
         } );
+        this.props.subscribe( 'courses', this.props.subscribeToCourses() );
+    }
+    
+    componentWillUnmount(): void {
+        this.props.unsubscribe( "courses" );
     }
     
     componentDidUpdate( prevProps: Readonly<IProps>,
@@ -54,6 +62,7 @@ class Login extends React.Component<IProps, IState> {
             lastName: this.state.inputs.lastName,
             cohort: this.state.inputs.cohort,
             isAdmin: false,
+            course: this.state.inputs.course,
         } );
     };
     
@@ -64,7 +73,13 @@ class Login extends React.Component<IProps, IState> {
         this.props.signIn( type );
     };
     
+    onChangeSelect = ( value: any, name: string ) => {
+        this.setState(
+            state => ( { inputs: { ...state.inputs, [ name ]: value } } ) );
+    };
+    
     render() {
+        const { Option } = Select;
         return ( <>
             <Row
                 type="flex"
@@ -133,6 +148,33 @@ class Login extends React.Component<IProps, IState> {
                                         />
                                     </Input.Group>
                                 </Col>
+                                <Form.Item label={ "Course" }>
+                                    <Select
+                                        showSearch
+                                        style={ { width: 200 } }
+                                        placeholder="Instructor"
+                                        optionFilterProp="children"
+                                        onChange={ ( value ) => {
+                                            this.onChangeSelect( value,
+                                                "course" );
+                                        } }
+                                        value={ this.state.inputs.course }
+                                        filterOption={ ( input,
+                                                         option ) => typeof option.props.children ===
+                                        "string" ?
+                                            option.props.children.toLowerCase()
+                                                .indexOf(
+                                                    input.toLowerCase() ) >= 0 :
+                                            '' }
+                                    >
+                                        { this.props.courses &&
+                                        Object.values( this.props.courses )
+                                            .map( ( course: ICourse ) => {
+                                                return <Option key={ course.id }
+                                                               value={ course.id }>{ `${ course.courseName }` }</Option>;
+                                            } ) }
+                                    </Select>
+                                </Form.Item>
                                 <Col xs={ 24 }
                                      style={ { textAlign: "center" } }>
                                     <Button
@@ -180,9 +222,11 @@ class Login extends React.Component<IProps, IState> {
     }
 }
 
-const mapStateToProps = ( { auth } ) => ( {
-    isLoading: auth.isLoading, newUser: auth.newUser, uid: auth.uid,
-    user: auth.user,
+const mapStateToProps = ( state ) => ( {
+    isLoading: state.auth.isLoading, newUser: state.auth.newUser,
+    uid: state.auth.uid,
+    user: state.auth.user,
+    courses: state.autoFill.courses,
 } );
 
 interface IProps {
@@ -193,6 +237,12 @@ interface IProps {
     createUser: typeof createUser;
     history: history;
     user: IUser;
+    courses: { [ id: string ]: ICourse };
+    subscribeToCourses: typeof subscribeToCourses;
+    subscribe: typeof subscribe;
+    unsubscribe: typeof unsubscribe;
 }
 
-export default connect( mapStateToProps, { signIn, createUser }, )( Login );
+export default connect( mapStateToProps,
+    { signIn, createUser, subscribeToCourses, subscribe, unsubscribe }, )(
+    Login );

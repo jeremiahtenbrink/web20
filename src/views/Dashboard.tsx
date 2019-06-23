@@ -18,6 +18,7 @@ import { history } from 'history';
 import MakeInput from '../components/MakeInput';
 import EditStudentModal from "../components/student/EditStudentModal";
 import { ICourse } from "../types/CourseInterface";
+import Logger from "../utils/logger";
 
 interface IState {
     joke?: string;
@@ -61,7 +62,7 @@ class Dashboard extends React.Component<IProps, IState> {
                         prevState: Readonly<IState> ): void {
         
         if ( this.props.getUserFailed ) {
-            console.log( "Get user Failed" );
+            Logger( "Get user Failed", null, "error", "Dashboard" );
             this.setState( state => ( { ...state, modalOpen: true } ) );
         }
         
@@ -109,7 +110,7 @@ class Dashboard extends React.Component<IProps, IState> {
     };
     
     setUserInfo = () => {
-        console.log( "Setting user info" );
+        Logger( "Setting user info", this.state, "info", "Dashboard" );
         this.setState( {
             modalOpen: true,
             firstName: this.props.user.firstName,
@@ -148,7 +149,8 @@ class Dashboard extends React.Component<IProps, IState> {
         }
         
         const { Option } = Select;
-        console.log( "rendering in dashboard", this.props, this.state );
+        Logger( "rendering in dashboard", [ this.props, this.state ], 'info',
+            "Dashboard" );
         return ( <div style={ { maxWidth: "800px", margin: "20px auto" } }>
             <Card
                 actions={ actions }>
@@ -223,21 +225,18 @@ class Dashboard extends React.Component<IProps, IState> {
                     <Table.Column
                         title="First Name"
                         dataIndex="firstName"
-                        key="firstName"
                     />
                     <Table.Column
                         title="Last Name"
                         dataIndex="lastName"
-                        key="lastName"
                     />
                     <Table.Column title="Github" dataIndex="github"
-                                  key="github" render={ ( text, record ) => (
-                        <a href={ `https://github.com/${ text }` }
-                           target="_blank">{ text }</a> ) }
+                                  render={ ( text, record ) => (
+                                      <a href={ `https://github.com/${ text }` }
+                                         target="_blank">{ text }</a> ) }
                     />
                     <Table.Column
                         title="Action"
-                        key="action"
                         render={ student => (
                             <div className={ "inline center-vert" +
                             " space-around" }>
@@ -358,7 +357,8 @@ class Dashboard extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = ( state ) => {
-    console.log( "Mapping state to props in dashboard", state );
+    Logger( "MSTP", state, "info", "Dashboard" );
+    
     return {
         students: state.students.students,
         uid: state.auth.uid,
