@@ -4,9 +4,9 @@ import Lessons from "../components/adminDashboard/Lessons";
 import Instructors from "../components/adminDashboard/Instructors";
 import Tas from "../components/adminDashboard/Tas";
 import {
-    copySprints, unsubscribe, subscribe, subscribeToInstructors,
+    unsubscribe, subscribe, subscribeToInstructors,
     subscribeToCourses, subscribeToPms, subscribeToTas
-} from "../actions";
+} from "../actions/index";
 import { connect } from "react-redux";
 import { history } from "../configStore";
 import Students from '../components/adminDashboard/Students';
@@ -73,7 +73,6 @@ class AdminDashboard extends Component<IProps, IState> {
 const mstp = state => ( {} );
 
 interface IProps {
-    copySprints: typeof copySprints;
     subscribeToInstructors: typeof subscribeToInstructors;
     subscribe: typeof subscribe;
     unsubscribe: typeof unsubscribe;
@@ -84,7 +83,6 @@ interface IProps {
 }
 
 export default connect( mstp, {
-    copySprints,
     subscribeToInstructors,
     subscribe,
     unsubscribe,
