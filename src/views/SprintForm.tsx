@@ -11,6 +11,7 @@ import "./sprint.scss";
 import { IStudent } from "../types/StudentInterface";
 import { IUser } from "../types/UserInterface";
 import { ISprint } from "../types/SprintInterface";
+import Logger from '../utils/logger';
 
 interface IState {
     sprintChallenge: string;
@@ -61,7 +62,7 @@ class SprintForm extends Component<IProps, IState> {
     };
     
     componentDidMount() {
-        console.log( "Sprint form mounted" );
+        Logger( "Mounted", null, "info", "SprintForm", "Component Did Mount" );
         if ( this.props.uid ) {
             this.setState( { subscribed: false } );
         }
@@ -69,9 +70,11 @@ class SprintForm extends Component<IProps, IState> {
     
     componentDidUpdate( prevProps: Readonly<IProps>,
                         prevState: Readonly<IState>, snapshot?: any ): void {
-        console.log( "component did update", this.props, this.state );
+        Logger( "component did update", [ this.props, this.state ], 'info',
+            "SprintForm", "Component Did Update" );
         if ( !this.state.subscribed && this.props.uid ) {
-            console.log( "component did update setting subscriptions" );
+            Logger( "Starting Subscriptions", null, "info", "Sprint Form",
+                "Component Did Update" );
             this.setState( { subscribed: true } );
             this.props.subscribe( "students",
                 this.props.subscribeToStudents( this.props.uid ) );
@@ -188,8 +191,8 @@ class SprintForm extends Component<IProps, IState> {
         const Option = Select.Option;
         const RadioGroup = Radio.Group;
         const TextArea = Input.TextArea;
-        console.log( "rendering insideo of sprint form", this.props,
-            this.state );
+        Logger( "rendering", [ this.props, this.state ], "info",
+            "Sprint Form" );
         return (
             
             <Row style={ {

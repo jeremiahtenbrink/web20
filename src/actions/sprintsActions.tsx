@@ -3,6 +3,9 @@ import { GET_COURSES_INIT, GET_COURSES_SUCCESS } from "./autoFillActions";
 import { ISprint } from "../types/SprintInterface";
 import { ILesson } from "../types/LessonInterface";
 import { action } from "./action";
+import Logger from '../utils/logger';
+
+const log = Logger( "Sprint Actions" );
 
 
 export const ADD_SPRINT_INIT = "ADD_SPRINT_INIT";
@@ -42,7 +45,8 @@ export const deleteSprint = ( sprint: ISprint ) => dispatch => {
         .collection( "sprints" )
         .doc( sprint.id ).delete()
         .then( res => {
-            console.log( res );
+            log.info( `Deleted ${ sprint.name } successfully`, null, "Delete" +
+                " Sprint" );
             dispatch( {
                 type: DELETE_SPRINT_SUCCESS, sprint,
             } );
@@ -66,7 +70,7 @@ export const updateSprint = ( sprint: ISprint ) => dispatch => {
         .collection( "sprints" )
         .doc( sprint.id ).set( sprint )
         .then( res => {
-            console.log( res );
+            log.info( "Update Sprint Successful", null, "Sprint Actions" );
             dispatch( {
                 type: UPDATE_SPRINT_SUCCESS, sprint,
             } );
@@ -135,7 +139,7 @@ export const subscribeToSprints = () => dispatch => {
             dispatch( { type: GET_COURSES_SUCCESS, payload: courses } );
         }, error => {
             dispatch( { type: GET_SPRINT_FAIL, payload: error } );
-            console.log( error );
+            log.error( "Failed", error, "Subscribe to Sprints" );
         } );
 };
 
@@ -199,7 +203,7 @@ export const addLesson = ( sprint: ISprint, lesson: ILesson ) => dispatch => {
         .collection( "lessons" )
         .add( lesson )
         .then( res => {
-            console.log( res );
+            log.info( "Add Lesson Success", res );
             lesson.id = res.id;
             dispatch( {
                 type: ADD_LESSON_SUCCESS, payload: lesson,

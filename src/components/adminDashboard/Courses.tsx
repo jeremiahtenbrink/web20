@@ -7,6 +7,7 @@ import {
 } from "../../actions/index";
 import { connect } from "react-redux";
 import { ICourse } from "../../types/CourseInterface";
+import Logger from '../../utils/logger';
 
 interface IState {
     courseName: string;
@@ -54,7 +55,7 @@ class Courses extends React.Component<IProps, IState> {
     };
     
     cancel = ( e ) => {
-        console.log( e );
+        Logger( 'event handler', e, 'info', 'Courses', 'Cancel' );
         message.error( "Course Not removed" );
     };
     

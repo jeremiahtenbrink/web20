@@ -8,6 +8,7 @@ import {
     EDIT_LESSON_FAIL, DEL_LESSON_FAIL, DEL_LESSON_INIT, DEL_LESSON_SUCCESS
 } from "../actions";
 import { ISprintsReducer } from "../types/SprintsReducerInterface";
+import Logger from '../utils/logger';
 
 const initialState: ISprintsReducer = {
     addingSprint: false,
@@ -42,8 +43,8 @@ export const sprintsReducer = ( state = initialState,
         case GET_SPRINT_INIT:
             return { ...state, gettingSprints: true, sprints: {} };
         case GET_SPRINT_SUCCESS:
-            console.log( "sprints reducer adding sprints from success",
-                action.payload );
+            Logger( "adding sprints", action.payload, 'info', 'SprintsReducer',
+                'Sprints' );
             return {
                 ...state,
                 gettingSprints: false,

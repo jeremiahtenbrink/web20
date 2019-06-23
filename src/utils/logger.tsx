@@ -3,49 +3,61 @@ class Log {
     private static title;
     private static group = 'default';
     
-    log = ( message, objects = null, type = 'log', group = "default",
-            title = null, ) => {
+    log = ( group: string = "default" ): ILog => {
         
-        if ( type === 'log' || type === "info" || type === "debug" ) {
-            if ( process.env.NODE_ENV !== "development" ) {
-                return;
-            }
+        return {
+            info: ( message: string, objects: undefined | {} | {}[] = undefined,
+                    title: string = undefined, ) => {
+                this.callLogType( message, group, this.info, title, objects );
+                
+            },
+            
+            log: ( message: string, objects: undefined | {} | {}[] = undefined,
+                   title: string = undefined, ) => {
+                this.callLogType( message, group, this.consoleLog, title,
+                    objects );
+                
+            },
+            
+            error: ( message: string,
+                     objects: undefined | {} | {}[] = undefined,
+                     title: string = undefined, ) => {
+                this.callLogType( message, group, this.error, title, objects );
+                
+            },
+            
+            warn: ( message: string, objects: undefined | {} | {}[] = undefined,
+                    title: string = undefined, ) => {
+                this.callLogType( message, group, this.warn, title, objects );
+            },
+            
+        };
+        
+    };
+    
+    callLogType = ( message: string, group: string, logFunction: Function,
+                    title: string | null = null,
+                    objects: null | {} | {}[] = null, ) => {
+        
+        if ( logFunction === this.consoleLog || logFunction === this.info &&
+            process.env.NODE_ENV !== "development" ) {
+            return;
         }
         
-        if ( Log.title !== title ) {
+        if ( group !== Log.group ) {
+            this.endGroup();
+            Log.group = group;
+            this.group();
+        }
+        
+        if ( title ) {
             Log.title = title;
         }
         
-        if ( Log.group !== group ) {
-            if ( Log.group !== 'default' ) {
-                this.endGroup();
-            }
-            Log.group = group;
-            if ( Log.group !== "default" ) {
-                this.group();
-            }
-        }
-        
-        if ( type === "warn" ) {
-            this.warn( message );
-        } else if ( type === "error" ) {
-            this.error( message );
-        } else if ( type === "info" ) {
-            this.info( message );
-        } else if ( type === "log" ) {
-            this.consoleLog( message );
-        }
-        
+        logFunction( message );
         if ( objects ) {
-            if ( Array.isArray( objects ) ) {
-                objects.forEach( obj => {
-                    this.consoleLog( obj );
-                } )
-            } else {
-                this.consoleLog( objects );
-            }
+            this.logObjects( objects );
         }
-        
     };
     
     group = () => {
@@ -82,15 +94,36 @@ class Log {
             arg = Log.title + ": " + arg;
         }
         console.log( arg );
+    };
+    
+    logObjects = ( objects: {} | {}[] ) => {
+        if ( Array.isArray( objects ) ) {
+            objects.forEach( object => {
+                this.logObject( object );
+            } )
+        } else {
+            this.logObject( objects );
+        }
+    };
+    
+    logObject = ( object: {} ) => {
+        if ( Log.title ) {
+            console.log( Log.title, object );
+        } else {
+            console.log( object );
+        }
     }
 }
 
 interface ILog {
-    type: string;
-    message: string;
-    objects?: any;
-    group?: string;
-    title?: null | string;
+    info: ( message: string, objects?: null | {} | {}[],
+            title?: string ) => void;
+    error: ( message: string, objects?: null | {} | {}[],
+             title?: string ) => void;
+    log: ( message: string, objects?: null | {} | {}[],
+           title?: string ) => void;
+    warn: ( message: string, objects?: null | {} | {}[],
+            title?: string ) => void;
 }
 
 const Logger = new Log();

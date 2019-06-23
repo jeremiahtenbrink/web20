@@ -20,6 +20,8 @@ import EditStudentModal from "../components/student/EditStudentModal";
 import { ICourse } from "../types/CourseInterface";
 import Logger from "../utils/logger";
 
+const Log = Logger( "Dashboard" );
+
 interface IState {
     joke?: string;
     firstName?: string,
@@ -62,7 +64,7 @@ class Dashboard extends React.Component<IProps, IState> {
                         prevState: Readonly<IState> ): void {
         
         if ( this.props.getUserFailed ) {
-            Logger( "Get user Failed", null, "error", "Dashboard" );
+            Log.error( "Get user Failed", null, );
             this.setState( state => ( { ...state, modalOpen: true } ) );
         }
         
@@ -110,7 +112,7 @@ class Dashboard extends React.Component<IProps, IState> {
     };
     
     setUserInfo = () => {
-        Logger( "Setting user info", this.state, "info", "Dashboard" );
+        Log.info( "Setting user info", this.state );
         this.setState( {
             modalOpen: true,
             firstName: this.props.user.firstName,
@@ -149,8 +151,8 @@ class Dashboard extends React.Component<IProps, IState> {
         }
         
         const { Option } = Select;
-        Logger( "rendering in dashboard", [ this.props, this.state ], 'info',
-            "Dashboard" );
+        Log.info( "rendering in dashboard", this.props, "Props" );
+        Log.info( "rendering in dashboard", this.state, "State" );
         return ( <div style={ { maxWidth: "800px", margin: "20px auto" } }>
             <Card
                 actions={ actions }>
@@ -357,7 +359,7 @@ class Dashboard extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = ( state ) => {
-    Logger( "MSTP", state, "info", "Dashboard" );
+    Log.info( "Reducers", state, "Map State To Props" );
     
     return {
         students: state.students.students,

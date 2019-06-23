@@ -13,6 +13,7 @@ import {
 } from "../actions";
 import { IAutoFillReducer } from "../types/AutoFillReducerInterface";
 import { IAction } from "../types/ActionInterface";
+import Logger from '../utils/logger';
 
 const initialState: IAutoFillReducer = {
     gettingSections: false,
@@ -166,13 +167,16 @@ export const autoFillReducer = ( state: IAutoFillReducer = initialState,
                 ...state, gettingCourses: true
             };
         case GET_COURSES_SUCCESS:
-            console.log( "setting courses into reducer", action.payload );
+            Logger( "setting courses", action.payload, 'info',
+                'AutoFill Reducer',
+                "Courses" );
             
             return {
                 ...state, gettingCourses: false, courses: action.payload
             };
         case GET_COURSES_FAIL:
-            console.log( "setting get course fail in reducer" );
+            Logger( "get courses failed", action.payload, 'error',
+                'AutoFill Reducer' );
             return {
                 ...state,
                 gettingCourses: false,
