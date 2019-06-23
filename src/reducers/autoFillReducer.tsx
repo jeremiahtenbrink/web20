@@ -15,6 +15,8 @@ import { IAutoFillReducer } from "../types/AutoFillReducerInterface";
 import { IAction } from "../types/ActionInterface";
 import Logger from '../utils/logger';
 
+const log = Logger( "AutoFill Reducer" );
+
 const initialState: IAutoFillReducer = {
     gettingSections: false,
     gettingInstructors: false,
@@ -167,16 +169,13 @@ export const autoFillReducer = ( state: IAutoFillReducer = initialState,
                 ...state, gettingCourses: true
             };
         case GET_COURSES_SUCCESS:
-            Logger( "setting courses", action.payload, 'info',
-                'AutoFill Reducer',
-                "Courses" );
+            log.info( "setting courses", action.payload, "Courses" );
             
             return {
                 ...state, gettingCourses: false, courses: action.payload
             };
         case GET_COURSES_FAIL:
-            Logger( "get courses failed", action.payload, 'error',
-                'AutoFill Reducer' );
+            log.error( "Failed", action.payload, "Get Courses" );
             return {
                 ...state,
                 gettingCourses: false,

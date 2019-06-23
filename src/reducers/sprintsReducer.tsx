@@ -10,6 +10,8 @@ import {
 import { ISprintsReducer } from "../types/SprintsReducerInterface";
 import Logger from '../utils/logger';
 
+const log = Logger( "Sprints Reducer" );
+
 const initialState: ISprintsReducer = {
     addingSprint: false,
     deletingSprint: false,
@@ -43,8 +45,7 @@ export const sprintsReducer = ( state = initialState,
         case GET_SPRINT_INIT:
             return { ...state, gettingSprints: true, sprints: {} };
         case GET_SPRINT_SUCCESS:
-            Logger( "adding sprints", action.payload, 'info', 'SprintsReducer',
-                'Sprints' );
+            log.info( "adding sprints", action.payload, 'Sprints' );
             return {
                 ...state,
                 gettingSprints: false,
