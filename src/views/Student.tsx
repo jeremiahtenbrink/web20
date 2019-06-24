@@ -16,6 +16,9 @@ import { ILessons } from "../types/LessonsInterface";
 import { IProjectManagers } from "../types/ProjectManagersInterface";
 import { ICourses } from "../types/CoursesInterface";
 import { IStudentLesson } from "../types/StudentLessonsInterface";
+import Logger from '../utils/logger';
+
+const log = Logger( "Student Sections" );
 
 
 interface IState {
@@ -54,12 +57,13 @@ class Student extends Component<IProps, IState> {
     };
     
     componentDidMount() {
+        log.info( "Component did mount." )
         if ( this.props.uid ) {
             
             this.props.subscribe( "Students",
                 this.props.subscribeToStudents( this.props.uid )
             );
-            
+            log.info( "Subscribed to students" );
             this.setState( { subscribedToStudents: true } );
         }
         this.props.subscribe( "Sprints", this.props.subscribeToSprints() );
@@ -80,7 +84,8 @@ class Student extends Component<IProps, IState> {
     
     componentDidUpdate( prevProps, prevState, snapshot ) {
         if ( this.props.uid && !this.state.subscribedToStudents ) {
-            
+            log.info( "Subscribing to students in CDU" );
+            this.setState( { subscribedToStudents: true } );
             this.props.subscribe( "Students",
                 this.props.subscribeToStudents( this.props.uid )
             );
@@ -91,6 +96,7 @@ class Student extends Component<IProps, IState> {
             Object.values( this.props.students ).length > 0 &&
             !this.props.selectedStudent ) {
             this.setState( { changingSelectedStudent: true } );
+            log.info( "Changing selected student in CDU." );
             this.props.changeSelectedStudent( this.props.match.params.id );
         }
         
@@ -100,6 +106,7 @@ class Student extends Component<IProps, IState> {
         if ( this.state.changingSelectedStudent &&
             this.props.selectedStudent ) {
             this.setStudentInfo( this.props.selectedStudent );
+            log.info( "Setting student info in CDU" );
             this.props.getStudentLessons( this.props.selectedStudent,
                 this.props.uid
             );

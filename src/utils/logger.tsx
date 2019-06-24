@@ -61,7 +61,9 @@ class Log {
     };
     
     group = () => {
-        console.group( Log.group );
+        console.group( '%c' + Log.group,
+            "padding: 2px 10px; border-bottom: 1px solid orange; font-size:" +
+            " 18px" );
     };
     
     endGroup = () => {
@@ -72,7 +74,8 @@ class Log {
         if ( Log.title ) {
             arg = Log.title + ": " + arg;
         }
-        console.info( arg );
+        console.info( '%c' + arg, "background-color: #bdcff3; color: black;" +
+            "padding: 2px 10px; border-radius: 3px" );
     };
     
     error = ( arg: string ) => {
@@ -108,9 +111,12 @@ class Log {
     
     logObject = ( object: {} ) => {
         if ( Log.title ) {
-            console.log( Log.title, object );
+            console.log( "%c" + Log.title, "background-color:" +
+                " #e4efb0; margin-left: 2rem; color: black; border-radius:" +
+                " 3px; padding: 2px 10px", object );
         } else {
-            console.log( object );
+            console.log( "%c" + object, "background-color:" +
+                " #e4efb0" );
         }
     }
 }
