@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { match } from 'react-router';
-import { Form, Input, Button, Row, Modal, Select, Card } from "antd";
+import { Form, Input, Button, Row, Modal, Select, Card, Icon } from "antd";
 import {
     editStudent, getStudentLessons, completeStudentLesson, changeSelectedSprint,
     changeSelectedStudent, subscribe, unsubscribe, subscribeToPms,
@@ -173,29 +173,33 @@ class Student extends Component<IProps, IState> {
                     ( <>
                         <Card>
                             <div className={ "inline" }>
-                                <Link to="/">
-                                    <Button type={ "primary" } size={ "large" }>
-                                        Back
-                                    </Button>
-                                </Link>
-                                
-                                {   /// ------------------------------------------------------
-                                    // EditUser Button.----------------------------
-                                    // ------------------------------------------------------
-                                }
-                                
-                                <Button
-                                    size={ "large" }
-                                    className={ "mg-left-sm" }
-                                    onClick={ () => this.setState(
-                                        { modalOpen: true } ) }>
-                                    Edit User
-                                </Button>
-                                <h1 className={ "mg-left-lg" }>
+                                <h1>
                                     { this.props.selectedStudent.firstName }{ " " }
                                     { this.props.selectedStudent.lastName }
                                 </h1>
+                            
                             </div>
+                            
+                            <Link to="/">
+                                <Button type={ "primary" } size={ "large" }>
+                                    <Icon type="left"/>
+                                    Go Back
+                                </Button>
+                            </Link>
+                            
+                            {   /// ------------------------------------------------------
+                                // EditUser Button.----------------------------
+                                // ------------------------------------------------------
+                            }
+                            
+                            <Button
+                                size={ "large" }
+                                className={ "mg-left-sm" }
+                                onClick={ () => this.setState(
+                                    { modalOpen: true } ) }>
+                                Edit User
+                            </Button>
+                            
                             <h3 className={ "mg-top-lg" }>PM: <span
                                 className={ "mg-left-sm" }>{ this.state.pm &&
                             this.props.pms[ this.state.pm ] &&

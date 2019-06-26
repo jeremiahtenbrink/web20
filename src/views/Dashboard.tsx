@@ -122,6 +122,10 @@ class Dashboard extends React.Component<IProps, IState> {
         } );
     };
     
+    openWindow = ( url: string ) => {
+        window.open( url );
+    };
+    
     render() {
         const newStudent = {
             id: null,
@@ -179,7 +183,7 @@ class Dashboard extends React.Component<IProps, IState> {
                 <Popover content={ <p>Attendance</p> }>
                     {/*
                     //@ts-ignore */ }
-                    <Col span={ 8 } align={ "center" }
+                    <Col span={ 6 } align={ "center" }
                          className={ "color-grey hover-blue pointer" }
                          onClick={ () => this.props.history.push(
                              "/attendance" ) }
@@ -193,7 +197,7 @@ class Dashboard extends React.Component<IProps, IState> {
                 <Popover content={ <p>Daily Standup</p> }>
                     {/*
                     //@ts-ignore */ }
-                    <Col span={ 8 } align={ "center" }
+                    <Col span={ 6 } align={ "center" }
                          className={ "color-grey hover-blue pointer" }
                          onClick={ () => this.props.history.push( "/standup" ) }
                     >
@@ -205,7 +209,7 @@ class Dashboard extends React.Component<IProps, IState> {
                 <Popover content={ <p>Sprint Retro</p> }>
                     {/*
                     //@ts-ignore */ }
-                    <Col span={ 8 } align={ "center" }
+                    <Col span={ 6 } align={ "center" }
                          className={ "color-grey hover-blue pointer" }
                          onClick={ () => this.props.history.push( "/sprint" ) }
                     >
@@ -214,9 +218,22 @@ class Dashboard extends React.Component<IProps, IState> {
                         />
                     </Col>
                 </Popover>
+                <Popover content={ <p>PM Handbook</p> }>
+                    {/*
+                    //@ts-ignore */ }
+                    <Col span={ 6 } align={ "center" }
+                         className={ "color-grey hover-blue pointer" }
+                         onClick={ () => this.openWindow(
+                             "https://www.notion.so/Full-Time-TL-Handbook-54e5207d1f494ab7a2268d903272c8ac" ) }
+                    >
+                        <Icon type="snippets"
+                              className={ "font-32" }
+                        />
+                    </Col>
+                </Popover>
             </Card>
             
-            <div style={ { backgroundColor: "white" } }>
+            < div style={ { backgroundColor: "white" } }>
                 <Table
                     dataSource={ Object.values( this.props.students ) }
                     style={ { marginTop: "30px" } }

@@ -158,6 +158,17 @@
   }
 }
 
+.border {
+  &-bottom {
+    border-bottom: 1px solid lightgray;
+  }
+
+  &-top {
+    border-top: 1px solid lightgray;
+    padding-top: 20px;
+  }
+}
+
 .font {
   &-24 {
     font-size: 24px;
