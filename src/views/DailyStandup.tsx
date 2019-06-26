@@ -149,6 +149,7 @@ class DailyStandup extends Component<IProps, IState> {
     };
     
     onChange = e => {
+        e.persist();
         this.setState(
             state => ( { ...state, [ e.target.name ]: e.target.value } ) );
     };
