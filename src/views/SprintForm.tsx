@@ -72,9 +72,10 @@ class SprintForm extends Component<IProps, IState> {
     
     componentDidUpdate( prevProps: Readonly<IProps>,
                         prevState: Readonly<IState>, snapshot?: any ): void {
-        log.info( "component did update", [ this.props, this.state ],"Component Did Update" );
+        log.info( "component did update", [ this.props, this.state ],
+            "Component Did Update" );
         if ( !this.state.subscribed && this.props.uid ) {
-            log.info( "Starting Subscriptions", null,"Component Did Update" );
+            log.info( "Starting Subscriptions", null, "Component Did Update" );
             this.setState( { subscribed: true } );
             this.props.subscribe( "students",
                 this.props.subscribeToStudents( this.props.uid ) );
@@ -191,7 +192,7 @@ class SprintForm extends Component<IProps, IState> {
         const Option = Select.Option;
         const RadioGroup = Radio.Group;
         const TextArea = Input.TextArea;
-        log.info( "props and state", [ this.props, this.state ], 'Render');
+        log.info( "props and state", [ this.props, this.state ], 'Render' );
         return (
             
             <Row style={ {
@@ -233,7 +234,9 @@ class SprintForm extends Component<IProps, IState> {
                                         0 : '' }
                                 >
                                     { this.props.sprints &&
-                                    Object.values( this.props.sprints )
+                                    Object.values( this.props.sprints ).filter(
+                                        ( sprint: ISprint ) => sprint.course ===
+                                            this.props.user.course )
                                         .sort( ( a, b ) => a.week - b.week )
                                         .map( sprint => {
                                             

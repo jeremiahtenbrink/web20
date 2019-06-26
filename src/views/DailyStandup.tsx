@@ -149,14 +149,12 @@ class DailyStandup extends Component<IProps, IState> {
     };
     
     onChange = e => {
-        // @ts-ignore
-        this.setState( { [ e.target.name ]: e.target.value } );
+        this.setState(
+            state => ( { ...state, [ e.target.name ]: e.target.value } ) );
     };
     
     onChangeSelect = ( value, name ) => {
-        
-        // @ts-ignore
-        this.setState( { [ name ]: value } );
+        this.setState( state => ( { ...state, [ name ]: value } ) );
     };
     
     getLessonsForDropDown = (): ILesson[] => {

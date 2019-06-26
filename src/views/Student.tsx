@@ -17,6 +17,8 @@ import { IProjectManagers } from "../types/ProjectManagersInterface";
 import { ICourses } from "../types/CoursesInterface";
 import { IStudentLesson } from "../types/StudentLessonsInterface";
 import Logger from '../utils/logger';
+import { IUser } from "../types/UserInterface";
+import { ISprint } from "../types/SprintInterface";
 
 const log = Logger( "Student Sections" );
 
@@ -224,7 +226,15 @@ class Student extends Component<IProps, IState> {
                         }
                         
                         <div style={ { backgroundColor: "white" } }>
-                            { Object.values( this.props.sprints )
+                            { Object.values( this.props.sprints ).filter(
+                                ( sprint: ISprint ) => sprint.course ===
+                                    this.props.user.course )
+                                .sort( ( a, b ) => {
+                                    if ( a.completed ) {
+                                        return -1;
+                                    }
+                                    return 1;
+                                } )
                                 .sort( ( a, b ) => a.week - b.week )
                                 .sort( ( a, b ) => {
                                     if ( this.props.selectedStudentLessons &&
@@ -381,6 +391,7 @@ class Student extends Component<IProps, IState> {
 const mstp = state => ( {
     students: state.students.students,
     uid: state.auth.uid,
+    user: state.auth.user,
     selectedStudent: state.students.selectedStudent,
     selectedStudentLessons: state.students.selectedStudentLessons,
     sprints: state.sprints.sprints,
@@ -395,6 +406,7 @@ const mstp = state => ( {
 interface IProps {
     students: { [ id: string ]: IStudent };
     uid: string;
+    user: IUser;
     selectedStudent: null | IStudent;
     selectedStudentLessons: { [ id: string ]: IStudentLesson },
     sprints: ISprints,
