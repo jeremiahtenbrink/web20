@@ -359,7 +359,7 @@ class Dashboard extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = ( state ) => {
-    Log.info( "Reducers", state, "Map State To Props" );
+    Log.info( "inside of map state to props", state, "MSTP" );
     
     return {
         students: state.students.students,

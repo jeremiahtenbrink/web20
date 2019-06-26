@@ -14,6 +14,7 @@ import { ITa } from "../types/TASInterface";
 import { IUser } from "../types/UserInterface";
 import { ILesson } from "../types/LessonInterface";
 import { IInstructor } from "../types/InstructorInterface";
+import { ISprint } from "../types/SprintInterface";
 
 interface IState {
     students: { [ id: string ]: IStudent } | {};
@@ -32,6 +33,7 @@ interface IState {
     other: string,
     lessons: ILesson[],
     lessonsLoaded: boolean
+    sprint: string;
 }
 
 class DailyStandup extends Component<IProps, IState> {
@@ -51,7 +53,8 @@ class DailyStandup extends Component<IProps, IState> {
         flexTaFeedback: "",
         other: "",
         lessons: [],
-        lessonsLoaded: false
+        lessonsLoaded: false,
+        sprint: ''
     };
     
     componentDidMount() {
@@ -117,8 +120,10 @@ class DailyStandup extends Component<IProps, IState> {
     setLessons = () => {
         let lessons: ILesson[] = [];
         Object.values( this.props.lessons ).forEach( sprint => {
-            Object.values( sprint ).forEach( lesson => {
-                lessons.push( lesson );
+            Object.values( sprint ).forEach( ( lesson: ILesson ) => {
+                if ( lesson.course === this.props.user.course ) {
+                    lessons.push( lesson );
+                }
             } );
         } );
         this.setState( { lessons, lessonsLoaded: true } );
@@ -152,6 +157,15 @@ class DailyStandup extends Component<IProps, IState> {
         
         // @ts-ignore
         this.setState( { [ name ]: value } );
+    };
+    
+    getLessonsForDropDown = (): ILesson[] => {
+        let lessons = this.state.lessons;
+        if ( this.state.sprint !== "" ) {
+            lessons =
+                lessons.filter( lesson => lesson.sprint === this.state.sprint );
+        }
+        return lessons;
     };
     
     getReportLink = () => {
@@ -338,6 +352,35 @@ class DailyStandup extends Component<IProps, IState> {
                             </Select>
                         </Form.Item>
                         
+                        <Form.Item label={ "Sprint" }>
+                            <Select
+                                showSearch
+                                style={ { width: 200 } }
+                                placeholder="Sprint"
+                                optionFilterProp="children"
+                                onChange={ ( e ) => {
+                                    this.onChangeSelect( e, "sprint" );
+                                } }
+                                value={ this.state.sprint }
+                                filterOption={ ( input,
+                                                 option ) => typeof option.props.children ===
+                                "string" ? option.props.children.toLowerCase()
+                                    .indexOf( input.toLowerCase() ) >= 0 : '' }
+                            >
+                                { this.props.sprints &&
+                                Object.values( this.props.sprints ).filter(
+                                    sprint => sprint.course ===
+                                        this.props.user.course )
+                                    .sort( ( a, b ) => a.week -
+                                        b.week )
+                                    .map( ( sprint: ISprint ) => {
+                                        return <Option key={ sprint.id }
+                                                       value={ sprint.id }>{ `${ sprint.name }` }</Option>;
+                                    } ) }
+                                <Option value={ "Lesson" }>Lesson</Option>
+                            </Select>
+                        </Form.Item>
+                        
                         <Form.Item label={ "Lesson" }>
                             <Select
                                 showSearch
@@ -354,8 +397,7 @@ class DailyStandup extends Component<IProps, IState> {
                                     .indexOf( input.toLowerCase() ) >= 0 : '' }
                             >
                                 { this.state.lessons &&
-                                this.state.lessons.sort( ( a, b ) => a.order -
-                                    b.order )
+                                this.getLessonsForDropDown()
                                     .map( lesson => {
                                         return <Option key={ lesson.id }
                                                        value={ lesson.name }>{ `${ lesson.name }` }</Option>;
@@ -504,10 +546,12 @@ const mpts = state => ( {
     instructors: state.autoFill.instructors,
     flexTas: state.autoFill.tas,
     uid: state.auth.uid,
+    sprints: state.sprints.sprints,
 } );
 
 interface IProps {
     students: { [ id: string ]: IStudent }
+    sprints: { [ id: string ]: ISprint }
     user: IUser;
     lessons: { [ id: string ]: ILesson };
     instructors: { [ id: string ]: IInstructor };

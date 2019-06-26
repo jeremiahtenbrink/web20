@@ -158,6 +158,7 @@ export const getUser = id => dispatch => {
             if ( res.exists ) {
                 let data = res.data();
                 data.id = res.id;
+                ;
                 if ( !data.course ) {
                     if ( data.cohort.toLowerCase().includes( 'web' ) ) {
                         data.course = "FSW";
