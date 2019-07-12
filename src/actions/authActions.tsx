@@ -170,7 +170,7 @@ export const getUser = id => dispatch => {
                         data.course = "Unknown";
                     }
                     
-                    store.collection(`users`).doc( id ).set(data);
+                    store.collection( `users` ).doc( id ).set( data );
                     
                 }
                 dispatch( { type: GET_USER_SUCCESS, payload: data } );

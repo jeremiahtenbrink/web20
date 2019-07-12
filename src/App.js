@@ -12,6 +12,7 @@ import Student from "./views/Student.tsx";
 import SprintForm from "./views/SprintForm.tsx";
 import AdminDashboard from "./views/AdminDashboard";
 import "./App.scss";
+import OneOnOne from "./views/OneOnOne";
 
 class App extends React.Component{
     
@@ -69,6 +70,9 @@ class App extends React.Component{
                         path="/admin-dashboard"
                         render={ props => <AdminDashboard { ...props } /> }
                     />
+                    
+                    <Route exact path="/one-on-one"
+                           render={ props => <OneOnOne { ...props } /> }/>
                     
                     
                     <Route exact path="/"
