@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
-import { Button, Card, Form, Icon, Row, Select } from "antd";
+import { Button, Card, Form, Icon, Row, Select, DatePicker } from "antd";
 import { IStudent } from "../types/StudentInterface";
 import logger from "../utils/logger";
 import {
@@ -10,7 +10,7 @@ import {
 import { ISprint } from "../types/SprintInterface";
 import { ILesson } from "../types/LessonInterface";
 import { IUser } from "../types/UserInterface";
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 const Logger = logger( 'One on One' );
 
@@ -20,6 +20,7 @@ interface IState {
   sprint?: string | null;
   lessons?: ILesson[] | null;
   selectedLesson?: string;
+  selectedDate?: Moment;
   
 }
 
@@ -30,6 +31,7 @@ class OneOnOne extends Component<IProps, IState> {
     sprint: null,
     lessons: null,
     selectedLesson: '',
+    selectedDate: moment( new Date() ).subtract( 1, 'day' ),
   };
   
   componentDidMount(): void {
@@ -42,9 +44,10 @@ class OneOnOne extends Component<IProps, IState> {
   }
   
   componentDidUpdate( prevProps: Readonly<IProps>, prevState: Readonly<IState>,
-                      snapshot?: any ): void {
+                      snapshot ?: any ): void {
     if ( this.state.lessonsLoaded && prevProps.lessons !==
-      this.props.lessons ) {
+      this.props.lessons
+    ) {
       this.setLessons();
     }
     
@@ -72,7 +75,9 @@ class OneOnOne extends Component<IProps, IState> {
     this.setState( { lessons, lessonsLoaded: true } );
   };
   
-  componentWillUnmount(): void {
+  componentWillUnmount()
+    :
+    void {
     this.props.unsubscribe( 'students' );
   }
   
@@ -89,9 +94,9 @@ class OneOnOne extends Component<IProps, IState> {
         lesson => {
           debugger;
           return lesson.sprint === this.state.sprint
-        } )
+        } ).sort( ( a, b ) => a.order - b.order );
       ;
-      return lessons;
+      return lessons.sort( ( a, b ) => a.name - b.name );
     }
     return this.state.lessons;
   };
@@ -100,12 +105,15 @@ class OneOnOne extends Component<IProps, IState> {
     let url = "https://airtable.com/shrgktJtyLgBE8pY0?prefill_Project+Manager=" +
       encodeURI(
         `${ this.props.user.firstName } ${ this.props.user.lastName } (${ this.props.user.cohort })` );
-    const dateString = moment( new Date() ).subtract( 1, 'day' )
-      .format( 'YYYY-MM-DD' );
+    const dateString = this.state.selectedDate.format( 'YYYY-MM-DD' );
     url += `&prefill_Daily+Standup=` +
       encodeURI(
         `${ name }  (${ dateString }) ${ this.state.selectedLesson }` );
     window.open( url );
+  };
+  
+  onDateChange = ( date: Moment ) => {
+    this.setState( { selectedDate: date } );
   };
   
   
@@ -128,6 +136,11 @@ class OneOnOne extends Component<IProps, IState> {
                 Go Back
               </Button>
             </Link>
+            <Form.Item label={ "Day the student submited their retro." +
+            " Usually yesterday" }>
+              <DatePicker onChange={ this.onDateChange }
+                          value={ this.state.selectedDate }/>
+            </Form.Item>
             <Form.Item label={ "Sprint" }>
               <Select
                 showSearch
@@ -146,6 +159,7 @@ class OneOnOne extends Component<IProps, IState> {
                 { this.props.sprints &&
                 Object.values( this.props.sprints )
                   .filter( sprint => sprint.course === this.props.user.course )
+                  .sort( ( a, b ) => a.week - b.week )
                   .map( sprint => {
                     return <Option key={ sprint.id }
                                    value={ sprint.id }>{ sprint.name }</Option>;
@@ -180,8 +194,9 @@ class OneOnOne extends Component<IProps, IState> {
             
             { this.props.students &&
             Object.values( this.props.students ).map( student => {
-              return <h2 onClick={ () => this.openWindow(
-                `${ student.firstName.trim() } ${ student.lastName.trim() }` ) }
+              return <h2 className={ 'hover-blue pointer' }
+                         onClick={ () => this.openWindow(
+                           `${ student.firstName.trim() } ${ student.lastName.trim() }` ) }
                          key={ student.id }>{ student.firstName } { student.lastName }</h2>;
             } ) }
           </div>
