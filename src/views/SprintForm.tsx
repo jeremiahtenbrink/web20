@@ -103,7 +103,7 @@ class SprintForm extends Component<IProps, IState> {
         let url = "";
         if ( this.props.user ) {
             url =
-                `https://airtable.com/shr6wexWV3RM4ITJP?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })`;
+                `https://airtable.com/shr6wexWV3RM4ITJP?prefill_Team+Lead=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })`;
         }
         
         if ( this.state.student && this.state.sprintChallenge ) {
