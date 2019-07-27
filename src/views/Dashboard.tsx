@@ -122,10 +122,14 @@ class Dashboard extends React.Component<IProps, IState> {
     } );
   };
   
-  openWindow = ( url: string ) => {
-    window.open( url );
+  openWindow = () => {
+    if (this.props.user.cohort.includes("PT")) {
+      window.open("https://www.notion.so/Part-Time-TL-Handbook-fc34b78b14ef4083b98ee3f1be043b26");
+    } else {
+      window.open("https://www.notion.so/Full-Time-TL-Handbook-54e5207d1f494ab7a2268d903272c8ac"); 
+    }
   };
-  
+
   render() {
     const newStudent = {
       id: null,
@@ -236,8 +240,7 @@ class Dashboard extends React.Component<IProps, IState> {
                     //@ts-ignore */ }
           <Col span={ 4 } align={ "center" }
                className={ "color-grey hover-blue pointer" }
-               onClick={ () => this.openWindow(
-                 "https://www.notion.so/Full-Time-TL-Handbook-54e5207d1f494ab7a2268d903272c8ac" ) }
+               onClick={ () => this.openWindow()}
           >
             <Icon type="snippets"
                   className={ "font-32" }
