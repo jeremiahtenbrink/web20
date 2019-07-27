@@ -101,9 +101,25 @@ class SprintForm extends Component<IProps, IState> {
     getSubmissionUrl = () => {
         
         let url = "";
+
+        // Unique PT and FT url variables 
+        let ptLink = "https://airtable.com/shrmbct7oEos2yPwZ";
+        let ftLink = "https://airtable.com/shr6wexWV3RM4ITJP"; 
+
+        // Empty string to store correct link, after conditional 
+        let link = "";
+
+        // Checking cohort state to set the link to the appropriate string
+        if (this.props.user.cohort.includes("PT")) {
+            link = ptLink; 
+        } else {
+            link = ftLink; 
+        }
+        // 'link' will be passed down and placed into interpolated string below 
+
         if ( this.props.user ) {
             url =
-                `https://airtable.com/shr6wexWV3RM4ITJP?prefill_Team+Lead=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })`;
+                `${link}?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })`;
         }
         
         if ( this.state.student && this.state.sprintChallenge ) {
