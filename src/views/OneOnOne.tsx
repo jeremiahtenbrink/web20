@@ -82,17 +82,17 @@ class OneOnOne extends Component<IProps, IState> {
   }
   
   onChangeSelect = ( value: string, name: string ) => {
-    debugger;
+    
     this.setState( { [ name ]: value } );
   };
   
   getLessonsForDropDown = (): ILesson[] => {
     
     if ( this.state.sprint !== null ) {
-      debugger;
+      
       const lessons = this.state.lessons.filter(
         lesson => {
-          debugger;
+          
           return lesson.sprint === this.state.sprint
         } ).sort( ( a, b ) => a.order - b.order );
       ;
