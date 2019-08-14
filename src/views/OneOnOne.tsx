@@ -109,6 +109,7 @@ class OneOnOne extends Component<IProps, IState> {
     url += `&prefill_Daily+Standup=` +
       encodeURI(
         `${ name }  (${ dateString }) ${ this.state.selectedLesson }` );
+    url += `&prefill_Students=` + encodeURI(name);
     window.open( url );
   };
   
