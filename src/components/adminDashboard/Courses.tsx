@@ -1,15 +1,15 @@
-import React from "react";
-import { Select, Form, Button, Popconfirm, message } from "antd";
-import InputComponent from "../InputComponent";
-import ModalComponent from "../Modal";
+import React from 'react';
+import {Select, Form, Button, Popconfirm, message} from 'antd';
+import InputComponent from '../InputComponent';
+import ModalComponent from '../Modal';
 import {
-    addCourse, delCourses, subscribe, subscribeToCourses, unsubscribe
-} from "../../actions/index";
-import { connect } from "react-redux";
-import { ICourse } from "../../types/CourseInterface";
+    addCourse, delCourses, subscribe, subscribeToCourses, unsubscribe,
+} from '../../actions/index';
+import {connect} from 'react-redux';
+import {ICourse} from '../../types/CourseInterface';
 import Logger from '../../utils/logger';
 
-const log = Logger( "Admin Dashboard Courses" );
+const log = Logger( 'Admin Dashboard Courses' );
 
 interface IState {
     courseName: string;
@@ -19,15 +19,15 @@ interface IState {
 
 class Courses extends React.Component<IProps, IState> {
     state = {
-        courseName: "", id: "", modalOpen: false,
+        courseName: '', id: '', modalOpen: false,
     };
     
     componentDidMount() {
-        this.props.subscribe( "Courses", this.props.subscribeToCourses() );
+        this.props.subscribe( 'Courses', this.props.subscribeToCourses() );
     }
     
     componentWillUnmount() {
-        this.props.unsubscribe( "Courses" );
+        this.props.unsubscribe( 'Courses' );
     }
     
     addCourse = () => {
@@ -35,17 +35,17 @@ class Courses extends React.Component<IProps, IState> {
             courseName: this.state.courseName, id: this.state.id,
         };
         this.props.addCourse( course );
-        this.setState( { courseName: "", id: "", modalOpen: false } );
+        this.setState( {courseName: '', id: '', modalOpen: false} );
         message.success( `${ course.courseName } added.` );
     };
     
     clearState = () => {
-        this.setState( { courseName: "", id: "", modalOpen: false } );
+        this.setState( {courseName: '', id: '', modalOpen: false} );
     };
     
     onChange = ( name, value ) => {
         // @ts-ignore
-        this.setState( { [ name ]: value } );
+        this.setState( {[ name ]: value} );
     };
     
     confirm = ( e ) => {
@@ -53,36 +53,38 @@ class Courses extends React.Component<IProps, IState> {
             .filter( course => course.id === this.props.selectedCourse )[ 0 ];
         this.props.delCourses( course );
         this.props.removeSelectedCourse();
-        message.success( "Course removed" );
+        message.success( 'Course removed' );
     };
     
     cancel = ( e ) => {
         log.info( 'event handler', e, 'Cancel' );
-        message.error( "Course Not removed" );
+        message.error( 'Course Not removed' );
     };
     
     render() {
         const Option = Select.Option;
+        
         return ( <div>
-            <Button onClick={ () => this.setState( { modalOpen: true } ) }>Add
+            <Button onClick={ () => this.setState( {modalOpen: true} ) }>Add
                 Course</Button>
-            <div className={ "inline" }>
+            <div className={ 'inline' }>
                 <Form.Item>
                     <Select
                         showSearch
-                        style={ { width: 200 } }
+                        style={ {width: 200} }
                         placeholder="Student"
                         optionFilterProp="children"
                         onChange={ ( value ) => {
                             
-                            this.props.changeCourseSelect( "selectedCourse",
-                                value
+                            this.props.changeCourseSelect( 'selectedCourse',
+                                value,
                             );
                         } }
                         value={ this.props.selectedCourse }
+                        // @ts-ignore
                         filterOption={ ( input,
                                          option ) => typeof option.props.children ===
-                        "string" ? option.props.children.toLowerCase()
+                        'string' ? option.props.children.toLowerCase()
                             .indexOf( input.toLowerCase() ) >= 0 : '' }
                     >
                         { this.props.courses &&
@@ -95,18 +97,18 @@ class Courses extends React.Component<IProps, IState> {
                 </Form.Item>
             
             </div>
-            
-            <ModalComponent title={ "Add Course" } okText={ "Submit" }
+            {/*@ts-ignore*/ }
+            <ModalComponent title={ 'Add Course' } okText={ 'Submit' }
                             onOk={ this.addCourse }
                             onCancel={ this.clearState }
                             modalOpen={ this.state.modalOpen }
             >
-                <InputComponent name={ "Course Name" }
+                <InputComponent name={ 'Course Name' }
                                 onChange={ this.onChange }
                                 value={ this.state.courseName }
                                 required={ true }
                 />
-                <InputComponent name={ "ID" } onChange={ this.onChange }
+                <InputComponent name={ 'ID' } onChange={ this.onChange }
                                 value={ this.state.id }
                                 required={ true }
                 />
@@ -120,7 +122,7 @@ const mstp = state => ( {
 } );
 
 interface IProps {
-    courses: { [ id: string ]: ICourse };
+    courses: {[ id: string ]: ICourse};
     selectedCourse: string,
     addCourse: typeof addCourse;
     delCourses: typeof delCourses;
@@ -132,6 +134,6 @@ interface IProps {
 }
 
 export default connect( mstp,
-    { addCourse, delCourses, subscribeToCourses, subscribe, unsubscribe }
+    {addCourse, delCourses, subscribeToCourses, subscribe, unsubscribe},
 )(
     Courses );

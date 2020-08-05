@@ -374,6 +374,7 @@ class Dashboard extends React.Component<IProps, IState> {
                                     this.onChangeSelect( value, 'course' );
                                 } }
                                 value={ this.state.course }
+                                //@ts-ignore
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
                                 'string' ? option.props.children.toLowerCase()

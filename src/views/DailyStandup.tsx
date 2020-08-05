@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {
-    Row, Col, Button, Form, Select, Input, Card, Table, Radio, Icon
-} from "antd";
-import { Link } from "react-router-dom";
+    Row, Col, Button, Form, Select, Input, Card, Table, Radio, Icon,
+} from 'antd';
+import {Link} from 'react-router-dom';
 import {
     subscribeToInstructors, subscribeToStudents, subscribe, unsubscribe,
-    subscribeToTas, subscribeToSprints, subscribeToCourses
-} from "../actions/index";
-import "./dailyStandup.scss";
-import { IStudent } from "../types/StudentInterface";
-import { ITa } from "../types/TASInterface";
-import { IUser } from "../types/UserInterface";
-import { ILesson } from "../types/LessonInterface";
-import { IInstructor } from "../types/InstructorInterface";
-import { ISprint } from "../types/SprintInterface";
+    subscribeToTas, subscribeToSprints, subscribeToCourses,
+} from '../actions/index';
+import './dailyStandup.scss';
+import {IStudent} from '../types/StudentInterface';
+import {ITa} from '../types/TASInterface';
+import {IUser} from '../types/UserInterface';
+import {ILesson} from '../types/LessonInterface';
+import {IInstructor} from '../types/InstructorInterface';
+import {ISprint} from '../types/SprintInterface';
 
 interface IState {
-    students: { [ id: string ]: IStudent } | {};
+    students: {[ id: string ]: IStudent} | {};
     subscribedToStudents: boolean;
     loaded: boolean,
     module: string,
@@ -41,20 +41,20 @@ class DailyStandup extends Component<IProps, IState> {
         students: {},
         subscribedToStudents: false,
         loaded: false,
-        module: "Lesson",
-        sprintTopic: "Topic",
-        wentWell: "",
-        concerns: "",
-        instructor: "IInstructor",
+        module: 'Lesson',
+        sprintTopic: 'Topic',
+        wentWell: '',
+        concerns: '',
+        instructor: 'IInstructor',
         instructionRating: 3,
-        instructorFeedback: "",
+        instructorFeedback: '',
         flexTa: null,
         flexTaRating: null,
-        flexTaFeedback: "",
-        other: "",
+        flexTaFeedback: '',
+        other: '',
         lessons: [],
         lessonsLoaded: false,
-        sprint: ''
+        sprint: '',
     };
     
     componentDidMount() {
@@ -71,28 +71,28 @@ class DailyStandup extends Component<IProps, IState> {
     
     subscribeToAutoFillData = () => {
         
-        this.props.subscribe( "Students",
-            this.props.subscribeToStudents( this.props.uid )
+        this.props.subscribe( 'Students',
+            this.props.subscribeToStudents( this.props.uid ),
         );
-        this.props.subscribe( "Instructors",
-            this.props.subscribeToInstructors()
+        this.props.subscribe( 'Instructors',
+            this.props.subscribeToInstructors(),
         );
         
-        this.props.subscribe( "Tas", this.props.subscribeToTas() );
+        this.props.subscribe( 'Tas', this.props.subscribeToTas() );
         
-        this.props.subscribe( "Courses", this.props.subscribeToCourses() );
-        this.props.subscribe( "Sprints", this.props.subscribeToSprints() );
+        this.props.subscribe( 'Courses', this.props.subscribeToCourses() );
+        this.props.subscribe( 'Sprints', this.props.subscribeToSprints() );
         
-        this.setState( { subscribedToStudents: true } );
+        this.setState( {subscribedToStudents: true} );
         
     };
     
     componentWillUnmount() {
-        this.props.unsubscribe( "Students" );
-        this.props.unsubscribe( "Instructors" );
-        this.props.unsubscribe( "Tas" );
-        this.props.unsubscribe( "Courses" );
-        this.props.unsubscribe( "Sprints" );
+        this.props.unsubscribe( 'Students' );
+        this.props.unsubscribe( 'Instructors' );
+        this.props.unsubscribe( 'Tas' );
+        this.props.unsubscribe( 'Courses' );
+        this.props.unsubscribe( 'Sprints' );
     }
     
     componentDidUpdate( prevProps, prevState, snapshot ) {
@@ -126,7 +126,7 @@ class DailyStandup extends Component<IProps, IState> {
                 }
             } );
         } );
-        this.setState( { lessons, lessonsLoaded: true } );
+        this.setState( {lessons, lessonsLoaded: true} );
     };
     
     setStudents = students => {
@@ -143,7 +143,7 @@ class DailyStandup extends Component<IProps, IState> {
         this.setState( state => {
             state.students[ id ].isPresent = !state.students[ id ].isPresent;
             return {
-                students: state.students
+                students: state.students,
             };
         } );
     };
@@ -151,16 +151,16 @@ class DailyStandup extends Component<IProps, IState> {
     onChange = e => {
         e.persist();
         this.setState(
-            state => ( { ...state, [ e.target.name ]: e.target.value } ) );
+            state => ( {...state, [ e.target.name ]: e.target.value} ) );
     };
     
     onChangeSelect = ( value, name ) => {
-        this.setState( state => ( { ...state, [ name ]: value } ) );
+        this.setState( state => ( {...state, [ name ]: value} ) );
     };
     
     getLessonsForDropDown = (): ILesson[] => {
         let lessons = this.state.lessons;
-        if ( this.state.sprint !== "" ) {
+        if ( this.state.sprint !== '' ) {
             lessons =
                 lessons.filter( lesson => lesson.sprint === this.state.sprint );
         }
@@ -172,22 +172,22 @@ class DailyStandup extends Component<IProps, IState> {
         if ( this.props.user ) {
             let url = `https://airtable.com/shripCmauVlvxNrAT?prefill_Project+Manager=${ this.props.user.firstName }+${ this.props.user.lastName }+(${ this.props.user.cohort })&prefill_Sections=${ this.props.user.cohort }`;
             
-            if ( this.state.module !== "" ) {
+            if ( this.state.module !== '' ) {
                 url += `&prefill_Module=${ encodeURI( this.state.module ) }`;
             }
             
             if ( this.state.students ) {
                 
                 let afterFirst = false;
-                let absentString = "&prefill_Students+(Absent)=";
+                let absentString = '&prefill_Students+(Absent)=';
                 
                 
                 Object.values( this.state.students )
-                //@ts-ignore
+                    //@ts-ignore
                     .forEach( ( student: IStudent ) => {
                         if ( !student.isPresent ) {
                             if ( afterFirst ) {
-                                absentString += ",";
+                                absentString += ',';
                             }
                             // @ts-ignore
                             absentString +=
@@ -198,22 +198,22 @@ class DailyStandup extends Component<IProps, IState> {
                         }
                     } );
                 
-                if ( absentString !== "&prefill_Absent+Students=" ) {
+                if ( absentString !== '&prefill_Absent+Students=' ) {
                     url += absentString;
                 }
             }
             
-            if ( this.state.wentWell !== "" ) {
+            if ( this.state.wentWell !== '' ) {
                 url += `&prefill_What+went+well=${ encodeURI(
                     this.state.wentWell ) }`;
             }
             
-            if ( this.state.concerns !== "" ) {
+            if ( this.state.concerns !== '' ) {
                 url +=
                     `&prefill_Concerns=${ encodeURI( this.state.concerns ) }`;
             }
             
-            if ( this.state.instructor !== "" ) {
+            if ( this.state.instructor !== '' ) {
                 url += `&prefill_Instructor=${ encodeURI(
                     this.state.instructor ) }`;
             }
@@ -223,14 +223,14 @@ class DailyStandup extends Component<IProps, IState> {
                     `&prefill_Instruction+Rating=${ this.state.instructionRating }`;
             }
             
-            if ( this.state.instructorFeedback !== "" ) {
+            if ( this.state.instructorFeedback !== '' ) {
                 url += `&prefill_Instruction+Feedback=${ encodeURI(
-                    this.state.instructorFeedback, ) }`;
+                    this.state.instructorFeedback ) }`;
             }
             
             if ( this.state.flexTa !== null ) {
                 let flexTaName = this.props.flexTas[ this.state.flexTa ].firstName +
-                    "+" + this.props.flexTas[ this.state.flexTa ].lastName;
+                    '+' + this.props.flexTas[ this.state.flexTa ].lastName;
                 let flexTaCohort = this.props.flexTas[ this.state.flexTa ].cohort;
                 url += `&prefill_Who+was+the+Flex+TA?=${ encodeURI(
                     flexTaName ) }+(${ flexTaCohort })`;
@@ -240,12 +240,12 @@ class DailyStandup extends Component<IProps, IState> {
                 url += `&prefill_Flex+TA+Rating=${ this.state.flexTaRating }`;
             }
             
-            if ( this.state.flexTaFeedback !== "" ) {
+            if ( this.state.flexTaFeedback !== '' ) {
                 url += `&prefill_Flex+TA+Feedback=${ encodeURI(
-                    this.state.flexTaFeedback, ) }`;
+                    this.state.flexTaFeedback ) }`;
             }
             
-            if ( this.state.other !== "" ) {
+            if ( this.state.other !== '' ) {
                 url += `&prefill_Other=${ encodeURI( this.state.other ) }`;
             }
             
@@ -255,13 +255,13 @@ class DailyStandup extends Component<IProps, IState> {
     
     render() {
         
-        const { Option } = Select;
-        const { TextArea } = Input;
+        const {Option} = Select;
+        const {TextArea} = Input;
         const RadioGroup = Radio.Group;
-        return ( <Row style={ { maxWidth: "800px", margin: "20px auto" } }>
+        return ( <Row style={ {maxWidth: '800px', margin: '20px auto'} }>
             <Card>
                 <Col span={ 24 }>
-                    <div className={ "dailyStandUp__topContent" }>
+                    <div className={ 'dailyStandUp__topContent' }>
                         <h1>Daily Standup</h1>
                         <Link to="/">
                             <Button type="primary">
@@ -273,16 +273,17 @@ class DailyStandup extends Component<IProps, IState> {
                     {/*
                     //@ts-ignore */ }
                     <Table
-                        dataIndex={ "id" }
+                        //@ts-ignore
+                        dataIndex={ 'id' }
                         dataSource={ this.state.students &&
                         Object.values( this.state.students )
                             .sort( ( a, b ) => {
                                 //@ts-ignore
-                                return a.firstName - b.firstName
+                                return a.firstName - b.firstName;
                             } ) }
-                        style={ { marginTop: "30px" } }
+                        style={ {marginTop: '30px'} }
                         bordered
-                        rowKey={ "id" }
+                        rowKey={ 'id' }
                         loading={ false }
                         pagination={ false }>
                         <Table.Column
@@ -301,21 +302,21 @@ class DailyStandup extends Component<IProps, IState> {
                                                  record: IStudent ) => {
                             
                                           return ( <Button.Group
-                                              size={ "large" }>
+                                              size={ 'large' }>
                                               <Button
                                                   onClick={ () => this.onChangeAttendance(
                                                       record.id ) }
                                                   style={ record.isPresent ?
-                                                      { backgroundColor: "#91d5ff" } :
+                                                      {backgroundColor: '#91d5ff'} :
                                                       {} }>
                                                   Present
                                               </Button>
                                               <Button
                                                   onClick={ () => this.onChangeAttendance(
                                                       record.id ) }
-                                                  type={ "default" }
+                                                  type={ 'default' }
                                                   style={ !record.isPresent ?
-                                                      { backgroundColor: "#fffb8f" } :
+                                                      {backgroundColor: '#fffb8f'} :
                                                       {} }>
                                                   Not Present
                                               </Button>
@@ -323,20 +324,21 @@ class DailyStandup extends Component<IProps, IState> {
                                       } }/>
                     </Table>
                     
-                    <Form className={ "dailyStandUp__form" }>
-                        <Form.Item label={ "IInstructor" }>
+                    <Form className={ 'dailyStandUp__form' }>
+                        <Form.Item label={ 'IInstructor' }>
                             <Select
                                 showSearch
-                                style={ { width: 200 } }
+                                style={ {width: 200} }
                                 placeholder="Instructor"
                                 optionFilterProp="children"
                                 onChange={ ( e ) => {
-                                    this.onChangeSelect( e, "instructor" );
+                                    this.onChangeSelect( e, 'instructor' );
                                 } }
                                 value={ this.state.instructor }
+                                //@ts-ignore
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
-                                "string" ? option.props.children.toLowerCase()
+                                'string' ? option.props.children.toLowerCase()
                                     .indexOf( input.toLowerCase() ) >= 0 : '' }
                             >
                                 { this.props.instructors &&
@@ -347,23 +349,24 @@ class DailyStandup extends Component<IProps, IState> {
                                                        value={ instructor.name }>{ `${ instructor.name }` }</Option>;
                                     } ) }
                                 <Option
-                                    value={ "IInstructor" }>Instructor</Option>
+                                    value={ 'IInstructor' }>Instructor</Option>
                             </Select>
                         </Form.Item>
                         
-                        <Form.Item label={ "Sprint" }>
+                        <Form.Item label={ 'Sprint' }>
                             <Select
                                 showSearch
-                                style={ { width: 200 } }
+                                style={ {width: 200} }
                                 placeholder="Sprint"
                                 optionFilterProp="children"
                                 onChange={ ( e ) => {
-                                    this.onChangeSelect( e, "sprint" );
+                                    this.onChangeSelect( e, 'sprint' );
                                 } }
                                 value={ this.state.sprint }
+                                //@ts-ignore
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
-                                "string" ? option.props.children.toLowerCase()
+                                'string' ? option.props.children.toLowerCase()
                                     .indexOf( input.toLowerCase() ) >= 0 : '' }
                             >
                                 { this.props.sprints &&
@@ -376,23 +379,24 @@ class DailyStandup extends Component<IProps, IState> {
                                         return <Option key={ sprint.id }
                                                        value={ sprint.id }>{ `${ sprint.name }` }</Option>;
                                     } ) }
-                                <Option value={ "Lesson" }>Lesson</Option>
+                                <Option value={ 'Lesson' }>Lesson</Option>
                             </Select>
                         </Form.Item>
                         
-                        <Form.Item label={ "Lesson" }>
+                        <Form.Item label={ 'Lesson' }>
                             <Select
                                 showSearch
-                                style={ { width: 200 } }
+                                style={ {width: 200} }
                                 placeholder="Lesson"
                                 optionFilterProp="children"
                                 onChange={ ( e ) => {
-                                    this.onChangeSelect( e, "module" );
+                                    this.onChangeSelect( e, 'module' );
                                 } }
                                 value={ this.state.module }
+                                //@ts-ignore
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
-                                "string" ? option.props.children.toLowerCase()
+                                'string' ? option.props.children.toLowerCase()
                                     .indexOf( input.toLowerCase() ) >= 0 : '' }
                             >
                                 { this.state.lessons &&
@@ -401,71 +405,72 @@ class DailyStandup extends Component<IProps, IState> {
                                         return <Option key={ lesson.id }
                                                        value={ lesson.name }>{ `${ lesson.name }` }</Option>;
                                     } ) }
-                                <Option value={ "Lesson" }>Lesson</Option>
+                                <Option value={ 'Lesson' }>Lesson</Option>
                             </Select>
                         </Form.Item>
                         
-                        <Form.Item label={ "IInstructor Rating" }>
-                            <RadioGroup name={ "instructionRating" }
+                        <Form.Item label={ 'IInstructor Rating' }>
+                            <RadioGroup name={ 'instructionRating' }
                                         onChange={ this.onChange }
                                         value={ this.state.instructionRating }>
                                 <Radio value={ 1 }><Icon type="star"
-                                                         theme={ "twoTone" }
-                                                         twoToneColor={ "#135200" }/></Radio>
+                                                         theme={ 'twoTone' }
+                                                         twoToneColor={ '#135200' }/></Radio>
                                 <Radio value={ 2 }>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
                                 </Radio>
                                 <Radio value={ 3 }>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
                                 </Radio>
                             </RadioGroup>
                         </Form.Item>
-                        <Form.Item label={ "What went well today?" }>
-                        <TextArea
-                            autosize={ { minRows: 4, maxRows: 6 } }
-                            placeholder="What went well today?"
-                            name={ "wentWell" }
-                            onChange={ this.onChange }
-                        />
-                        </Form.Item>
-                        <Form.Item label={ "What could have gone better?" }>
+                        <Form.Item label={ 'What went well today?' }>
                             <TextArea
-                                autosize={ { minRows: 4, maxRows: 6 } }
-                                placeholder="What could have gone better?"
-                                name={ "concerns" }
+                                autosize={ {minRows: 4, maxRows: 6} }
+                                placeholder="What went well today?"
+                                name={ 'wentWell' }
                                 onChange={ this.onChange }
                             />
                         </Form.Item>
-                        <Form.Item label={ "Feedback for the instructor." }>
+                        <Form.Item label={ 'What could have gone better?' }>
                             <TextArea
-                                autosize={ { minRows: 4, maxRows: 6 } }
+                                autosize={ {minRows: 4, maxRows: 6} }
+                                placeholder="What could have gone better?"
+                                name={ 'concerns' }
+                                onChange={ this.onChange }
+                            />
+                        </Form.Item>
+                        <Form.Item label={ 'Feedback for the instructor.' }>
+                            <TextArea
+                                autosize={ {minRows: 4, maxRows: 6} }
                                 placeholder="Instructor Feedback"
-                                name={ "instructorFeedback" }
+                                name={ 'instructorFeedback' }
                                 onChange={ this.onChange }
                             />
                         </Form.Item>
                         
-                        <Form.Item label={ "Flex TA" }>
+                        <Form.Item label={ 'Flex TA' }>
                             <Select
                                 showSearch
-                                style={ { width: 200 } }
+                                style={ {width: 200} }
                                 placeholder="Flex Ta"
                                 optionFilterProp="children"
                                 onChange={ ( e ) => {
-                                    this.onChangeSelect( e, "flexTa" );
+                                    this.onChangeSelect( e, 'flexTa' );
                                 } }
                                 value={ this.state.flexTa }
+                                //@ts-ignore
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
-                                "string" ? option.props.children.toLowerCase()
+                                'string' ? option.props.children.toLowerCase()
                                     .indexOf( input.toLowerCase() ) >= 0 : '' }
                             >{ this.props.flexTas &&
                             Object.values( this.props.flexTas ).map( ta => {
@@ -473,49 +478,49 @@ class DailyStandup extends Component<IProps, IState> {
                                 return <Option key={ ta.id }
                                                value={ `${ ta.id }` }>{ `${ ta.firstName } ${ ta.lastName }` }</Option>;
                             } ) }
-                                <Option value={ "Flex Ta" }>Flex Ta</Option>
+                                <Option value={ 'Flex Ta' }>Flex Ta</Option>
                             </Select>
                         </Form.Item>
-                        <Form.Item label={ "Flex TA Rating" }>
-                            <RadioGroup name={ "flexTaRating" }
+                        <Form.Item label={ 'Flex TA Rating' }>
+                            <RadioGroup name={ 'flexTaRating' }
                                         onChange={ this.onChange }
                                         value={ this.state.flexTaRating }>
                                 <Radio value={ 0 }>N/A</Radio>
                                 <Radio value={ 1 }><Icon type="star"
-                                                         theme={ "twoTone" }
-                                                         twoToneColor={ "#135200" }/></Radio>
+                                                         theme={ 'twoTone' }
+                                                         twoToneColor={ '#135200' }/></Radio>
                                 <Radio value={ 2 }>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
                                 </Radio>
                                 <Radio value={ 3 }>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
-                                    <Icon type="star" theme={ "twoTone" }
-                                          twoToneColor={ "#135200" }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
+                                    <Icon type="star" theme={ 'twoTone' }
+                                          twoToneColor={ '#135200' }/>
                                 </Radio>
                             </RadioGroup>
                         </Form.Item>
                         
-                        <Form.Item label={ "Flex TA Feedback" }>
+                        <Form.Item label={ 'Flex TA Feedback' }>
                             <TextArea
-                                autosize={ { minRows: 4, maxRows: 6 } }
+                                autosize={ {minRows: 4, maxRows: 6} }
                                 placeholder="Flex TA Feedback"
-                                name={ "flexTaFeedback" }
+                                name={ 'flexTaFeedback' }
                                 onChange={ this.onChange }
                             />
                         </Form.Item>
                         <Form.Item
-                            label={ "Is there anything else we should know\n" +
-                            "about?" }>
+                            label={ 'Is there anything else we should know\n' +
+                            'about?' }>
                             <TextArea
-                                autosize={ { minRows: 4, maxRows: 6 } }
+                                autosize={ {minRows: 4, maxRows: 6} }
                                 placeholder="Anything Else We Should Know...."
-                                name={ "other" }
+                                name={ 'other' }
                                 onChange={ this.onChange }
                             />
                         </Form.Item>
@@ -525,10 +530,10 @@ class DailyStandup extends Component<IProps, IState> {
                     <a
                         className="btn btn-success mb-3"
                         target="_blank"
-                        rel={ "noopener noreferrer" }
+                        rel={ 'noopener noreferrer' }
                         href={ this.getReportLink() }>
                         <Button type="primary" icon="download"
-                                size={ "large" }>
+                                size={ 'large' }>
                             Submit
                         </Button>
                     </a>
@@ -549,12 +554,12 @@ const mpts = state => ( {
 } );
 
 interface IProps {
-    students: { [ id: string ]: IStudent }
-    sprints: { [ id: string ]: ISprint }
+    students: {[ id: string ]: IStudent}
+    sprints: {[ id: string ]: ISprint}
     user: IUser;
-    lessons: { [ id: string ]: ILesson };
-    instructors: { [ id: string ]: IInstructor };
-    flexTas: { [ id: string ]: ITa };
+    lessons: {[ id: string ]: ILesson};
+    instructors: {[ id: string ]: IInstructor};
+    flexTas: {[ id: string ]: ITa};
     uid: string;
     subscribeToStudents: typeof subscribeToStudents;
     subscribeToInstructors: typeof subscribeToInstructors;
@@ -572,5 +577,5 @@ export default connect( mpts, {
     unsubscribe,
     subscribeToTas,
     subscribeToCourses,
-    subscribeToSprints
-}, )( DailyStandup );
+    subscribeToSprints,
+} )( DailyStandup );

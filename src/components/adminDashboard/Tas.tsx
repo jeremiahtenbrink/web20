@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {
     Button, // Checkbox,
-    Col, Icon, Input, Modal, Popconfirm, Row, Table, Form
-} from "antd";
+    Col, Icon, Input, Modal, Popconfirm, Row, Table, Form,
+} from 'antd';
 import {
     deleteTa, updateTa, addTa, subscribe, unsubscribe, subscribeToTas,
-} from "../../actions";
-import { ITa } from "../../types/TASInterface";
+} from '../../actions';
+import {ITa} from '../../types/TASInterface';
 
 interface IState {
     modalOpen: boolean,
@@ -21,18 +21,18 @@ class Tas extends Component<IProps, IState> {
     
     state = {
         modalOpen: false,
-        cohort: "",
-        firstName: "",
-        lastName: "",
+        cohort: '',
+        firstName: '',
+        lastName: '',
         selectedId: null,
     };
     
     componentDidMount() {
-        this.props.subscribe( "Tas", this.props.subscribeToTas() );
+        this.props.subscribe( 'Tas', this.props.subscribeToTas() );
     }
     
     componentWillUnmount() {
-        this.props.unsubscribe( "Tas" );
+        this.props.unsubscribe( 'Tas' );
     }
     
     deleteTA = ta => {
@@ -48,53 +48,53 @@ class Tas extends Component<IProps, IState> {
         };
         this.props.updateTa( ta );
         this.setState( {
-            firstName: "",
-            lastName: "",
-            cohort: "",
+            firstName: '',
+            lastName: '',
+            cohort: '',
             selectedId: null,
-            modalOpen: false
+            modalOpen: false,
         } );
     };
     
     onChange = e => {
         //@ts-ignore
-        this.setState( { [ e.target.name ]: e.target.value } );
+        this.setState( {[ e.target.name ]: e.target.value} );
     };
     
     addTA = () => {
         let ta = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
-            cohort: this.state.cohort
+            cohort: this.state.cohort,
         };
         
         this.props.addTa( ta );
         this.setState( {
-            firstName: "",
-            lastName: "",
-            cohort: "",
+            firstName: '',
+            lastName: '',
+            cohort: '',
             selectedId: null,
-            modalOpen: false
+            modalOpen: false,
         } );
     };
     
     render() {
         return ( <>
-            <Button type={ "primary" }
-                    onClick={ () => this.setState( { modalOpen: true } ) }>Create
+            <Button type={ 'primary' }
+                    onClick={ () => this.setState( {modalOpen: true} ) }>Create
                 TA</Button>
             <Table
                 dataSource={ Object.values( this.props.tas )
-                    .sort( ( a: ITa, b: ITa ) =>  {
-                        if (a.firstName > b.firstName){
+                    .sort( ( a: ITa, b: ITa ) => {
+                        if ( a.firstName > b.firstName ) {
                             return 1;
                         }
                         return -1;
-                }) }
-                style={ { marginTop: "30px" } }
+                    } ) }
+                style={ {marginTop: '30px'} }
                 bordered
                 pagination={ false }
-                rowKey={ "id" }
+                rowKey={ 'id' }
             >
                 <Table.Column
                     title="First Name"
@@ -109,62 +109,69 @@ class Tas extends Component<IProps, IState> {
                     dataIndex="cohort"
                 />
                 <Table.Column title="Actions" dataIndex="actions"
-                              key="actions" render={ ( text: string, record: ITa ) => {
-                    return ( <div className={ "instructors__actions" }>
-                        <div className={ "instructors__actions--icon" }
-                             onClick={ () => this.setState( {
-                                 firstName: record.firstName,
-                                 lastName: record.lastName,
-                                 cohort: record.cohort,
-                                 modalOpen: true,
-                                 selectedId: record.id,
-                             } ) }
-                        >
-                            <Icon type={ "profile" }/>
-                            <p>Update</p>
-                        </div>
-                        <Popconfirm
-                            title="Are you sure delete this TA?"
-                            onConfirm={ () => this.deleteTA( record ) }
-                            okText="Yes"
-                            cancelText="No"
-                            className={ "instructors__actions--icon" }
-                            style={ { cursor: "pointer" } }
-                        >
-                            <Icon
-                                type={ "delete" } theme={ "twoTone" }
-                                twoToneColor={ "#f5222d" }
-                                style={ { cursor: "pointer" } }
-                            />
-                            <p style={ { cursor: "pointer" } }>Delete</p>
-                        </Popconfirm>
-                    </div> );
-                } }/>
+                              key="actions"
+                              render={ ( text: string, record: ITa ) => {
+                                  return (
+                                      <div className={ 'instructors__actions' }>
+                                          <div
+                                              className={ 'instructors__actions--icon' }
+                                              onClick={ () => this.setState( {
+                                                  firstName: record.firstName,
+                                                  lastName: record.lastName,
+                                                  cohort: record.cohort,
+                                                  modalOpen: true,
+                                                  selectedId: record.id,
+                                              } ) }
+                                          >
+                                              <Icon type={ 'profile' }/>
+                                              <p>Update</p>
+                                          </div>
+                                          <Popconfirm
+                                              title="Are you sure delete this TA?"
+                                              onConfirm={ () => this.deleteTA(
+                                                  record ) }
+                                              okText="Yes"
+                                              cancelText="No"
+                                              className={ 'instructors__actions--icon' }
+                                              style={ {cursor: 'pointer'} }
+                                          >
+                                              <Icon
+                                                  type={ 'delete' }
+                                                  theme={ 'twoTone' }
+                                                  twoToneColor={ '#f5222d' }
+                                                  style={ {cursor: 'pointer'} }
+                                              />
+                                              <p style={ {cursor: 'pointer'} }>Delete</p>
+                                          </Popconfirm>
+                                      </div> );
+                              } }/>
             </Table>
             {/*
-            //@ts-ignore */}
+            //@ts-ignore */ }
             <Modal
-                title={ this.state.selectedId ? `Update TA` : "Add TA" }
+                title={ this.state.selectedId ? `Update TA` : 'Add TA' }
                 visible={ this.state.modalOpen }
-                okText={ this.state.selectedId ? "Update TA" : "Add TA" }
+                okText={ this.state.selectedId ? 'Update TA' : 'Add TA' }
                 onOk={ this.state.selectedId ? this.updateTA : this.addTA }
                 onCancel={ () => this.setState( {
                     modalOpen: false,
                     selectedId: null,
-                    firstName: "",
-                    lastName: "",
+                    firstName: '',
+                    lastName: '',
                     cohort: '',
-                } ) } align={ "center" }>
+                } ) }
+                //@ts-ignore
+                align={ 'center' }>
                 <Row type="flex" gutter={ 24 }>
                     <Col xs={ 24 } md={ 12 }>
                         <h3>
                                 <span
-                                    style={ { color: "#f5222d" } }>*</span> First
+                                    style={ {color: '#f5222d'} }>*</span> First
                             Name
                         </h3>
                         <Form.Item>
                             <Input
-                                style={ { width: "100%" } }
+                                style={ {width: '100%'} }
                                 value={ this.state.firstName }
                                 onChange={ this.onChange }
                                 name="firstName"
@@ -174,12 +181,12 @@ class Tas extends Component<IProps, IState> {
                         
                         <h3>
                                 <span
-                                    style={ { color: "#f5222d" } }>*</span> Last
+                                    style={ {color: '#f5222d'} }>*</span> Last
                             Name
                         </h3>
                         <Form.Item>
                             <Input
-                                style={ { width: "100%" } }
+                                style={ {width: '100%'} }
                                 value={ this.state.lastName }
                                 onChange={ this.onChange }
                                 name="lastName"
@@ -189,11 +196,11 @@ class Tas extends Component<IProps, IState> {
                         
                         <h3>
                                 <span
-                                    style={ { color: "#f5222d" } }>*</span> Cohort
+                                    style={ {color: '#f5222d'} }>*</span> Cohort
                         </h3>
                         <Form.Item>
                             <Input
-                                style={ { width: "100%" } }
+                                style={ {width: '100%'} }
                                 value={ this.state.cohort }
                                 onChange={ this.onChange }
                                 name="cohort"
@@ -212,7 +219,7 @@ const mstp = state => ( {
 } );
 
 interface IProps {
-    tas: { [ id: string ]: ITa };
+    tas: {[ id: string ]: ITa};
     deleteTa: typeof deleteTa;
     updateTa: typeof updateTa;
     addTa: typeof addTa;

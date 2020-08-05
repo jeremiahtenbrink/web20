@@ -1,18 +1,18 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
-import { checkAuth, signInFailed } from "./actions";
-import firebase from "./firebase/firebase";
-import { connect } from "react-redux";
-import { Layout } from "antd";
-import Login from "./views/Login";
-import Dashboard from "./views/Dashboard";
-import Attendance from "./views/Attendance.tsx";
-import DailyStandup from "./views/DailyStandup.tsx";
-import Student from "./views/Student.tsx";
-import SprintForm from "./views/SprintForm.tsx";
-import AdminDashboard from "./views/AdminDashboard";
-import "./App.scss";
-import OneOnOne from "./views/OneOnOne";
+import React from 'react';
+import {Route, Switch} from 'react-router-dom';
+import {checkAuth, signInFailed} from './actions';
+import firebase from './firebase/firebase';
+import {connect} from 'react-redux';
+import {Layout} from 'antd';
+import Login from './views/Login';
+import Dashboard from './views/Dashboard';
+import Attendance from './views/Attendance.tsx';
+import DailyStandup from './views/DailyStandup.tsx';
+import Student from './views/Student.tsx';
+import SprintForm from './views/SprintForm.tsx';
+import AdminDashboard from './views/AdminDashboard';
+import './App.scss';
+import OneOnOne from './views/OneOnOne';
 
 class App extends React.Component{
     
@@ -36,7 +36,7 @@ class App extends React.Component{
     render(){
         return ( <Layout>
             <Layout.Content
-                style={ { minHeight: "100vh", padding: "20px 10px" } }>
+                style={ {minHeight: '100vh', padding: '20px 10px'} }>
                 <Switch>
                     <Route exact path="/start"
                            render={ props => <Login { ...props } /> }/>
@@ -54,7 +54,6 @@ class App extends React.Component{
                     {/*exact*/ }
                     {/*path="/user"*/ }
                     {/*render={ props => <EditUser { ...props } /> }*/ }
-                    />
                     <Route
                         exact
                         path="/student/:id"
@@ -86,4 +85,4 @@ class App extends React.Component{
 
 const mapStateToProps = () => ( {} );
 
-export default connect( mapStateToProps, { checkAuth, signInFailed } )( App );
+export default connect( mapStateToProps, {checkAuth, signInFailed} )( App );

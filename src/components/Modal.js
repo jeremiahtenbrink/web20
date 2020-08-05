@@ -1,6 +1,6 @@
-import { Modal } from "antd";
-import React from "react";
-import PropTypes from "prop-types";
+import {Modal} from 'antd';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const ModalComponent = props => {
     
@@ -21,7 +21,7 @@ ModalComponent.propTypes = {
     okText: PropTypes.string,
     onOk: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    
+    children: PropTypes.any,
 };
 
 export default ModalComponent;

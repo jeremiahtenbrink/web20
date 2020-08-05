@@ -1,13 +1,13 @@
 import React from 'react';
-import { Input, Modal, Row, Form, Select } from "antd";
-import { connect } from 'react-redux';
-import { ICourse } from "../../types/CourseInterface";
-import { IPm } from "../../types/IPm";
+import {Input, Modal, Row, Form, Select} from 'antd';
+import {connect} from 'react-redux';
+import {ICourse} from '../../types/CourseInterface';
+import {IPm} from '../../types/IPm';
 import {
     editStudent, subscribe, unsubscribe, subscribeToCourses, subscribeToPms,
-    addStudent
-} from "../../actions/index.js";
-import { IStudent } from "../../types/StudentInterface";
+    addStudent,
+} from '../../actions/index.js';
+import {IStudent} from '../../types/StudentInterface';
 
 interface IState {
     pm?: string;
@@ -27,20 +27,20 @@ class EditStudentModal extends React.Component<IProps, IState> {
     };
     
     componentDidMount(): void {
-        this.setState( { ...this.props.student } );
-        this.props.subscribe( "pms", this.props.subscribeToPms() );
-        this.props.subscribe( "courses", this.props.subscribeToCourses() );
+        this.setState( {...this.props.student} );
+        this.props.subscribe( 'pms', this.props.subscribeToPms() );
+        this.props.subscribe( 'courses', this.props.subscribeToCourses() );
     }
     
     componentWillUnmount(): void {
-        this.props.unsubscribe( "pms" );
-        this.props.unsubscribe( "courses" );
+        this.props.unsubscribe( 'pms' );
+        this.props.unsubscribe( 'courses' );
     }
     
     updateStudentSubmit = e => {
         e.preventDefault();
         const student: IStudent = {
-            ...this.state
+            ...this.state,
         };
         
         if ( student.id ) {
@@ -59,11 +59,11 @@ class EditStudentModal extends React.Component<IProps, IState> {
     };
     
     changeSelect = ( value: string, name: string ) => {
-        this.setState( { [ name ]: value } );
+        this.setState( {[ name ]: value} );
     };
     
     onChange = ( e ) => {
-        this.setState( { [ e.target.name ]: e.target.value } )
+        this.setState( {[ e.target.name ]: e.target.value} );
     };
     
     render() {
@@ -71,7 +71,7 @@ class EditStudentModal extends React.Component<IProps, IState> {
             <Modal
                 title={ this.state.id ? `Update Student` : 'Create Student' }
                 visible={ true }
-                okText={ this.state.id ? "Update Student" : "Submit" }
+                okText={ this.state.id ? 'Update Student' : 'Submit' }
                 onOk={ this.updateStudentSubmit }
                 onCancel={ () => this.cancelEdit() }>
                 <Row type="flex" gutter={ 24 }>
@@ -79,22 +79,23 @@ class EditStudentModal extends React.Component<IProps, IState> {
                                 //@ts-ignore */ }
                     <Form onSubmit={ this.onSubmit }>
                         
-                        <Form.Item label={ "Project Manager" }>
+                        <Form.Item label={ 'Project Manager' }>
                             <Select
                                 showSearch
-                                style={ { width: 200 } }
+                                style={ {width: 200} }
                                 placeholder="PM"
                                 optionFilterProp="children"
                                 onChange={ ( value ) => {
                                     
                                     this.changeSelect( value,
-                                        "pm"
+                                        'pm',
                                     );
                                 } }
                                 value={ this.state.pm }
+                                //@ts-ignore
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
-                                "string" ?
+                                'string' ?
                                     option.props.children.toLowerCase()
                                         .indexOf(
                                             input.toLowerCase() ) >=
@@ -111,50 +112,51 @@ class EditStudentModal extends React.Component<IProps, IState> {
                             </Select>
                         </Form.Item>
                         
-                        <Form.Item label={ "First Name" }>
+                        <Form.Item label={ 'First Name' }>
                             <Input
-                                id={ "firstName" }
-                                name={ "firstName" }
+                                id={ 'firstName' }
+                                name={ 'firstName' }
                                 value={ this.state.firstName }
-                                placeholder={ "First Name" }
+                                placeholder={ 'First Name' }
                                 onChange={ this.onChange }
                             />
                         </Form.Item>
-                        <Form.Item label={ "Last Name" }>
+                        <Form.Item label={ 'Last Name' }>
                             <Input
-                                id={ "lastName" }
-                                name={ "lastName" }
+                                id={ 'lastName' }
+                                name={ 'lastName' }
                                 value={ this.state.lastName }
-                                placeholder={ "Last Name" }
+                                placeholder={ 'Last Name' }
                                 onChange={ this.onChange }
                             />
                         </Form.Item>
-                        <Form.Item label={ "Github Handle" }>
+                        <Form.Item label={ 'Github Handle' }>
                             <Input
-                                id={ "github" }
-                                name={ "github" }
+                                id={ 'github' }
+                                name={ 'github' }
                                 value={ this.state.github }
-                                placeholder={ "Github" }
+                                placeholder={ 'Github' }
                                 onChange={ this.onChange }
                             />
                         </Form.Item>
                         
-                        <Form.Item label={ "Course" }>
+                        <Form.Item label={ 'Course' }>
                             <Select
                                 showSearch
-                                style={ { width: 200 } }
+                                style={ {width: 200} }
                                 placeholder="Course"
                                 optionFilterProp="children"
                                 onChange={ ( value ) => {
                                     
                                     this.changeSelect( value,
-                                        "course"
+                                        'course',
                                     );
                                 } }
                                 value={ this.state.course }
+                                //@ts-ignore
                                 filterOption={ ( input,
                                                  option ) => typeof option.props.children ===
-                                "string" ?
+                                'string' ?
                                     option.props.children.toLowerCase()
                                         .indexOf(
                                             input.toLowerCase() ) >=
@@ -184,8 +186,8 @@ const mstp = state => ( {
 } );
 
 interface IProps {
-    courses: { [ id: string ]: ICourse };
-    pms: { [ id: string ]: IPm };
+    courses: {[ id: string ]: ICourse};
+    pms: {[ id: string ]: IPm};
     editStudent: typeof editStudent;
     subscribe: typeof subscribe;
     unsubscribe: typeof unsubscribe;
@@ -198,5 +200,5 @@ interface IProps {
 
 export default connect( mstp, {
     editStudent, subscribe, unsubscribe, subscribeToCourses, subscribeToPms,
-    addStudent
+    addStudent,
 } )( EditStudentModal );
